@@ -1,0 +1,485 @@
+/* Register Container */
+.reg-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('../../../assets/img/laptop-6966045_1920.jpg');
+  background-size: cover;       
+  background-repeat: no-repeat;  
+  background-position: center;   
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+}
+
+/* Error Notification */
+.error-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.error-content {
+  background: #fff;
+  border: 2px solid #e74c3c;
+  border-radius: 10px;  
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+  max-width: 500px;
+  padding: 10px;
+}
+
+.error-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-weight: 600;
+  font-size: 15px;
+  flex: 1;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.error-close:hover {
+  background-color: #fdf2f2;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Register Card */
+.reg-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 20px 60px;
+
+};
+/* Register Header */
+.reg-header {
+  margin-bottom: 25px;
+}
+
+.reg-header h2 {
+  text-align: center;
+  color: #333;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+
+
+/* Form Styles */
+.reg-form {
+  margin-bottom: 25px;
+  gap: 20px;
+}
+.form-infor-user{
+  display: flex;
+  gap: 30px;
+}
+
+
+.reg-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+
+.reg-group {
+  margin-bottom: 10px;
+}
+
+
+.reg-group label {
+  display: block;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.reg-group input {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #f5f5f5;
+  box-sizing: border-box;
+}
+
+.reg-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.reg-group input::placeholder {
+  color: #aaa;
+}
+
+
+
+/* Password Input Container */
+.reg-password-container {
+  position: relative;
+}
+
+.reg-password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.reg-password-toggle:hover {
+  background-color: #f0f0f0;
+}
+
+/* Form Options */
+.reg-options {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Checkbox Styles */
+.reg-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  user-select: none;
+}
+
+.reg-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  accent-color: #000;
+  cursor: pointer;
+}
+
+.reg-checkmark {
+  margin-left: 5px;
+}
+
+/* Register Button */
+.reg-button {
+
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  padding: 18px 0;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reg-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.reg-button:active {
+  transform: translateY(0);
+}
+
+/* Divider */
+.reg-divider {
+  text-align: center;
+  margin: 25px 0;
+  position: relative;
+}
+
+.reg-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e1e5e9;
+}
+
+.reg-divider span {
+  background: white;
+  padding: 0 20px;
+  color: #666;
+  font-size: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Social Register */
+.reg-social {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.reg-social-btn {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.reg-google-btn:hover {
+  border-color: #4285F4;
+  background: #f8f9ff;
+}
+
+.reg-facebook-btn:hover {
+  border-color: #1877F2;
+  background: #f0f7ff;
+}
+
+.reg-social-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Register Footer */
+.reg-footer {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.reg-footer p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.reg-footer a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.reg-footer a:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .reg-card {
+    max-width: 800px;
+  }
+  
+  .reg-form {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  /* First row - 2 columns for username, email */
+  .reg-form .reg-group:nth-child(1),
+  .reg-form .reg-group:nth-child(2) {
+    grid-column: auto;
+  }
+  
+  /* Second row - 1 column for phone */
+  .reg-form .reg-group:nth-child(3) {
+    grid-column: 1 / 3;
+  }
+  
+  /* Third row - 1 column for password (centered) */
+  .reg-form .reg-group:nth-child(4) {
+    grid-column: 1 / 3;
+  }
+  
+  /* Fourth row - 1 column for confirm password (centered) */
+  .reg-form .reg-group:nth-child(5),
+  .reg-form .reg-group:nth-child(4) {
+    grid-column: 1 / 3;
+  }
+  
+  /* Fourth row - 1 column for confirm password (centered) */
+  .reg-form .reg-group:nth-child(5) {
+    grid-column: 1 / 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .reg-container {
+    padding: 15px;
+    justify-content: center;
+  }
+  
+  .reg-card {
+    padding: 25px 20px;
+    max-width: 100%;
+    max-height: 95vh;
+  }
+  
+  .reg-header h2 {
+    font-size: 24px;
+  }
+  
+  .reg-form {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .reg-group.full-width {
+    grid-column: 1;
+  }
+  
+  /* Reset all grid-columns for mobile */
+  .reg-form .reg-group:nth-child(n) {
+    grid-column: 1;
+  }
+  
+  .reg-social {
+    flex-direction: column;
+  }
+  
+  .reg-social-btn {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reg-container {
+    padding: 10px;
+  }
+  
+  .reg-card {
+    padding: 20px 15px;
+    max-height: 98vh;
+  }
+  
+  .reg-header h2 {
+    font-size: 22px;
+  }
+  
+  .reg-group input {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+  
+  .reg-button {
+    padding: 15px;
+    font-size: 15px;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reg-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Focus states for accessibility */
+.reg-group input:focus,
+.reg-button:focus,
+.reg-social-btn:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.reg-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.reg-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Custom scrollbar for register card */
+.reg-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reg-card::-webkit-scrollbar-track {
+  background: rgba(27, 26, 85, 0.2);
+  border-radius: 4px;
+}
+
+.reg-card::-webkit-scrollbar-thumb {
+  background: rgba(146, 144, 195, 0.6);
+  border-radius: 4px;
+}
+
+.reg-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(146, 144, 195, 0.8);
+}

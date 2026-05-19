@@ -1,0 +1,136 @@
+.admin-dashboard {
+  width: 100%;
+}
+
+.admin-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.admin-chart-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.admin-chart-content {
+  min-height: 200px;
+}
+
+.admin-activities {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-activity-item {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.admin-activity-item:last-child {
+  border-bottom: none;
+}
+
+.admin-activity-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.admin-activity-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-activity-text {
+  font-size: 14px;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.admin-activity-user {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.admin-activity-time {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.admin-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.admin-list-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.admin-list-item:last-child {
+  border-bottom: none;
+}
+
+.admin-list-label {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.admin-list-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+@media (max-width: 1024px) {
+  .admin-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
