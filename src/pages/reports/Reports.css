@@ -1,6 +1,6 @@
 .reports-page {
   margin: 0 auto;
-  max-width: 1400px;
+  max-width: 100%;
   animation: fadeIn 0.5s ease-in;
 }
 
@@ -71,7 +71,7 @@
   left: 0;
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, #1c4d70, #1c4d70);
+  background: linear-gradient(90deg, #d32f2f, #d32f2f);
   transition: width 0.3s ease;
 }
 
@@ -81,7 +81,7 @@
 
 .stats-header i {
   font-size: 28px;
-  background: linear-gradient(135deg, #1c4d70 0%, #1c4d70 100%);
+  background: linear-gradient(135deg, #d32f2f 0%, #d32f2f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -152,7 +152,7 @@
 .stat-value {
   font-size: 22px;
   font-weight: 800;
-  background: linear-gradient(90deg, #1c4d70, #1c4d70);;
+  background: linear-gradient(90deg, #d32f2f, #d32f2f);;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -194,7 +194,7 @@
   left: 0;
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, #1c4d70, #1c4d70);
+  background: linear-gradient(90deg, #d32f2f, #d32f2f);
   transition: width 0.3s ease;
 }
 
@@ -222,7 +222,7 @@
 }
 
 .chart-body::-webkit-scrollbar-thumb {
-background: #1c4d70;
+background: #d32f2f;
   border-radius: 4px;
 }
 
@@ -281,7 +281,7 @@ background: #1c4d70;
 .pie-center {
   font-size: 32px;
   font-weight: 800;
-  background: linear-gradient(90deg, #1c4d70, #1c4d70);;
+  background: linear-gradient(90deg, #d32f2f, #d32f2f);;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -332,7 +332,7 @@ background: #1c4d70;
 }
 
 .legend-dot.primary { 
-  background: linear-gradient(90deg, #1c4d70, #1c4d70);;
+  background: linear-gradient(90deg, #d32f2f, #d32f2f);;
 }
 
 .legend-dot.muted {
@@ -347,12 +347,12 @@ background: #1c4d70;
 }
 
 ::-webkit-scrollbar-track {
-    background: #c5dff2;
+    background: #ffcdd2;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1c4d70;
+  background: #d32f2f;
   border-radius: 4px;
   transition: background 0.3s ease;
 }

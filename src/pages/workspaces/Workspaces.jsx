@@ -158,9 +158,9 @@ const Workspaces = () => {
           </p>
         </div>
         <div className='logo-wp-container'>
-          <img src={require('../../assets/img/BrandTaskHub.png')} alt="TaskHub Logo" className='logo-wp' style={{ width: 48, height: 48, objectFit: 'contain' }} />
+          <img src={require('../../assets/img/BrandCogniSync.png')} alt="CogniSync Logo" className='logo-wp' style={{ width: 48, height: 48, objectFit: 'contain' }} />
           <span className='logo-wp-text'>
-            TASK HUB
+            COGNISYNC
           </span>
         </div>
       </div>

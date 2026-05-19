@@ -109,12 +109,12 @@ h1 {
 }
 
 .team-table-container::-webkit-scrollbar-track {
-  background: #c5dff2;
+  background: #ffcdd2;
   border-radius: 4px;
 }
 
 .team-table-container::-webkit-scrollbar-thumb {
-  background: #1c4d70;
+  background: #d32f2f;
   border-radius: 4px;
 }
 
@@ -126,7 +126,7 @@ h1 {
 }
 
 .team-table thead {
-  background: #1e5a86;
+  background: #d32f2f;
   color: white;
   position: sticky;
   top: 0;

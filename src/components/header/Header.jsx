@@ -1,5 +1,5 @@
 import '../../components/header/Header.css'
-import logo from '../../assets/img/BrandTaskHub.png'
+import logo from '../../assets/img/BrandCogniSync.png'
 import BtnPale from '../button/BtnPale'
 import BtnBold from '../button/BtnBold'
 import { useState, useEffect } from 'react'
@@ -37,16 +37,14 @@ const Header = () => {
       <div className="header-container">
         <div className="header-logo">
           <img src={logo} alt="logo" className='logo-img'/>
-          <p className='logo-text'>TASK HUB</p>
+          <p className='logo-text'>COGNISYNC</p>
         </div>
         <div className="header-nav">
           <ul className="nav-list">
-            <li className="nav-item">
-              <a href="/" className="nav-link">Home<i className="fa-solid fa-chevron-down"></i></a>
-              <a href="/about" className="nav-link">About<i className="fa-solid fa-chevron-down"></i></a>
-              <a href="/services" className="nav-link">Services<i className="fa-solid fa-chevron-down"></i></a>
-              <a href="/contact" className="nav-link">Contact<i className="fa-solid fa-chevron-down"></i></a>
-            </li>
+            <li className="nav-item"><a href="/" className="nav-link">Home</a></li>
+            <li className="nav-item"><a href="/about" className="nav-link">About</a></li>
+            <li className="nav-item"><a href="/services" className="nav-link">Services</a></li>
+            <li className="nav-item"><a href="/contact" className="nav-link">Contact</a></li>
           </ul>
         </div>
         <div className="header-right">

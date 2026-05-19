@@ -2,7 +2,6 @@ import Header from '../../components/header/Header'
 import Footer from '../../components/footer/Footer'
 import './Contact.css'
 import { useState } from 'react'
-import imgBgr from '../../assets/img/ai-5202865_1920.jpg'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -44,9 +43,13 @@ const Contact = () => {
   return (
     <div className="container">
       {/* Background Image */}
-      <div className="page-bgr">
-        <img src={imgBgr} alt="background"/>
-      </div>
+      <div className="hero-bg">
+          <div className="hero-bg-gradient"></div>
+          <div className="hero-bg-grid"></div>
+          <div className="hero-bg-orb hero-bg-orb-1"></div>
+          <div className="hero-bg-orb hero-bg-orb-2"></div>
+          <div className="hero-bg-orb hero-bg-orb-3"></div>
+        </div>
 
       <Header />
       
@@ -94,8 +97,8 @@ const Contact = () => {
                     <div className="method-content">
                       <h3 className="method-title">Điện Thoại</h3>
                       <p className="method-text">
-                        Hotline: +84 905 731 260<br />
-                        Support: +84 905 731 260<br />
+                        Hotline: +84 354 301 301<br />
+                        Support: +84 354 301 301<br />
                         (8:00 - 22:00 mỗi ngày)
                       </p>
                     </div>
@@ -108,7 +111,7 @@ const Contact = () => {
                     <div className="method-content">
                       <h3 className="method-title">Email</h3>
                       <p className="method-text">
-                        Info: 19102003kien@gmail.com
+                        Info: tungnv.backend@gmail.com
                       </p>
                     </div>
                   </div>
@@ -267,7 +270,7 @@ const Contact = () => {
                 <div className="faq-icon">
                   <i className="fa-solid fa-circle-question"></i>
                 </div>
-                <h3 className="faq-question">TaskHub có miễn phí không?</h3>
+                <h3 className="faq-question">CogniSync có miễn phí không?</h3>
                 <p className="faq-answer">
                   Chúng tôi cung cấp gói dùng thử miễn phí 30 ngày với đầy đủ tính năng. 
                   Sau đó bạn có thể chọn gói phù hợp với nhu cầu.
@@ -314,7 +317,7 @@ const Contact = () => {
         <section className="map-section">
           <div className="map-container">
             <iframe
-              title="TaskHub Location"
+              title="CogniSync Location"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.144967111796!2d108.17492627416863!3d16.057965384619912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142191abe321c91%3A0x6bb1db7fe9abc543!2zSMOyYSBBbiAxMCwgSMOyYSBBbiwgQ-G6qW0gTOG7hywgxJDDoCBO4bq1bmcgNTUwMDAwLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1765074897252!5m2!1svi!2s"
               width="100%"
               height="450"

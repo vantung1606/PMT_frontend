@@ -8,13 +8,13 @@ const Footer = () => {
 				<div className="footer-content">
 					{/* Company Info */}
 					<div className="footer-column">
-						<h3 className="footer-brand">TASK HUB</h3>
+						<h3 className="footer-brand">COGNISYNC</h3>
 						<p className="footer-description">
 							Hệ thống quản lý công việc chuyên nghiệp dành cho nhóm freelancer.
 						</p>
 						<div className="footer-contact">
-							<p>Email: 19102003kien@gmail.com</p>
-							<p>Số điện thoại: 0905731260</p>
+							<p>Email: tungnv.backend@gmail.com</p>
+							<p>Số điện thoại: 0354301301</p>
 						</div>
 					</div>
 
@@ -61,7 +61,7 @@ const Footer = () => {
 								<a href="https://www.facebook.com/abc.abcxz/">Facebook</a>
 							</li>
 							<li>
-								<a href="https://zalo.me/0905731260">Zalo</a>
+								<a href="https://zalo.me/0354301301">Zalo</a>
 							</li>
 							<li>
 								<a href="https://www.instagram.com/_n.v.k.03/">Instagram</a>
@@ -75,7 +75,7 @@ const Footer = () => {
 
 				{/* Copyright */}
 				<div className="footer-copyright">
-					<p>Copyright ©2025 - Bản quyền thuộc về Nguyễn Văn Kiện - キエン</p>
+					<p>Copyright ©2025 - Bản quyền thuộc về Nguyễn Văn Tùng</p>
 				</div>
 			</footer>
 		</div>

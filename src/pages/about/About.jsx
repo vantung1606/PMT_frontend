@@ -1,15 +1,18 @@
 import Header from '../../components/header/Header'
 import Footer from '../../components/footer/Footer'
 import './About.css'
-import imgBgr from '../../assets/img/ai-5202865_1920.jpg'
 
 const About = () => {
   return (
     <div className="container">
       {/* Background Image */}
-      <div className="page-bgr">
-        <img src={imgBgr} alt="background"/>
-      </div>
+      <div className="hero-bg">
+          <div className="hero-bg-gradient"></div>
+          <div className="hero-bg-grid"></div>
+          <div className="hero-bg-orb hero-bg-orb-1"></div>
+          <div className="hero-bg-orb hero-bg-orb-2"></div>
+          <div className="hero-bg-orb hero-bg-orb-3"></div>
+        </div>
 
       <Header />
       
@@ -17,7 +20,7 @@ const About = () => {
         {/* Hero Section */}
         <section className="about-hero">
           <div className="about-hero-content">
-            <p className="about-title">Về Task Hub</p>
+            <p className="about-title">Về CogniSync</p>
             <p className="about-subtitle">
               Nền tảng quản lý dự án thông minh, giúp đội ngũ của bạn làm việc hiệu quả hơn
             </p>
@@ -31,14 +34,14 @@ const About = () => {
               <div className="about-text-col">
                 <h2 className="section-title">Sứ Mệnh Của Chúng Tôi</h2>
                 <p className="section-text">
-                  Task Hub được phát triển với mục tiêu đơn giản hóa quy trình quản lý dự án, 
+                  CogniSync được phát triển với mục tiêu đơn giản hóa quy trình quản lý dự án, 
                   giúp các đội nhóm từ nhỏ đến lớn có thể cộng tác hiệu quả, theo dõi tiến độ 
                   công việc một cách rõ ràng và đạt được mục tiêu nhanh chóng hơn.
                 </p>
                 <p className="section-text">
                   Chúng tôi tin rằng sự thành công của một dự án không chỉ nằm ở công cụ, 
                   mà còn ở cách thức giao tiếp và phối hợp giữa các thành viên trong nhóm. 
-                  Đó là lý do tại sao Task Hub tích hợp đầy đủ các tính năng cần thiết để 
+                  Đó là lý do tại sao CogniSync tích hợp đầy đủ các tính năng cần thiết để 
                   hỗ trợ toàn diện cho mọi khía cạnh của quản lý dự án.
                 </p>
               </div>
@@ -153,7 +156,7 @@ const About = () => {
           <div className="about-container">
             <h2 className="cta-title">Sẵn Sàng Bắt Đầu?</h2>
             <p className="cta-text">
-              Tham gia cùng hàng ngàn đội nhóm đang sử dụng Task Hub để quản lý dự án hiệu quả
+              Tham gia cùng hàng ngàn đội nhóm đang sử dụng CogniSync để quản lý dự án hiệu quả
             </p>
             <div className="cta-buttons">
               <button className="btn-primary" onClick={() => window.location.href = '/register'}>

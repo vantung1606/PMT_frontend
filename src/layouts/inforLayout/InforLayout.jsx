@@ -1,5 +1,5 @@
 import "../inforLayout/InforLayout.css";
-import imgBgr from "../../assets/img/ai-5202865_1920.jpg";
+import imgBgr from "../../assets/img/landing_bg.png";
 import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -50,13 +50,17 @@ const InforLayout = () => {
 	return (
 		<div>
 			<div className="container-inforLayout">
-				<div className="img_bgr">
-					<img src={imgBgr} alt="logo"/>
+				<div className="hero-bg">
+					<div className="hero-bg-gradient"></div>
+					<div className="hero-bg-grid"></div>
+					<div className="hero-bg-orb hero-bg-orb-1"></div>
+					<div className="hero-bg-orb hero-bg-orb-2"></div>
+					<div className="hero-bg-orb hero-bg-orb-3"></div>
 				</div>
 
 				{/* Hero Content */}
 				<div className="hero-content">
-					<p className="hero-title">TASK HUB</p>
+					<p className="hero-title">COGNISYNC</p>
 					<p className="hero-description">
 						Hệ thống quản lý công việc chuyên nghiệp dành cho nhóm freelancer.
 						Tối ưu hóa quy trình làm việc, tăng cường hiệu quả cộng tác và theo
@@ -143,7 +147,7 @@ const InforLayout = () => {
 							Sẵn sàng tối ưu hóa quy trình làm việc?
 						</h2>
 						<p className="cta-description">
-							Tham gia TASK HUB ngay hôm nay và trải nghiệm cách quản lý công
+							Tham gia COGNISYNC ngay hôm nay và trải nghiệm cách quản lý công
 							việc hiệu quả nhất cho nhóm freelancer của bạn.
 						</p>
 						<div className="cta-buttons">
