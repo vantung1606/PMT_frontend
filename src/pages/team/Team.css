@@ -15,18 +15,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1B1A55;
+  background: linear-gradient(135deg, var(--color-brand, #b71c1c), var(--color-brand-2, #7f1212));
   border-radius: 14px;
   color: white;
   font-size: 24px;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 24px rgba(183, 28, 28, 0.22);
 }
 
 h1 {
   margin: 0 0 4px 0;
   font-size: 28px;
   font-weight: 700;
-  background: #1B1A55;
+  background: linear-gradient(135deg, var(--color-brand, #b71c1c), var(--color-brand-2, #7f1212));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -44,7 +44,7 @@ h1 {
 }
 
 .badge-prj {
-  color: #1B1A55;
+  color: var(--color-brand, #b71c1c);
   border-radius: 12px;
   padding: 8px 16px;
   font-size: 16px;
@@ -55,12 +55,12 @@ h1 {
 }
 
 .badge-prj i {
-  color: #1B1A55;
+  color: var(--color-brand, #b71c1c);
   font-size: 18px;
 }
 
 .primary {  
-  background: #070F2B;
+  background: linear-gradient(135deg, var(--color-brand, #b71c1c), var(--color-brand-2, #7f1212));
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -68,8 +68,8 @@ h1 {
   cursor: pointer;
   transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
-    0 4px 16px rgba(83, 92, 145, 0.4),
-    0 0 0 1px rgba(146, 144, 195, 0.2) inset;
+    0 10px 26px rgba(183, 28, 28, 0.26),
+    0 0 0 1px rgba(255, 255, 255, 0.14) inset;
   font-size: 15px;
   font-weight: 600;
   display: flex;
@@ -82,15 +82,15 @@ h1 {
 .primary:hover {
   transform: translateY(-3px);
   box-shadow: 
-    0 8px 24px rgba(83, 92, 145, 0.5),
-    0 0 0 1px rgba(146, 144, 195, 0.3) inset;
+    0 14px 34px rgba(183, 28, 28, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
 }
 
 .primary:active {
   transform: translateY(0);
   box-shadow: 
-    0 2px 8px rgba(83, 92, 145, 0.4),
-    0 0 0 1px rgba(146, 144, 195, 0.2) inset;
+    0 8px 20px rgba(183, 28, 28, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.14) inset;
 }
 
 
@@ -109,12 +109,12 @@ h1 {
 }
 
 .team-table-container::-webkit-scrollbar-track {
-  background: #c5dff2;
+  background: #ffcdd2;
   border-radius: 4px;
 }
 
 .team-table-container::-webkit-scrollbar-thumb {
-  background: #1c4d70;
+  background: #d32f2f;
   border-radius: 4px;
 }
 
@@ -126,7 +126,7 @@ h1 {
 }
 
 .team-table thead {
-  background: #1e5a86;
+  background: #d32f2f;
   color: white;
   position: sticky;
   top: 0;

@@ -5,7 +5,7 @@ import { useWorkspace } from '../../contexts/WorkspaceContext';
 import usePermissions from '../../hooks/usePermissions';
 import notificationService from '../../services/notificationService';
 import { getLastName } from '../../utils/nameHelper';
-import logo from '../../assets/img/BrandTaskHub.png';
+import logo from '../../assets/img/BrandCollabTask.png';
 import './UserHeader.css';
 
 const UserHeader = () => {
@@ -116,7 +116,7 @@ const UserHeader = () => {
         {/* Logo */}
         <div className="user-header-logo" onClick={handleLogoClick}>
           <img src={logo} alt="logo" className="user-logo-img" />
-          <span className="user-logo-text">TASK HUB</span>
+          <span className="user-logo-text">COLLABTASK</span>
         </div>
 
         {/* Navigation Menu */}

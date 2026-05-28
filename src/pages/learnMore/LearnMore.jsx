@@ -3,7 +3,6 @@ import Footer from '../../components/footer/Footer'
 import './LearnMore.css'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import imgBgr from '../../assets/img/ai-5202865_1920.jpg'
 
 const LearnMore = () => {
   const navigate = useNavigate()
@@ -20,9 +19,13 @@ const LearnMore = () => {
   return (
     <div className="container">
       {/* Background Image */}
-      <div className="page-bgr">
-        <img src={imgBgr} alt="background"/>
-      </div>
+      <div className="hero-bg">
+          <div className="hero-bg-gradient"></div>
+          <div className="hero-bg-grid"></div>
+          <div className="hero-bg-orb hero-bg-orb-1"></div>
+          <div className="hero-bg-orb hero-bg-orb-2"></div>
+          <div className="hero-bg-orb hero-bg-orb-3"></div>
+        </div>
 
       <Header />
       
@@ -30,17 +33,17 @@ const LearnMore = () => {
         {/* Hero Section */}
         <section className="learn-hero">
           <div className="learn-hero-content">
-            <p className="learn-title">TaskHub - Quản Lý Dự Án Thông Minh</p>
+            <p className="learn-title">CollabTask - Quản Lý Dự Án Thông Minh</p>
             <p className="learn-subtitle">
               Giải pháp toàn diện cho các nhóm freelancer và doanh nghiệp
             </p>
           </div>
         </section>
 
-        {/* Why TaskHub */}
+        {/* Why CollabTask */}
         <section className="learn-section why-section">
           <div className="learn-container">
-            <h2 className="section-title-center">Tại Sao Chọn TaskHub?</h2>
+            <h2 className="section-title-center">Tại Sao Chọn CollabTask?</h2>
             <div className="why-grid">
               <div className="why-card">
                 <div className="why-icon">
@@ -59,7 +62,7 @@ const LearnMore = () => {
                 </div>
                 <h3 className="why-title">Tăng Năng Suất 3X</h3>
                 <p className="why-text">
-                  Các nhóm sử dụng TaskHub báo cáo tăng năng suất lên đến 300% nhờ 
+                  Các nhóm sử dụng CollabTask báo cáo tăng năng suất lên đến 300% nhờ 
                   quy trình làm việc được tối ưu hóa và tự động hóa.
                 </p>
               </div>
@@ -266,12 +269,12 @@ const LearnMore = () => {
         {/* Comparison Table */}
         <section className="learn-section comparison-section">
           <div className="learn-container">
-            <h2 className="section-title-center">So Sánh Trước & Sau TaskHub</h2>
+            <h2 className="section-title-center">So Sánh Trước & Sau CollabTask</h2>
             <div className="comparison-table">
               <div className="comparison-column before">
                 <div className="comparison-header">
                   <i className="fa-solid fa-xmark"></i>
-                  <h3>Trước Khi Dùng TaskHub</h3>
+                  <h3>Trước Khi Dùng CollabTask</h3>
                 </div>
                 <ul className="comparison-list">
                   <li>
@@ -308,7 +311,7 @@ const LearnMore = () => {
               <div className="comparison-column after">
                 <div className="comparison-header">
                   <i className="fa-solid fa-check"></i>
-                  <h3>Sau Khi Dùng TaskHub</h3>
+                  <h3>Sau Khi Dùng CollabTask</h3>
                 </div>
                 <ul className="comparison-list">
                   <li>
@@ -355,7 +358,7 @@ const LearnMore = () => {
                   <i className="fa-solid fa-star"></i>
                 </div>
                 <p className="testimonial-text">
-                  "TaskHub đã thay đổi hoàn toàn cách nhóm chúng tôi làm việc. 
+                  "CollabTask đã thay đổi hoàn toàn cách nhóm chúng tôi làm việc. 
                   Năng suất tăng gấp đôi và không còn bỏ lỡ deadline nào nữa!"
                 </p>
                 <div className="testimonial-author">
@@ -423,7 +426,7 @@ const LearnMore = () => {
           <div className="learn-container">
             <h2 className="cta-title">Bắt Đầu Hành Trình Của Bạn</h2>
             <p className="cta-text">
-              Tham gia cùng hàng ngàn đội nhóm đang sử dụng TaskHub để quản lý dự án hiệu quả hơn
+              Tham gia cùng hàng ngàn đội nhóm đang sử dụng CollabTask để quản lý dự án hiệu quả hơn
             </p>
             <div className="cta-features">
               <div className="cta-feature">

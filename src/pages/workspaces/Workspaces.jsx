@@ -13,16 +13,49 @@ const Workspaces = () => {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('recent');
   const userMenuRef = useRef(null);
 
-  // Ph√¢n t√°ch workspace do m√¨nh t·∫°o v√† workspace ƒë∆∞·ª£c m·ªùi/tham gia
   const ownedWorkspaces = Array.isArray(workspaces)
-    ? workspaces.filter(ws => user && ws.owner_id === user.id)
+    ? workspaces.filter((ws) => user && ws.owner_id === user.id)
     : [];
 
   const memberWorkspaces = Array.isArray(workspaces)
-    ? workspaces.filter(ws => !user || ws.owner_id !== user.id)
+    ? workspaces.filter((ws) => !user || ws.owner_id !== user.id)
     : [];
+
+  const getWorkspaceTime = (ws) => {
+    const rawValue = ws?.updated_at || ws?.created_at;
+    const parsed = rawValue ? new Date(rawValue).getTime() : 0;
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
+
+  const filterAndSortWorkspaces = (list) => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const filtered = normalizedSearch
+      ? list.filter((ws) => {
+          const name = (ws?.name || '').toLowerCase();
+          const description = (ws?.description || '').toLowerCase();
+          return name.includes(normalizedSearch) || description.includes(normalizedSearch);
+        })
+      : list;
+
+    const sorted = [...filtered];
+    if (sortBy === 'name-asc') {
+      sorted.sort((a, b) => (a?.name || '').localeCompare(b?.name || '', 'vi'));
+    } else if (sortBy === 'name-desc') {
+      sorted.sort((a, b) => (b?.name || '').localeCompare(a?.name || '', 'vi'));
+    } else {
+      sorted.sort((a, b) => getWorkspaceTime(b) - getWorkspaceTime(a));
+    }
+
+    return sorted;
+  };
+
+  const displayedOwnedWorkspaces = filterAndSortWorkspaces(ownedWorkspaces);
+  const displayedMemberWorkspaces = filterAndSortWorkspaces(memberWorkspaces);
+  const recentWorkspaces = filterAndSortWorkspaces(Array.isArray(workspaces) ? workspaces : []).slice(0, 4);
 
   const handleSelect = (ws) => {
     selectWorkspace(ws);
@@ -42,22 +75,20 @@ const Workspaces = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name.trim()) {
-      setError('T√™n kh√¥ng gian l√†m vi·ªác l√† b·∫Øt bu·ªôc');
+      setError('TÍn khÙng gian l‡m vi?c l‡ b?t bu?c');
       return;
     }
     setError('');
     setSubmitting(true);
     try {
-      const ws = await createWorkspace({
+      await createWorkspace({
         name: form.name.trim(),
         description: form.description.trim()
       });
       setForm({ name: '', description: '' });
       setShowModal(false);
-      // Sau khi t·∫°o t·ª± ƒë·ªông v√†o workspace m·ªõi
-      // navigate('/projects');
     } catch (err) {
-      setError(err.message || 'Kh√¥ng th·ªÉ t·∫°o kh√¥ng gian l√†m vi·ªác');
+      setError(err.message || 'KhÙng th? t?o khÙng gian l‡m vi?c');
     } finally {
       setSubmitting(false);
     }
@@ -68,11 +99,6 @@ const Workspaces = () => {
     navigate('/');
   };
 
-  const handleBackToHome = () => {
-    navigate('/');
-  };
-
-  // Close user menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -80,55 +106,44 @@ const Workspaces = () => {
       }
     };
 
-    if (showUserMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    if (showUserMenu) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showUserMenu]);
 
   return (
     <div className="workspaces-page">
-      {/* Top Navigation Bar */}
       <div className="workspace-top-nav">
-        <button className="back-to-home-btn" onClick={handleBackToHome} title="Tr·ªü v·ªÅ trang ch·ªß">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-          <span>Trang ch·ªß</span>
-        </button>
-        
+        <div className="workspace-nav-actions">
+          <button className="back-to-home-btn" onClick={() => navigate('/')} title="Tr? v? trang ch?">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            <span>Trang ch?</span>
+          </button>
+          {user?.role === 'admin' && (
+            <button className="back-to-admin-btn" onClick={() => navigate('/admin')} title="Back to Admin Dashboard">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="9"></rect>
+                <rect x="14" y="3" width="7" height="5"></rect>
+                <rect x="14" y="12" width="7" height="9"></rect>
+                <rect x="3" y="16" width="7" height="5"></rect>
+              </svg>
+              <span>Admin Dashboard</span>
+            </button>
+          )}
+        </div>
+
         <div className="user-menu-container" ref={userMenuRef}>
-          <button 
-            className="user-name-btn" 
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            title="Menu ng∆∞·ªùi d√πng"
-          >
+          <button className="user-name-btn" onClick={() => setShowUserMenu(!showUserMenu)} title="Menu ngu?i d˘ng">
             <div className="user-avatar">
-              {user?.avatar_url ? (
-                <img src={user.avatar_url} alt={user.full_name} />
-              ) : (
-                <span>{user?.full_name?.charAt(0).toUpperCase() || 'U'}</span>
-              )}
+              {user?.avatar_url ? <img src={user.avatar_url} alt={user.full_name} /> : <span>{user?.full_name?.charAt(0).toUpperCase() || 'U'}</span>}
             </div>
-            <span className="user-name">{user?.full_name || 'Ng∆∞·ªùi d√πng'}</span>
-            <svg 
-              className={`dropdown-arrow ${showUserMenu ? 'open' : ''}`}
-              width="16" 
-              height="16" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
+            <span className="user-name">{user?.full_name || 'Ngu?i d˘ng'}</span>
+            <svg className={`dropdown-arrow ${showUserMenu ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          
+
           {showUserMenu && (
             <div className="user-dropdown-menu">
               <div className="user-info-section">
@@ -137,174 +152,215 @@ const Workspaces = () => {
               </div>
               <div className="dropdown-divider"></div>
               <button className="logout-btn" onClick={handleLogout}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                <span>ƒêƒÉng xu·∫•t</span>
+                <span>–ang xu?t</span>
               </button>
             </div>
           )}
         </div>
       </div>
 
-      <div className="workspaces-hero" >
+      <div className="workspaces-hero">
         <div>
-          <p className="hero-eyebrow">Kh√¥ng gian l√†m vi·ªác</p>
-          <h1>Ch·ªçn n∆°i b·∫°n mu·ªën b·∫Øt ƒë·∫ßu</h1>
-          <p className="hero-subtitle">
-            Qu·∫£n l√Ω t·∫•t c·∫£ d·ª± √°n, task, th√†nh vi√™n v√† b√°o c√°o trong m·ªôt n∆°i th·ªëng nh·∫•t.
-          </p>
+          <p className="hero-eyebrow">Workspace cho d? ·n</p>
+          <h1>Ch?n workspace d? di th?ng v‡o qu?n l˝ d? ·n</h1>
+          <p className="hero-subtitle">M?i workspace gi˙p b?n t·ch d? ·n theo team ho?c kh·ch h‡ng, theo dıi ti?n d? v‡ ph?i h?p cÙng vi?c rı r‡ng.</p>
         </div>
-        <div className='logo-wp-container'>
-          <img src={require('../../assets/img/BrandTaskHub.png')} alt="TaskHub Logo" className='logo-wp' style={{ width: 48, height: 48, objectFit: 'contain' }} />
-          <span className='logo-wp-text'>
-            TASK HUB
-          </span>
+        <div className="logo-wp-container">
+          <img src={require('../../assets/img/BrandCollabTask.png')} alt="CollabTask Logo" className="logo-wp" style={{ width: 48, height: 48, objectFit: 'contain' }} />
+          <span className="logo-wp-text">COLLABTASK</span>
         </div>
       </div>
 
-      {/* C√°c workspace do ch√≠nh user t·∫°o */}
-      <section className="workspace-section">
-        <div className="workspace-section-header">
-          <div>
-            <h2>Kh√¥ng gian c·ªßa b·∫°n</h2>
-            <p>Ch·∫°m ƒë·ªÉ truy c·∫≠p nhanh v√†o kh√¥ng gian ƒë√£ tham gia</p>
+      <section className="workspace-section workspace-tools-section">
+        <div className="workspace-tools">
+          <div className="workspace-search">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="TÏm workspace theo tÍn d? ·n, team ho?c mÙ t?..."
+              aria-label="TÏm workspace"
+            />
           </div>
-          <button className="workspace-section-action" onClick={handleOpenModal}>
-            T·∫°o kh√¥ng gian
-          </button>
-        </div>
-
-        {loading && (
-          <div className="workspaces-loading">ƒêang t·∫£i danh s√°ch kh√¥ng gian...</div>
-        )}
-
-        {!loading && ownedWorkspaces.length === 0 && (
-          <div className="workspaces-empty">
-            <p>B·∫°n ch∆∞a c√≥ kh√¥ng gian l√†m vi·ªác n√†o. H√£y t·∫°o m·ªõi ƒë·ªÉ b·∫Øt ƒë·∫ßu.</p>
+          <div className="workspace-sort">
+            <label htmlFor="workspace-sort">S?p x?p</label>
+            <select id="workspace-sort" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="recent">M?i c?p nh?t</option>
+              <option value="name-asc">TÍn A-Z</option>
+              <option value="name-desc">TÍn Z-A</option>
+            </select>
           </div>
-        )}
-
-        <div className="workspaces-grid">
-          <button className="workspace-card workspace-card-create" onClick={handleOpenModal}>
-            <div className="create-icon">+</div>
-            <div>
-              <h3>T·∫°o kh√¥ng gian m·ªõi</h3>
-              <p>B·∫Øt ƒë·∫ßu d·ª± √°n v√† m·ªùi th√†nh vi√™n</p>
-            </div>
-          </button>
-
-          {ownedWorkspaces.map((ws) => (
-            <button
-              key={ws.id}
-              className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`}
-              onClick={() => handleSelect(ws)}
-            >
-              <div className="workspace-card-header">
-                <div>
-                  <h3>{ws.name}</h3>
-                  {ws.description && (
-                    <p className="workspace-desc">{ws.description}</p>
-                  )}
-                </div>
-              </div>
-              <div className="workspace-footer">
-                <span className="workspace-status">
-                  {currentWorkspace?.id === ws.id ? 'ƒêang ho·∫°t ƒë·ªông' : 'Nh·∫•n ƒë·ªÉ truy c·∫≠p'}
-                </span>
-                <span className="workspace-arrow">‚Üí</span>
-              </div>
-            </button>
-          ))}
         </div>
       </section>
 
-      {/* C√°c workspace m√† user ƒë∆∞·ª£c PM kh√°c th√™m v√†o / tham gia */}
-      {memberWorkspaces.length > 0 && (
-        <section className="workspace-section">
-          <div className="workspace-section-header">
-            <div>
-              <h2>Kh√¥ng gian b·∫°n tham gia</h2>
-              <p>C√°c kh√¥ng gian do ng∆∞·ªùi kh√°c t·∫°o v√† m·ªùi b·∫°n v√†o l√†m th√†nh vi√™n</p>
+      <div className="workspace-main-layout">
+        <div className="workspace-primary-column">
+          <section className="workspace-section workspace-primary-section">
+            <div className="workspace-section-header">
+              <div>
+                <h2>KhÙng gian c?a b?n</h2>
+                <p>Ch?n workspace d? m? danh s·ch d? ·n tuong ?ng</p>
+              </div>
+              <button className="workspace-section-action" onClick={handleOpenModal}>T?o khÙng gian</button>
             </div>
-          </div>
 
-          <div className="workspaces-grid">
-            {memberWorkspaces.map((ws) => (
-              <button
-                key={ws.id}
-                className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`}
-                onClick={() => handleSelect(ws)}
-              >
-                <div className="workspace-card-header">
-                  <div>
-                    <h3>{ws.name}</h3>
-                    {ws.description && (
-                      <p className="workspace-desc">{ws.description}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="workspace-footer">
-                  <span className="workspace-status">
-                    {currentWorkspace?.id === ws.id ? 'ƒêang ho·∫°t ƒë·ªông' : 'Nh·∫•n ƒë·ªÉ truy c·∫≠p'}
-                  </span>
-                  <span className="workspace-arrow">‚Üí</span>
+            {loading && <div className="workspaces-loading">–ang t?i danh s·ch khÙng gian...</div>}
+
+            {!loading && displayedOwnedWorkspaces.length === 0 && (
+              <div className="workspaces-empty">
+                <p>{searchTerm.trim() ? 'KhÙng tÏm th?y workspace ph˘ h?p v?i t? khÛa c?a b?n.' : 'B?n chua cÛ khÙng gian l‡m vi?c n‡o. H„y t?o m?i d? b?t d?u.'}</p>
+              </div>
+            )}
+
+            <div className="workspaces-grid">
+              <button className="workspace-card workspace-card-create" onClick={handleOpenModal}>
+                <div className="create-icon">+</div>
+                <div>
+                  <h3>T?o khÙng gian m?i</h3>
+                  <p>B?t d?u qu?n l˝ d? ·n m?i theo team ho?c kh·ch h‡ng</p>
                 </div>
               </button>
-            ))}
-          </div>
-        </section>
-      )}
+
+              {displayedOwnedWorkspaces.map((ws) => (
+                <button key={ws.id} className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`} onClick={() => handleSelect(ws)}>
+                  <div className="workspace-card-header">
+                    <div>
+                      <h3>{ws.name}</h3>
+                      {ws.description && <p className="workspace-desc">{ws.description}</p>}
+                    </div>
+                  </div>
+                  <div className="workspace-footer">
+                    <span className="workspace-status">{currentWorkspace?.id === ws.id ? '–ang ho?t d?ng' : 'M? d? ·n'}</span>
+                    <span className="workspace-arrow">?</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {!loading && recentWorkspaces.length > 0 && (
+            <section className="workspace-section">
+              <div className="workspace-section-header">
+                <div>
+                  <h2>G?n d‚y truy c?p</h2>
+                  <p>C·c workspace b?n v?a l‡m vi?c g?n nh?t</p>
+                </div>
+              </div>
+              <div className="workspaces-grid">
+                {recentWorkspaces.map((ws) => (
+                  <button key={`recent-${ws.id}`} className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`} onClick={() => handleSelect(ws)}>
+                    <div className="workspace-card-header">
+                      <div>
+                        <h3>{ws.name}</h3>
+                        {ws.description && <p className="workspace-desc">{ws.description}</p>}
+                      </div>
+                    </div>
+                    <div className="workspace-footer">
+                      <span className="workspace-status">{currentWorkspace?.id === ws.id ? '–ang ho?t d?ng' : 'M? d? ·n'}</span>
+                      <span className="workspace-arrow">?</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {displayedMemberWorkspaces.length > 0 && (
+            <section className="workspace-section">
+              <div className="workspace-section-header">
+                <div>
+                  <h2>KhÙng gian b?n tham gia</h2>
+                  <p>C·c workspace cÛ d? ·n b?n dang c?ng t·c</p>
+                </div>
+              </div>
+
+              <div className="workspaces-grid">
+                {displayedMemberWorkspaces.map((ws) => (
+                  <button key={ws.id} className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`} onClick={() => handleSelect(ws)}>
+                    <div className="workspace-card-header">
+                      <div>
+                        <h3>{ws.name}</h3>
+                        {ws.description && <p className="workspace-desc">{ws.description}</p>}
+                      </div>
+                    </div>
+                    <div className="workspace-footer">
+                      <span className="workspace-status">{currentWorkspace?.id === ws.id ? '–ang ho?t d?ng' : 'M? d? ·n'}</span>
+                      <span className="workspace-arrow">?</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        <aside className="workspace-sidebar-column">
+          <section className="workspace-section workspace-sidebar-block">
+            <div className="workspace-section-header">
+              <div>
+                <h2>B?t d?u trong 3 bu?c</h2>
+                <p>T?i uu d? v‡o qu?n l˝ d? ·n ngay</p>
+              </div>
+            </div>
+            <div className="workspace-content-grid sidebar-grid">
+              <article className="workspace-content-card">
+                <span className="content-step">01</span>
+                <h3>T?o workspace</h3>
+                <p>T?o khÙng gian theo team/kh·ch h‡ng d? gom d˙ng d? ·n.</p>
+              </article>
+              <article className="workspace-content-card">
+                <span className="content-step">02</span>
+                <h3>T?o d? ·n d?u tiÍn</h3>
+                <p>Thi?t l?p m?c tiÍu, timeline v‡ ph?m vi cÙng vi?c rı r‡ng.</p>
+              </article>
+              <article className="workspace-content-card">
+                <span className="content-step">03</span>
+                <h3>Ph‚n cÙng & theo dıi</h3>
+                <p>Giao task cho th‡nh viÍn v‡ c?p nh?t ti?n d? theo d? ·n.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="workspace-section workspace-sidebar-block">
+            <div className="workspace-section-header">
+              <div>
+                <h2>M?u workspace d? ·n</h2>
+                <p>Ch?n m?u d? tri?n khai nhanh</p>
+              </div>
+            </div>
+            <div className="workspace-content-grid sidebar-grid">
+              <article className="workspace-content-card"><h3>Ph?n m?m</h3><p>Backlog, sprint, bug, release.</p></article>
+              <article className="workspace-content-card"><h3>Marketing</h3><p>Timeline n?i dung v‡ KPI.</p></article>
+              <article className="workspace-content-card"><h3>V?n h‡nh</h3><p>Quy trÏnh d?nh k? v‡ b·o c·o.</p></article>
+            </div>
+          </section>
+        </aside>
+      </div>
 
       {showModal && (
         <div className="workspace-modal-backdrop" onClick={handleCloseModal}>
-          <div
-            className="workspace-modal"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
+          <div className="workspace-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
             <div className="workspace-modal-header">
               <div>
-                <p className="modal-eyebrow">T·∫°o kh√¥ng gian</p>
-                <h3>Thi·∫øt l·∫≠p kh√¥ng gian m·ªõi</h3>
+                <p className="modal-eyebrow">T?o khÙng gian</p>
+                <h3>Thi?t l?p khÙng gian m?i</h3>
               </div>
-              <button className="modal-close" onClick={handleCloseModal} disabled={submitting}>
-                √ó
-              </button>
+              <button className="modal-close" onClick={handleCloseModal} disabled={submitting}>◊</button>
             </div>
 
             <form onSubmit={handleSubmit} className="workspace-form">
               <div className="form-row">
-                <label htmlFor="ws-name">T√™n kh√¥ng gian</label>
-                <input
-                  id="ws-name"
-                  type="text"
-                  placeholder="V√≠ d·ª•: Main project workspace"
-                  value={form.name}
-                  onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
-                />
+                <label htmlFor="ws-name">TÍn khÙng gian</label>
+                <input id="ws-name" type="text" placeholder="VÌ d?: Product Team 2026" value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} />
               </div>
               <div className="form-row">
-                <label htmlFor="ws-desc">M√¥ t·∫£</label>
-                <textarea
-                  id="ws-desc"
-                  rows={4}
-                  placeholder="Th√™m m√¥ t·∫£ ng·∫Øn g·ªçn v·ªÅ m·ª•c ƒë√≠ch, ƒë·ªôi nh√≥m ho·∫∑c kh√°ch h√†ng..."
-                  value={form.description}
-                  onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
-                />
+                <label htmlFor="ws-desc">MÙ t?</label>
+                <textarea id="ws-desc" rows={4} placeholder="MÙ t? ng?n v? d? ·n/team/kh·ch h‡ng trong workspace n‡y..." value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} />
               </div>
               {error && <div className="workspace-error">{error}</div>}
               <div className="modal-actions">
-                <button type="button" className="modal-secondary" onClick={handleCloseModal} disabled={submitting}>
-                  H·ªßy
-                </button>
-                <button type="submit" className="workspace-submit" disabled={submitting}>
-                  {submitting ? 'ƒêang t·∫°o...' : 'T·∫°o kh√¥ng gian'}
-                </button>
+                <button type="button" className="modal-secondary" onClick={handleCloseModal} disabled={submitting}>H?y</button>
+                <button type="submit" className="workspace-submit" disabled={submitting}>{submitting ? '–ang t?o...' : 'T?o khÙng gian'}</button>
               </div>
             </form>
           </div>
@@ -315,4 +371,3 @@ const Workspaces = () => {
 };
 
 export default Workspaces;
-

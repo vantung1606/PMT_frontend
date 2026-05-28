@@ -1,15 +1,15 @@
 .ai-chat-page {
   height: 70vh;
-  max-width: 1400px;
+  max-width: 100%;
   padding: 0 24px;
   margin: auto;
 }
 
 .ai-chat-header {
   margin-top: 10px;
-  color: #1c4d70;
+  color: #d32f2f;
   padding: 10px 0;
-  border-bottom: 2px solid #1c4d70;
+  border-bottom: 2px solid #d32f2f;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -28,7 +28,7 @@
   height: 40px;
   border-radius: 50%;
   border: none;
-  background-color: #1c4d70;
+  background-color: #d32f2f;
   color: #ffffff;
   cursor: pointer;
   display: flex;
@@ -85,7 +85,7 @@
   top: 24px;
   right: 24px;
   padding: 8px 16px;
-  background: #1c4d70;
+  background: #d32f2f;
   color: white;
   border: none;
   border-radius: 6px;
@@ -127,7 +127,7 @@
 
 .ai-chat-header h1 {
   margin: 0;
-  background-color: #1c4d70;
+  background-color: #d32f2f;
   font-size: 26px;
 }
 
@@ -139,7 +139,7 @@
 
 .ai-chat-container {
   flex: 1;
-  max-width: 1400px;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
   display: flex;
@@ -178,7 +178,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: #1c4d70;
+  background: #d32f2f;
   display: flex;
   align-items: center;
   justify-content: center;

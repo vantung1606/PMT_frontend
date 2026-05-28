@@ -71,7 +71,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 16px 24px 16px 24px;
-  border-bottom: 2px solid #1c4d70;
+  border-bottom: 2px solid #d32f2f;
 }
 
 .modal-header-text {
@@ -82,7 +82,7 @@
 .modal-title {
   font-size: 18px;
   font-weight: 800;
-  color: #1c4d70;
+  color: #d32f2f;
   margin: 0 0 4px 0;
   line-height: 1.5;
 }
@@ -132,12 +132,12 @@
 }
 
 .modal-body::-webkit-scrollbar-track {
-  background: #c5dff2;
+  background: #ffcdd2;
   border-radius: 4px;
 }
 
 .modal-body::-webkit-scrollbar-thumb {
-  background:#1c4d70; 
+  background:#d32f2f; 
   border-radius: 4px;
 
 }
@@ -193,31 +193,31 @@
 
 /* Primary Button */
 .modal-action-btn.primary {
-  background: #1d425d;
+  background: #b71c1c;
   color: #ffffff;
 }
 
 .modal-action-btn.primary:hover:not(:disabled) {
-  background: #1d425d;
+  background: #b71c1c;
   color: #ffffff;
 }
 
 .modal-action-btn.primary:active:not(:disabled) {
-  background: #1d425d;
+  background: #b71c1c;
 }
 
 /* Secondary Button */
 .modal-action-btn.secondary {
-  background: #93c5e6;
+  background: #ef5350;
   color: #ffff;
 }
 
 .modal-action-btn.secondary:hover:not(:disabled) {
-  background: #93c5e6;
+  background: #ef5350;
 }
 
 .modal-action-btn.secondary:active:not(:disabled) {
-  background: #93c5e6;
+  background: #ef5350;
 }
 
 /* Danger Button */
@@ -604,7 +604,7 @@ modal-content .project-form .form-row input[type="number"],
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  background: #c5dff2;
+  background: #ffcdd2;
   border-radius: 20px;
   font-size: 13px;
   border: 1px solid #e5e7eb;
@@ -624,7 +624,7 @@ modal-content .project-form .form-row input[type="number"],
 }
 
 .chip-text {
-  color: #1c4d70;
+  color: #d32f2f;
   font-weight: 500;
 }
 

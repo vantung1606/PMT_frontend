@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePermissions from '../../hooks/usePermissions';
+import { useAuth } from '../../contexts/AuthContext';
 import './Projects.css';
 import projectService from '../../services/projectService';
 import memberService from '../../services/memberService';
@@ -21,6 +22,7 @@ const emptyForm = {
 const Projects = () => {
   const navigate = useNavigate();
   const permissions = usePermissions();
+  const { user } = useAuth();
 
   // Danh sách dự án (fetch từ backend)
   const [projects, setProjects] = useState([]);
@@ -285,6 +287,16 @@ const Projects = () => {
         </div>
         {permissions.canCreateProject && (
           <div className="header-actions">
+            {user?.role === 'admin' && (
+              <button
+                className="admin-back-btn"
+                onClick={() => navigate('/admin')}
+                type="button"
+              >
+                <i className="fas fa-table-cells-large"></i>
+                Admin Dashboard
+              </button>
+            )}
             <span className="badge-prj">
               <i className="fas fa-project-diagram"></i>
               {projects.length} dự án

@@ -1,76 +1,128 @@
-import '../../components/header/Header.css'
-import logo from '../../assets/img/BrandTaskHub.png'
-import BtnPale from '../button/BtnPale'
-import BtnBold from '../button/BtnBold'
-import { useState, useEffect } from 'react'
-import { useAuth } from '../../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import '../../components/header/Header.css';
+import logo from '../../assets/img/BrandCollabTask.png';
+import BtnPale from '../button/BtnPale';
+import BtnBold from '../button/BtnBold';
+import { useState, useEffect, useRef } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const [isVisible, setIsVisible] = useState(true)
-  const [lastScrollY, setLastScrollY] = useState(0)
-  const { user, logout, isAuthenticated } = useAuth()
-  const navigate = useNavigate()
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const userMenuRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      
-      if (currentScrollY < lastScrollY || currentScrollY < 10) {
-        setIsVisible(true)
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsVisible(false)
+      setIsScrolled(window.scrollY > 24);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
       }
-      
-      setLastScrollY(currentScrollY)
+    };
+
+    if (showUserMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [lastScrollY])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserMenu]);
+
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
+  };
 
   return (
-    <header className={`header ${!isVisible ? 'header-hidden' : ''}`}>
+    <header className={`header ${isScrolled ? 'header-scrolled' : ''}`}>
       <div className="header-container">
         <div className="header-logo">
-          <img src={logo} alt="logo" className='logo-img'/>
-          <p className='logo-text'>TASK HUB</p>
+          <img src={logo} alt="logo" className="logo-img" />
+          <p className="logo-text">COLLABTASK</p>
         </div>
         <div className="header-nav">
           <ul className="nav-list">
-            <li className="nav-item">
-              <a href="/" className="nav-link">Home<i className="fa-solid fa-chevron-down"></i></a>
-              <a href="/about" className="nav-link">About<i className="fa-solid fa-chevron-down"></i></a>
-              <a href="/services" className="nav-link">Services<i className="fa-solid fa-chevron-down"></i></a>
-              <a href="/contact" className="nav-link">Contact<i className="fa-solid fa-chevron-down"></i></a>
-            </li>
+            <li className="nav-item"><a href="/#home" className="nav-link">Trang chủ</a></li>
+            <li className="nav-item"><a href="/#about" className="nav-link">Giới thiệu</a></li>
+            <li className="nav-item"><a href="/#services" className="nav-link">Dịch vụ</a></li>
+            <li className="nav-item"><a href="/#contact" className="nav-link">Liên hệ</a></li>
           </ul>
         </div>
         <div className="header-right">
           {isAuthenticated ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <span className="user-greeting">
-                Xin chào, {user?.username}
-              </span>
-              <BtnPale 
-                style={{ width: '125px' }}
-                onClick={logout}
+            <div className="header-user-menu" ref={userMenuRef}>
+              <button
+                className="header-user-btn"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                type="button"
               >
-                Đăng xuất
-              </BtnPale>
+                <div className="header-user-avatar">
+                  {user?.avatar_url ? (
+                    <img src={user.avatar_url} alt={user?.full_name || 'User avatar'} />
+                  ) : (
+                    <span>{(user?.full_name || user?.username || 'U').charAt(0).toUpperCase()}</span>
+                  )}
+                </div>
+                <span className="user-greeting">Xin chào, {user?.full_name || user?.username || 'User'}</span>
+                <i className={`fas fa-chevron-down header-user-arrow ${showUserMenu ? 'open' : ''}`}></i>
+              </button>
+
+              {showUserMenu && (
+                <div className="header-dropdown-menu">
+                  {user?.role === 'admin' && (
+                    <button
+                      className="header-menu-action"
+                      onClick={() => {
+                        navigate('/admin');
+                        setShowUserMenu(false);
+                      }}
+                      type="button"
+                    >
+                      <i className="fas fa-table-cells-large"></i>
+                      <span>Admin Dashboard</span>
+                    </button>
+                  )}
+                  <button
+                    className="header-menu-action"
+                    onClick={() => {
+                      navigate('/workspaces');
+                      setShowUserMenu(false);
+                    }}
+                    type="button"
+                  >
+                    <i className="fas fa-layer-group"></i>
+                    <span>Không gian</span>
+                  </button>
+                  <button className="header-menu-action logout" onClick={handleLogout} type="button">
+                    <i className="fas fa-sign-out-alt"></i>
+                    <span>Đăng xuất</span>
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <>
-              <BtnPale 
+              <BtnPale
                 style={{ width: '125px' }}
                 onClick={() => navigate('/login')}
               >
                 Đăng Nhập
               </BtnPale>
-              <BtnBold 
+              <BtnBold
                 style={{ width: '125px' }}
                 onClick={() => navigate('/register')}
               >
@@ -84,4 +136,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;

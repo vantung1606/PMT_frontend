@@ -67,7 +67,7 @@ const AdminDashboard = () => {
                 <div>
                     <h1 className="admin-header-title">Dashboard</h1>
                     <p className="admin-header-subtitle">
-                        Tổng quan hệ thống TaskHub
+                        Tổng quan hệ thống CollabTask
                     </p>
                 </div>
                 <div className="admin-header-actions">

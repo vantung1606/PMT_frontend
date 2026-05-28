@@ -1,15 +1,18 @@
 import Header from '../../components/header/Header'
 import Footer from '../../components/footer/Footer'
 import './Services.css'
-import imgBgr from '../../assets/img/ai-5202865_1920.jpg'
 
 const Services = () => {
   return (
     <div className="container">
       {/* Background Image */}
-      <div className="page-bgr">
-        <img src={imgBgr} alt="background"/>
-      </div>
+      <div className="hero-bg">
+          <div className="hero-bg-gradient"></div>
+          <div className="hero-bg-grid"></div>
+          <div className="hero-bg-orb hero-bg-orb-1"></div>
+          <div className="hero-bg-orb hero-bg-orb-2"></div>
+          <div className="hero-bg-orb hero-bg-orb-3"></div>
+        </div>
 
       <Header />
       

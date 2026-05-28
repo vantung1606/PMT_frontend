@@ -1,6 +1,6 @@
 .notifications-page {
   margin: 0 auto;
-  max-width: 1400px;
+  max-width: 100%;
 }
 
 .notifications-content {
@@ -84,7 +84,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1c4d70;
+  background: #d32f2f;
   border-radius: 12px;
   color: #ffffff;
   font-size: 20px;
