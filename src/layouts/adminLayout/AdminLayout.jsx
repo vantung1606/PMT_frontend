@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getLastName } from '../../utils/nameHelper';
 import './AdminLayout.css';
-import LogoDash from '../../assets/img/BrandCogniSync.png';
+import LogoDash from '../../assets/img/BrandCollabTask.png';
 
 const AdminLayout = ({ children, currentView, setCurrentView }) => {
     const { user, logout } = useAuth();
@@ -57,7 +57,7 @@ const AdminLayout = ({ children, currentView, setCurrentView }) => {
                 <div className="admin-brand">
                     <img src={LogoDash} alt="logo" className="admin-brand-logo" />
                     <div>
-                        <h2>COGNISYNC</h2>
+                        <h2>COLLABTASK</h2>
                     </div>
                 </div>
 

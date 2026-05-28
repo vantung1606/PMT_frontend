@@ -1,8 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../pages/home/Home';
-import About from '../pages/about/About';
-import Services from '../pages/services/Services';
-import Contact from '../pages/contact/Contact';
 import LearnMore from '../pages/learnMore/LearnMore';
 import NotFound from '../pages/notFound/NotFound';
 import Login from '../pages/auth/login/Login';
@@ -25,9 +22,9 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/services" element={<Services />} />
-      <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<Navigate to="/#about" replace />} />
+      <Route path="/services" element={<Navigate to="/#services" replace />} />
+      <Route path="/contact" element={<Navigate to="/#contact" replace />} />
       <Route path="/learn-more" element={<LearnMore />} />
       
       {/* Admin Panel - Chỉ Admin */}

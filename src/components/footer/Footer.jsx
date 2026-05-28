@@ -8,7 +8,7 @@ const Footer = () => {
 				<div className="footer-content">
 					{/* Company Info */}
 					<div className="footer-column">
-						<h3 className="footer-brand">COGNISYNC</h3>
+						<h3 className="footer-brand">COLLABTASK</h3>
 						<p className="footer-description">
 							Hệ thống quản lý công việc chuyên nghiệp dành cho nhóm freelancer.
 						</p>
