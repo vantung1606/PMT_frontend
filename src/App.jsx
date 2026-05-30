@@ -1,13 +1,19 @@
 import React from "react";
+import Home from "./pages/home/Home";
+import { AuthProvider } from "./contexts/AuthContext";
+import { WorkspaceProvider } from "./contexts/WorkspaceContext";
 import "./index.css";
 
 function App() {
 	return (
-		<div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", fontFamily: "sans-serif" }}>
-			<h1>PMT Frontend - Skeleton</h1>
-		</div>
+		<AuthProvider>
+			<WorkspaceProvider>
+				<Home />
+			</WorkspaceProvider>
+		</AuthProvider>
 	);
 }
 
 export default App;
+
 

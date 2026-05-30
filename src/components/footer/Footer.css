@@ -1,0 +1,139 @@
+﻿.footer-container {
+	position: relative;
+	z-index: 10;
+}
+
+.btn_start {
+	background: #fff;
+	color: #000;
+	font-weight: bold;
+	border: none;
+	border-radius: 30px;
+	padding: 20px 30px;
+	cursor: pointer;
+	font-size: 20px;
+	letter-spacing: 1.2px;
+	transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+		box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	margin-right: 30px;
+}
+
+.btn_learn {
+	background: rgba(255, 255, 255, 0.3);
+	color: #fff;
+	font-weight: bold;
+	border: none;
+	border-radius: 30px;
+	padding: 20px 30px;
+	cursor: pointer;
+	font-size: 20px;
+	letter-spacing: 1.2px;
+	transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+		box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn_start:hover,
+.btn_learn:hover {
+	transform: translateY(-4px);
+}
+
+
+
+.footer-section {
+	background: #000000ad;
+	color: white;
+	padding: 40px 0;
+}
+
+.footer-content {
+	max-width: 1200px;
+	margin: auto;
+	display: flex;
+	justify-content: space-between;
+	grid-template-columns: 1fr;
+	gap: 32px;
+}
+
+@media (min-width: 768px) {
+	.footer-content {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.footer-column {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.footer-brand {
+	font-size: 21px;
+	font-weight: bold;
+	margin: 0;
+	text-align: center;
+}
+
+.footer-description {
+	color: #fff;
+	line-height: 1.55;
+	font-size: 14px;
+	margin: 0;
+}
+
+.footer-contact {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.footer-contact p {
+	color: #fff;
+	margin: 0;
+}
+
+.footer-heading {
+	font-size: 16px;
+	font-weight: 600;
+	margin: 0;
+}
+
+.footer-links {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.footer-links li {
+	margin: 0;
+}
+
+.footer-links a {
+	color: #fff;
+	text-decoration: none;
+	border-bottom: 2px solid transparent;
+	transition: border-bottom-color 0.3s ease;
+}
+
+.footer-links a:hover {
+	color: white;
+	opacity: 0.7;
+	border-bottom: 1px solid #fff;
+}
+
+.footer-copyright {
+	max-width: 1200px;
+	margin: 0 auto;
+	margin-top: 32px;
+	padding-top: 24px;
+	border-top: 2px solid #fff;
+	text-align: center;
+}
+
+.footer-copyright p {
+	color: #fff;
+	margin: 0;
+}
+
