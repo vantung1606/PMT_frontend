@@ -1,5 +1,4 @@
-import React from "react";
-import Home from "./pages/home/Home";
+import AppRouter from "./router/AppRouter";
 import { AuthProvider } from "./contexts/AuthContext";
 import { WorkspaceProvider } from "./contexts/WorkspaceContext";
 import "./index.css";
@@ -8,12 +7,10 @@ function App() {
 	return (
 		<AuthProvider>
 			<WorkspaceProvider>
-				<Home />
+				<AppRouter />
 			</WorkspaceProvider>
 		</AuthProvider>
 	);
 }
 
 export default App;
-
-
