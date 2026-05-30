@@ -25,14 +25,14 @@ const AppRouter = () => {
       <Route path="/about" element={<Navigate to="/#about" replace />} />
       <Route path="/services" element={<Navigate to="/#services" replace />} />
       <Route path="/contact" element={<Navigate to="/#contact" replace />} />
-      // <Route path="/learn-more" element={<LearnMore />} />
+      {/* <Route path="/learn-more" element={<LearnMore />} /> */}
       
       {/* Admin Panel - Chỉ Admin */}
-      // <Route path="/admin" element={
-      //   <ProtectedRoute requireAdmin={true}>
-      //     <Admin />
-      //   </ProtectedRoute>
-      // } />
+      {/* <Route path="/admin" element={
+        <ProtectedRoute requireAdmin={true}>
+          <Admin />
+        </ProtectedRoute>
+      } /> */}
 
       {/* Chọn / tạo không gian làm việc - layout riêng */}
       <Route path="/workspaces" element={
