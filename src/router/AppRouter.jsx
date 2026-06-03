@@ -5,8 +5,8 @@ import NotFound from '../pages/notFound/NotFound';
 import Login from '../pages/auth/login/Login';
 import Register from '../pages/auth/register/Register';
 import ProtectedRoute from '../components/protectedRoute/ProtectedRoute';
-// import Projects from '../pages/projects/Projects';
-// import Tasks from '../pages/tasks/Tasks';
+import Projects from '../pages/projects/Projects';
+import Tasks from '../pages/tasks/Tasks';
 // import MyTasks from '../pages/myTasks/MyTasks';
 // import Team from '../pages/team/Team';
 // import Notifications from '../pages/notifications/Notifications';
@@ -14,7 +14,7 @@ import ProtectedRoute from '../components/protectedRoute/ProtectedRoute';
 // import Chat from '../pages/chat/Chat';
 // import Profile from '../pages/profile/Profile';
 // import AIChat from '../pages/aiChat/AIChat';
-// import MainLayout from '../layouts/mainLayout/MainLayout';
+import MainLayout from '../layouts/mainLayout/MainLayout';
 import Workspaces from '../pages/workspaces/Workspaces';
 // import Admin from '../pages/admin/Admin';
 
@@ -42,22 +42,22 @@ const AppRouter = () => {
       } />
       
       {/* Main Layout Routes - Quản lý dự án */}
-      {/* <Route path="/projects" element={
+      <Route path="/projects" element={
         <ProtectedRoute allowedRoles={['pm', 'tl', 'mb', 'clt']} requireWorkspace={true}>
           <MainLayout>
             <Projects />
           </MainLayout>
         </ProtectedRoute>
-      } /> */}
+      } />
       
       {/* Tasks - Tất cả role có thể xem */}
-      {/* <Route path="/tasks" element={
+      <Route path="/tasks" element={
         <ProtectedRoute allowedRoles={['pm', 'tl', 'mb']} requireWorkspace={true}>
           <MainLayout>
             <Tasks />
           </MainLayout>
         </ProtectedRoute>
-      } /> */}
+      } />
       
       {/* My Tasks - Tất cả role */}
       {/* <Route path="/my-tasks" element={
