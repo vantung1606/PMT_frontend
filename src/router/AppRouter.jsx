@@ -7,7 +7,7 @@ import Register from '../pages/auth/register/Register';
 import ProtectedRoute from '../components/protectedRoute/ProtectedRoute';
 import Projects from '../pages/projects/Projects';
 import Tasks from '../pages/tasks/Tasks';
-// import MyTasks from '../pages/myTasks/MyTasks';
+import MyTasks from '../pages/myTasks/MyTasks';
 // import Team from '../pages/team/Team';
 // import Notifications from '../pages/notifications/Notifications';
 // import Reports from '../pages/reports/Reports';
@@ -60,13 +60,13 @@ const AppRouter = () => {
       } />
       
       {/* My Tasks - Tất cả role */}
-      {/* <Route path="/my-tasks" element={
+      <Route path="/my-tasks" element={
         <ProtectedRoute allowedRoles={['pm', 'tl', 'mb']} requireWorkspace={true}>
           <MainLayout>
             <MyTasks />
           </MainLayout>
         </ProtectedRoute>
-      } /> */}
+      } />
       
       {/* Team - Chỉ TL, PM, Admin */}
       {/* <Route path="/team" element={
