@@ -1,0 +1,76 @@
+.status-badge {
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-badge i {
+  font-size: 10px;
+}
+
+.status-badge.not-started {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.status-badge.in-progress {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+  border: 1px solid #3b82f6;
+}
+
+.status-badge.completed {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.status-badge.pending {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  color: #92400e !important;
+  border: 1px solid #fbbf24 !important;
+}
+
+.status-badge.planned {
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%) !important;
+  color: #3730a3 !important;
+  border: 1px solid #6366f1 !important;
+}
+
+.status-badge.testing {
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%) !important;
+  color: #831843 !important;
+  border: 1px solid #ec4899 !important;
+}
+
+.status-badge.in-review {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  color: #78350f !important;
+  border: 1px solid #f59e0b !important;
+}
+
+.status-badge.delayed {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  color: #991b1b !important;
+  border: 1px solid #ef4444 !important;
+}
+
+.status-badge.cancelled {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+  color: #374151 !important;
+  border: 1px solid #9ca3af !important;
+}
+
+.status-badge.default {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  color: #374151;
+  border: 1px solid #9ca3af;
+}
+
