@@ -11,7 +11,7 @@ import MyTasks from '../pages/myTasks/MyTasks';
 // import Team from '../pages/team/Team';
 // import Notifications from '../pages/notifications/Notifications';
 // import Reports from '../pages/reports/Reports';
-// import Chat from '../pages/chat/Chat';
+import Chat from '../pages/chat/Chat';
 // import Profile from '../pages/profile/Profile';
 // import AIChat from '../pages/aiChat/AIChat';
 import MainLayout from '../layouts/mainLayout/MainLayout';
@@ -96,13 +96,13 @@ const AppRouter = () => {
       } /> */}
       
       {/* Chat - Tất cả role */}
-      {/* <Route path="/chat" element={
+      <Route path="/chat" element={
         <ProtectedRoute allowedRoles={['pm', 'tl', 'mb', 'clt']} requireWorkspace={true}>
           <MainLayout>
             <Chat />
           </MainLayout>
         </ProtectedRoute>
-      } /> */}
+      } />
       
       {/* AI Chat - Tất cả role */}
       {/* <Route path="/ai-chat" element={
