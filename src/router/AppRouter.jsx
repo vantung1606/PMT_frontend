@@ -16,7 +16,7 @@ import Chat from '../pages/chat/Chat';
 // import AIChat from '../pages/aiChat/AIChat';
 import MainLayout from '../layouts/mainLayout/MainLayout';
 import Workspaces from '../pages/workspaces/Workspaces';
-// import Admin from '../pages/admin/Admin';
+import Admin from '../pages/admin/Admin';
 
 const AppRouter = () => {
   return (
@@ -28,11 +28,11 @@ const AppRouter = () => {
       {/* <Route path="/learn-more" element={<LearnMore />} /> */}
       
       {/* Admin Panel - Chỉ Admin */}
-      {/* <Route path="/admin" element={
+      <Route path="/admin" element={
         <ProtectedRoute requireAdmin={true}>
           <Admin />
         </ProtectedRoute>
-      } /> */}
+      } />
 
       {/* Chọn / tạo không gian làm việc - layout riêng */}
       <Route path="/workspaces" element={
