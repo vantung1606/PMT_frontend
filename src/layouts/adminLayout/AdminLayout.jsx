@@ -44,6 +44,12 @@ const AdminLayout = ({ children, currentView, setCurrentView }) => {
             permission: true
         },
         {
+            label: 'Quản lý website',
+            icon: 'fa-globe',
+            view: 'website',
+            permission: true
+        },
+        {
             label: 'Cài đặt hệ thống',
             icon: 'fa-cog',
             view: 'settings',

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import adminService from '../../services/adminService';
 import useToast from '../../hooks/useToast';
+import { ToastContainer } from '../../components/toast/Toast';
 import { formatDistanceToNow } from '../../utils/dateHelper';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
-    const { showToast } = useToast();
+    const { toasts, showToast, removeToast } = useToast();
 
     useEffect(() => {
         loadDashboardStats();
@@ -287,6 +288,7 @@ const AdminDashboard = () => {
                     </div>
                 )}
             </div>
+            <ToastContainer toasts={toasts} onRemove={removeToast} />
         </div>
     );
 };

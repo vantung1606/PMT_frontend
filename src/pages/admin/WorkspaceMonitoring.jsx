@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import adminService from '../../services/adminService';
 import useToast from '../../hooks/useToast';
+import { ToastContainer } from '../../components/toast/Toast';
 import { formatDistanceToNow } from '../../utils/dateHelper';
 
 const WorkspaceMonitoring = () => {
@@ -14,7 +15,7 @@ const WorkspaceMonitoring = () => {
     });
     const [selectedWorkspace, setSelectedWorkspace] = useState(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
-    const { showToast } = useToast();
+    const { toasts, showToast, removeToast } = useToast();
 
     useEffect(() => {
         loadWorkspaces();
@@ -337,6 +338,7 @@ const WorkspaceMonitoring = () => {
                     </div>
                 </div>
             )}
+            <ToastContainer toasts={toasts} onRemove={removeToast} />
         </div>
     );
 };

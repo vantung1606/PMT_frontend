@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from '../pages/home/Home';
 // import LearnMore from '../pages/learnMore/LearnMore';
 import NotFound from '../pages/notFound/NotFound';
@@ -17,10 +18,16 @@ import AIChat from '../pages/aiChat/AIChat';
 import MainLayout from '../layouts/mainLayout/MainLayout';
 import Workspaces from '../pages/workspaces/Workspaces';
 import Admin from '../pages/admin/Admin';
-import Events from '../pages/events/Events';
-import News from '../pages/news/News';
 
 const AppRouter = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTo(0, 0);
+    document.body.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -44,8 +51,8 @@ const AppRouter = () => {
       } />
       
       {/* Sự kiện và Tin tức - không cần đăng nhập */}
-      <Route path="/events" element={<Events />} />
-      <Route path="/news" element={<News />} />
+      <Route path="/events" element={<Navigate to="/#events" replace />} />
+      <Route path="/news" element={<Navigate to="/#news" replace />} />
       
       {/* Main Layout Routes - Quản lý dự án */}
       <Route path="/projects" element={

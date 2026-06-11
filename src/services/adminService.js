@@ -114,6 +114,25 @@ const adminService = {
         } catch (error) {
             throw error.response?.data || error;
         }
+    },
+
+    // ========== WEBSITE SETTINGS ==========
+    getWebsiteSettings: async () => {
+        try {
+            const response = await api.get('/admin/website/settings');
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error;
+        }
+    },
+
+    updateWebsiteSettings: async (settings) => {
+        try {
+            const response = await api.put('/admin/website/settings', settings);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error;
+        }
     }
 };
 

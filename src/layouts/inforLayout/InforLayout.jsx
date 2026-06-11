@@ -1,11 +1,45 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import api from "../../services/api";
 import "./InforLayout.css";
+import "../../pages/workspaces/Workspaces.css";
 import Slide1 from "../../assets/img/hero_slide_1.png";
 import Slide2 from "../../assets/img/hero_slide_2.png";
 import Slide3 from "../../assets/img/hero_slide_3.png";
 import logoImage from "../../assets/img/logo.png";
+
+const DEFAULT_SETTINGS = {
+  heroTitle1: 'Quản lý dự án',
+  heroTitleHighlight: 'rõ ràng cho cả đội.',
+  heroDesc: 'CollabTask giúp bạn tạo workspace, phân công task, trao đổi realtime và theo dõi tiến độ trong một nơi duy nhất.',
+  heroCtaText: 'Bắt đầu miễn phí',
+  titleFontFamily: 'Montserrat',
+  titleFontSize: 48,
+  titleFontWeight: '900',
+  highlightColor1: '#c62828',
+  highlightColor2: '#991b1b',
+  backgroundGradientStart: '#fff4ef',
+  backgroundGradientEnd: '#eef5ff',
+  glowOrbColor1: '#c62828',
+  glowOrbColor2: '#2563eb',
+  backgroundImageUrl: '',
+  featuresTitle: 'CollabTask làm được gì?',
+  featuresDesc: 'Những khối chức năng cần có để một đội nhóm làm việc gọn hơn, rõ hơn và ít đứt mạch hơn.',
+  feature1Title: 'Workspace rõ ràng',
+  feature1Desc: 'Tổ chức công việc theo không gian riêng cho từng đội, từng dự án, từng mục tiêu.',
+  feature2Title: 'Task minh bạch',
+  feature2Desc: 'Giao việc, đặt deadline, cập nhật trạng thái và theo dõi tiến độ theo thời gian thực.',
+  feature3Title: 'Trao đổi ngay tại việc',
+  feature3Desc: 'Bình luận, phản hồi và thống nhất ngay trên task để tránh rời rạc thông tin.',
+  stat1Value: '500+',
+  stat1Label: 'WORKSPACE',
+  stat2Value: '99.9%',
+  stat2Label: 'THỜI GIAN HOẠT ĐỘNG',
+  stat3Value: '24/7',
+  stat3Label: 'HỖ TRỢ',
+  footerText: '© 2026 COLLABTASK. Bảo lưu mọi quyền.'
+};
 
 const featureCards = [
   {
@@ -78,13 +112,148 @@ const workflowSteps = [
   }
 ];
 
+const eventsList = [
+  { id: 1, title: "Hội Thảo AI & Tương Lai", date: "15/06/2026", type: "online", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80" },
+  { id: 2, title: "Workshop Năng Suất Nhóm", date: "22/06/2026", type: "offline", image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=600&q=80" },
+  { id: 3, title: "Lãnh Đạo Kỷ Nguyên Số", date: "01/07/2026", type: "offline", image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=600&q=80" }
+];
+
+const newsList = [
+  { id: 1, title: "CollabTask v2.0 chính thức ra mắt", category: "Sản Phẩm", image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=600&q=80" },
+  { id: 2, title: "Cột mốc 10.000 thành viên", category: "Cộng Đồng", image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" },
+  { id: 3, title: "Tăng 200% tốc độ tải trang", category: "Công Nghệ", image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80" }
+];
+
 const InforLayout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
   const userMenuRef = React.useRef(null);
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [activeHash, setActiveHash] = React.useState('/');
   const heroSlides = [Slide1, Slide2, Slide3];
+
+  const scrollToElementWithOffset = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const yOffset = -90; // Offset for fixed navbar height + padding
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  React.useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.substring(1);
+      const timer = setTimeout(() => {
+        scrollToElementWithOffset(id);
+        setActiveHash(location.hash);
+      }, 150);
+      return () => clearTimeout(timer);
+    } else if (location.pathname === '/') {
+      setActiveHash('/');
+    }
+  }, [location]);
+
+  const [settings, setSettings] = React.useState(() => {
+    const saved = localStorage.getItem('collabtask_website_settings');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const currentSettings = React.useMemo(() => {
+    return { ...DEFAULT_SETTINGS, ...settings };
+  }, [settings]);
+
+  React.useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await api.get('/admin/website/settings');
+        if (response.data?.success && response.data?.data) {
+          setSettings(response.data.data);
+          localStorage.setItem('collabtask_website_settings', JSON.stringify(response.data.data));
+        }
+      } catch (error) {
+        console.error('Không thể tải cấu hình giao diện từ server:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const displayFeatureCards = React.useMemo(() => {
+    return featureCards.map((card, idx) => {
+      if (idx === 0) {
+        return { ...card, title: currentSettings.feature1Title, text: currentSettings.feature1Desc };
+      }
+      if (idx === 2) {
+        return { ...card, title: currentSettings.feature2Title, text: currentSettings.feature2Desc };
+      }
+      if (idx === 3) {
+        return { ...card, title: currentSettings.feature3Title, text: currentSettings.feature3Desc };
+      }
+      return card;
+    });
+  }, [currentSettings]);
+
+  React.useEffect(() => {
+    const handleThemeChange = () => {
+      const saved = localStorage.getItem('collabtask_website_settings');
+      setSettings(saved ? JSON.parse(saved) : null);
+    };
+    window.addEventListener('collabtask_theme_change', handleThemeChange);
+    return () => window.removeEventListener('collabtask_theme_change', handleThemeChange);
+  }, []);
+
+  React.useEffect(() => {
+    if (settings) {
+      // Inject background styles dynamically
+      const styleId = 'custom-website-theme-styles';
+      let styleEl = document.getElementById(styleId);
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = styleId;
+        document.head.appendChild(styleEl);
+      }
+      const bgImg = settings.backgroundImageUrl ? `url("${settings.backgroundImageUrl}"),` : '';
+      styleEl.innerHTML = `
+        .landing-page::before {
+          background-image:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(244, 247, 251, 0.76) 34%, rgba(255, 255, 255, 0.96) 100%),
+            ${bgImg}
+            radial-gradient(ellipse at 12% 18%, ${settings.glowOrbColor1}22 0%, ${settings.glowOrbColor1}10 26%, transparent 58%),
+            radial-gradient(ellipse at 88% 24%, ${settings.glowOrbColor2}1e 0%, ${settings.glowOrbColor2}0e 26%, transparent 60%),
+            radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.88) 0%, transparent 56%),
+            linear-gradient(135deg, ${settings.backgroundGradientStart} 0%, ${settings.backgroundGradientEnd} 100%) !important;
+          background-size: cover, cover, auto, auto, auto, auto !important;
+          background-position: center, center, center, center, center, center !important;
+        }
+      `;
+      
+      // Load custom font dynamically if chosen
+      if (settings.titleFontFamily) {
+        const font = settings.titleFontFamily;
+        const fontId = `custom-font-${font.replace(/\s+/g, '-').toLowerCase()}`;
+        if (!document.getElementById(fontId)) {
+          const link = document.createElement('link');
+          link.id = fontId;
+          link.rel = 'stylesheet';
+          link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/\s+/g, '+')}:wght@400;500;700;900&display=swap`;
+          document.head.appendChild(link);
+        }
+      }
+
+      return () => {
+        const el = document.getElementById(styleId);
+        if (el) el.remove();
+      };
+    }
+  }, [settings]);
+
+  React.useEffect(() => {
+    if (window.location.hash) {
+      setActiveHash(window.location.hash);
+    }
+  }, []);
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -113,53 +282,66 @@ const InforLayout = () => {
   };
 
   const headerLinks = [
-    { label: 'TRANG CHỦ', active: true, path: '/' },
+    { label: 'TRANG CHỦ', active: activeHash === '/', path: '/' },
     { label: 'DỰ ÁN', active: false, path: '/workspaces' },
-    { label: 'SỰ KIỆN', active: false, path: '/events' },
-    { label: 'TIN TỨC', active: false, path: '/news' }
+    { label: 'SỰ KIỆN', active: activeHash === '#events', path: '#events' },
+    { label: 'TIN TỨC', active: activeHash === '#news', path: '#news' }
   ];
+
+  const handleNavClick = (path) => {
+    setActiveHash(path);
+    if (path === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (path.startsWith('#')) {
+      const id = path.substring(1);
+      scrollToElementWithOffset(id);
+    } else {
+      navigate(path);
+    }
+  };
 
   return (
     <main className="landing-page">
-      <div className="landing-pill-nav">
-        <div className="ld-nav-left">
-          <img className="ld-brand-logo" src={logoImage} alt="CollabTask" />
+      <div className="workspace-pill-nav">
+        <div className="wp-nav-left" onClick={() => handleNavClick('/')} style={{ cursor: 'pointer' }}>
+          <img className="wp-brand-logo" src={logoImage} alt="CollabTask" />
         </div>
-        <div className="ld-nav-center">
+        <div className="wp-nav-center">
           {headerLinks.map((link) => (
             <span
               key={link.label}
-              className={`ld-nav-link ${link.active ? 'active' : ''}`}
-              onClick={() => navigate(link.path)}
+              className={`wp-nav-link ${link.active ? 'active' : ''}`}
+              onClick={() => handleNavClick(link.path)}
             >
               {link.label}
             </span>
           ))}
         </div>
-        <div className="ld-nav-right">
+        <div className="wp-nav-right">
           {isAuthenticated ? (
-            <div className="ld-user-profile" onClick={() => setShowUserMenu(!showUserMenu)} ref={userMenuRef}>
-              <div className="ld-avatar">
+            <div className="wp-account-trigger" onClick={() => setShowUserMenu(!showUserMenu)} ref={userMenuRef}>
+              <div className="wp-avatar">
                 {user?.avatar_url ? (
                   <img src={user.avatar_url} alt="User" />
                 ) : (
                   <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
                 )}
               </div>
-              <span className="ld-nav-username">{user?.full_name || user?.username || 'Admin Account'}</span>
+              <span className="wp-account-name">{user?.full_name || user?.username || 'Admin Account'}</span>
+              <i className={`fas fa-chevron-down wp-account-arrow ${showUserMenu ? 'open' : ''}`}></i>
               {showUserMenu && (
-                <div className="ld-user-dropdown" onClick={(e) => e.stopPropagation()}>
-                  <div className="ld-user-info">
-                    <div className="ld-user-name">{user?.username || user?.full_name || 'Admin Account'}</div>
-                    <div className="ld-user-email">{user?.email}</div>
+                <div className="wp-user-dropdown" onClick={(e) => e.stopPropagation()}>
+                  <div className="wp-user-info">
+                    <div className="wp-user-name">{user?.username || user?.full_name || 'Admin Account'}</div>
+                    <div className="wp-user-email">{user?.email}</div>
                   </div>
-                  <div className="ld-dropdown-divider"></div>
+                  <div className="wp-dropdown-divider"></div>
                   {user?.role === 'admin' && (
-                    <button className="ld-admin-btn" onClick={(e) => { e.stopPropagation(); setShowUserMenu(false); navigate('/admin'); }} type="button">
+                    <button className="wp-admin-btn" onClick={(e) => { e.stopPropagation(); setShowUserMenu(false); navigate('/admin'); }} type="button">
                       <i className="fas fa-shield-alt"></i> Admin Dashboard
                     </button>
                   )}
-                  <button className="ld-logout-btn" onClick={(e) => { e.stopPropagation(); setShowUserMenu(false); handleLogout(); }} type="button">
+                  <button className="wp-logout-btn" onClick={(e) => { e.stopPropagation(); setShowUserMenu(false); handleLogout(); }} type="button">
                     <i className="fas fa-sign-out-alt"></i> Đăng xuất
                   </button>
                 </div>
@@ -171,21 +353,40 @@ const InforLayout = () => {
         </div>
       </div>
 
+      <div style={{ height: '90px' }}></div>
+
       <section className="ld-hero-section">
         <div className="hero-glow-orb orb-1"></div>
         <div className="hero-glow-orb orb-2"></div>
 
         <div className="ld-hero-left">
-          <h1 className="ld-hero-title">
-            Quản lý dự án<br />
-            <span className="ld-hero-highlight">rõ ràng cho cả đội.</span>
+          <h1 
+            className="ld-hero-title"
+            style={{
+              fontFamily: currentSettings.titleFontFamily,
+              fontSize: `${currentSettings.titleFontSize}px`,
+              fontWeight: currentSettings.titleFontWeight,
+            }}
+          >
+            {currentSettings.heroTitle1}<br />
+            <span 
+              className="ld-hero-highlight"
+              style={{
+                background: `linear-gradient(135deg, ${currentSettings.highlightColor1} 0%, ${currentSettings.highlightColor2} 100%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                color: currentSettings.highlightColor1
+              }}
+            >
+              {currentSettings.heroTitleHighlight}
+            </span>
           </h1>
           <p className="ld-hero-desc">
-            CollabTask giúp bạn tạo workspace, phân công task, trao đổi realtime và theo dõi tiến độ trong một nơi duy nhất.
+            {currentSettings.heroDesc}
           </p>
           <div className="ld-hero-actions">
             <button className="ld-btn-primary glow-btn" onClick={handleStartClick} type="button">
-              Dùng thử miễn phí <i className="fas fa-arrow-right"></i>
+              {currentSettings.heroCtaText} <i className="fas fa-arrow-right"></i>
             </button>
             <button className="ld-btn-secondary glass-btn" type="button" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
               Xem tính năng
@@ -227,12 +428,12 @@ const InforLayout = () => {
 
       <section className="ld-features-section" id="features">
         <div className="ld-features-header">
-          <h2 className="reveal-text">CollabTask làm được gì?</h2>
-          <p>Những khối chức năng cần có để một đội nhóm làm việc gọn hơn, rõ hơn và ít đứt mạch hơn.</p>
+          <h2 className="reveal-text">{currentSettings.featuresTitle}</h2>
+          <p>{currentSettings.featuresDesc}</p>
         </div>
 
         <div className="ld-features-grid">
-          {featureCards.map((card, index) => (
+          {displayFeatureCards.map((card, index) => (
             <div className={`ld-feature-card ${index === 1 ? 'image-card' : 'glass-card'} hover-lift`} key={card.title}>
               {index === 1 ? (
                 <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800" alt="Team collaboration" />
@@ -295,20 +496,65 @@ const InforLayout = () => {
 
       <section className="ld-stats-section">
         <div className="ld-stat-item">
-          <h3>500+</h3>
-          <p>WORKSPACE</p>
+          <h3>{currentSettings.stat1Value}</h3>
+          <p>{currentSettings.stat1Label}</p>
         </div>
         <div className="ld-stat-item">
-          <h3>99.9%</h3>
-          <p>THỜI GIAN HOẠT ĐỘNG</p>
+          <h3>{currentSettings.stat2Value}</h3>
+          <p>{currentSettings.stat2Label}</p>
         </div>
         <div className="ld-stat-item">
-          <h3>24/7</h3>
-          <p>HỖ TRỢ</p>
+          <h3>{currentSettings.stat3Value}</h3>
+          <p>{currentSettings.stat3Label}</p>
         </div>
         <div className="ld-stat-item">
           <h3>15M</h3>
           <p>TASK ĐÃ XỬ LÝ</p>
+        </div>
+      </section>
+
+      {/* EVENTS SECTION */}
+      <section id="events" className="ld-events-section">
+        <div className="ld-section-header">
+
+          <h2>Sự Kiện Sắp Diễn Ra</h2>
+          <p>Tham gia cộng đồng, cập nhật xu hướng và kỹ năng mới.</p>
+        </div>
+        <div className="ld-events-grid">
+          {eventsList.map(item => (
+            <div key={item.id} className="ld-event-card">
+              <div className="ld-event-image" style={{ backgroundImage: `url(${item.image})` }}>
+                <span className="ld-event-type">{item.type}</span>
+              </div>
+              <div className="ld-event-info">
+                <div className="ld-event-date"><i className="far fa-calendar-alt"></i> {item.date}</div>
+                <h3>{item.title}</h3>
+                <button className="ld-event-btn">Xem Chi Tiết <i className="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* NEWS SECTION */}
+      <section id="news" className="ld-news-section">
+        <div className="ld-section-header">
+
+          <h2>Cập Nhật Mới Nhất</h2>
+          <p>Theo dõi tiến trình phát triển và các thông báo từ đội ngũ.</p>
+        </div>
+        <div className="ld-news-grid">
+          {newsList.map(item => (
+            <div key={item.id} className="ld-news-card">
+              <div className="ld-news-image" style={{ backgroundImage: `url(${item.image})` }}>
+                <span className="ld-news-category">{item.category}</span>
+              </div>
+              <div className="ld-news-info">
+                <h3>{item.title}</h3>
+                <button className="ld-news-link">Đọc thêm <i className="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -328,13 +574,13 @@ const InforLayout = () => {
           <p>Nền tảng quản lý dự án và cộng tác nhóm</p>
         </div>
         <div className="ld-footer-links">
-          <span onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>Tính năng</span>
-          <span onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>Quy trình</span>
-          <span onClick={() => navigate('/events')}>Sự kiện</span>
-          <span onClick={() => navigate('/news')}>Tin tức</span>
+          <span onClick={() => handleNavClick('#features')}>Tính năng</span>
+          <span onClick={() => handleNavClick('#features')}>Quy trình</span>
+          <span onClick={() => handleNavClick('#events')}>Sự kiện</span>
+          <span onClick={() => handleNavClick('#news')}>Tin tức</span>
         </div>
         <div className="ld-footer-right">
-          <p>© 2026 COLLABTASK. Bảo lưu mọi quyền.</p>
+          <p>{currentSettings.footerText}</p>
         </div>
       </footer>
     </main>

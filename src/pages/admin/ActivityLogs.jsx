@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import adminService from '../../services/adminService';
 import useToast from '../../hooks/useToast';
+import { ToastContainer } from '../../components/toast/Toast';
 import { formatDistanceToNow } from '../../utils/dateHelper';
 
 const ActivityLogs = () => {
@@ -17,7 +18,7 @@ const ActivityLogs = () => {
         start_date: '',
         end_date: ''
     });
-    const { showToast } = useToast();
+    const { toasts, showToast, removeToast } = useToast();
 
     useEffect(() => {
         loadLogs();
@@ -437,6 +438,7 @@ const ActivityLogs = () => {
                     </div>
                 )}
             </div>
+            <ToastContainer toasts={toasts} onRemove={removeToast} />
         </div>
     );
 };

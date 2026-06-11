@@ -14,17 +14,21 @@ export const useWorkspace = () => {
 };
 
 export const WorkspaceProvider = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [workspaces, setWorkspaces] = useState([]);
   const [currentWorkspace, setCurrentWorkspace] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Tải danh sách workspace khi user đăng nhập thành công
   useEffect(() => {
     const load = async () => {
+      // Đợi AuthContext load xong mới quyết định trạng thái workspace
+      if (authLoading) return;
+
       if (!isAuthenticated) {
         setWorkspaces([]);
         setCurrentWorkspace(null);
+        setLoading(false);
         return;
       }
 
@@ -59,7 +63,7 @@ export const WorkspaceProvider = ({ children }) => {
     };
 
     load();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const selectWorkspace = (workspace) => {
     if (!workspace) {

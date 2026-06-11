@@ -3,7 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
 import { useAuth } from '../../contexts/AuthContext';
 import logoImage from '../../assets/img/logo.png';
+import api from '../../services/api';
 import './Workspaces.css';
+
+const DEFAULT_SETTINGS = {
+  heroTitle1: 'Quản lý dự án',
+  heroTitleHighlight: 'rõ ràng cho cả đội.',
+  heroDesc: 'CollabTask giúp bạn tạo workspace, phân công task, trao đổi realtime và theo dõi tiến độ trong một nơi duy nhất.',
+  heroCtaText: 'Bắt đầu miễn phí',
+  titleFontFamily: 'Montserrat',
+  titleFontSize: 48,
+  titleFontWeight: '900',
+  highlightColor1: '#c62828',
+  highlightColor2: '#991b1b',
+  backgroundGradientStart: '#fff4ef',
+  backgroundGradientEnd: '#eef5ff',
+  glowOrbColor1: '#c62828',
+  glowOrbColor2: '#2563eb',
+  backgroundImageUrl: ''
+};
 
 const Workspaces = () => {
   const navigate = useNavigate();
@@ -17,6 +35,60 @@ const Workspaces = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('recent');
   const userMenuRef = useRef(null);
+
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('collabtask_website_settings');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await api.get('/admin/website/settings');
+        if (response.data?.success && response.data?.data) {
+          setSettings(response.data.data);
+          localStorage.setItem('collabtask_website_settings', JSON.stringify(response.data.data));
+        }
+      } catch (error) {
+        console.error('Không thể tải cấu hình giao diện từ server:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const currentSettings = useMemo(() => {
+    return { ...DEFAULT_SETTINGS, ...settings };
+  }, [settings]);
+
+  useEffect(() => {
+    if (currentSettings) {
+      const styleId = 'custom-workspaces-theme-styles';
+      let styleEl = document.getElementById(styleId);
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = styleId;
+        document.head.appendChild(styleEl);
+      }
+      const bgImg = currentSettings.backgroundImageUrl ? `url("${currentSettings.backgroundImageUrl}"),` : '';
+      styleEl.innerHTML = `
+        .workspaces-page {
+          background-image:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(244, 247, 251, 0.76) 34%, rgba(255, 255, 255, 0.96) 100%),
+            ${bgImg}
+            radial-gradient(ellipse at 12% 18%, ${currentSettings.glowOrbColor1}22 0%, ${currentSettings.glowOrbColor1}10 26%, transparent 58%),
+            radial-gradient(ellipse at 88% 24%, ${currentSettings.glowOrbColor2}1e 0%, ${currentSettings.glowOrbColor2}0e 26%, transparent 60%),
+            radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.88) 0%, transparent 56%),
+            linear-gradient(135deg, ${currentSettings.backgroundGradientStart} 0%, ${currentSettings.backgroundGradientEnd} 100%) !important;
+          background-size: cover, cover, auto, auto, auto, auto !important;
+          background-position: center, center, center, center, center, center !important;
+        }
+      `;
+      return () => {
+        const el = document.getElementById(styleId);
+        if (el) el.remove();
+      };
+    }
+  }, [currentSettings]);
 
   const ownedWorkspaces = useMemo(
     () => (Array.isArray(workspaces) ? workspaces.filter((ws) => user && ws.owner_id === user.id) : []),
@@ -38,10 +110,10 @@ const Workspaces = () => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
     const filtered = normalizedSearch
       ? list.filter((ws) => {
-          const name = (ws?.name || '').toLowerCase();
-          const description = (ws?.description || '').toLowerCase();
-          return name.includes(normalizedSearch) || description.includes(normalizedSearch);
-        })
+        const name = (ws?.name || '').toLowerCase();
+        const description = (ws?.description || '').toLowerCase();
+        return name.includes(normalizedSearch) || description.includes(normalizedSearch);
+      })
       : list;
 
     const sorted = [...filtered];
@@ -106,6 +178,13 @@ const Workspaces = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    window.scroll(0, 0);
+    document.documentElement.scrollTo(0, 0);
+    document.body.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
@@ -116,67 +195,73 @@ const Workspaces = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showUserMenu]);
 
+  const handleNavClick = (path) => {
+    if (path === '/workspaces') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate(path);
+    }
+  };
+
   const headerLinks = [
     { label: 'TRANG CHỦ', active: false, path: '/' },
     { label: 'DỰ ÁN', active: true, path: '/workspaces' },
-    { label: 'SỰ KIỆN', active: false, path: '/events' },
-    { label: 'TIN TỨC', active: false, path: '/news' }
+    { label: 'SỰ KIỆN', active: false, path: '/#events' },
+    { label: 'TIN TỨC', active: false, path: '/#news' }
   ];
 
   return (
     <div className="workspaces-page">
-      <div className="workspace-hero-wrapper">
-        <div className="workspace-pill-nav">
-          <div className="wp-nav-left">
-            <img className="wp-brand-logo" src={logoImage} alt="CollabTask" />
-          </div>
-          <div className="wp-nav-center">
-            {headerLinks.map((link) => (
-              <span
-                key={link.label}
-                className={`wp-nav-link ${link.active ? 'active' : ''}`}
-                onClick={() => navigate(link.path)}
-              >
-                {link.label}
-              </span>
-            ))}
-          </div>
-          <div className="wp-nav-right">
-            <div className="wp-account-menu" ref={userMenuRef}>
-              <button type="button" className="wp-account-trigger" onClick={() => setShowUserMenu(!showUserMenu)}>
-                <div className="wp-avatar">
-                  {user?.avatar_url ? (
-                    <img src={user.avatar_url} alt="User" />
-                  ) : (
-                    <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
-                  )}
-                </div>
-                <span className="wp-account-name">{user?.full_name || user?.username || 'Admin Account'}</span>
-              </button>
-              {showUserMenu && (
-                <div className="wp-user-dropdown">
-                  <div className="wp-user-info">
-                    <div className="wp-user-name">{user?.username || user?.full_name || 'Admin Account'}</div>
-                    <div className="wp-user-email">{user?.email}</div>
-                  </div>
-                  <div className="wp-dropdown-divider"></div>
-                  {user?.role === 'admin' && (
-                    <button className="wp-admin-btn" onClick={() => { setShowUserMenu(false); navigate('/admin'); }} type="button">
-                      <i className="fas fa-shield-alt"></i> Admin Dashboard
-                    </button>
-                  )}
-                  <button className="wp-logout-btn" onClick={() => { setShowUserMenu(false); handleLogout(); }} type="button">
-                    <i className="fas fa-sign-out-alt"></i> Đăng xuất
-                  </button>
-                </div>
+      <div className="workspace-pill-nav">
+        <div className="wp-nav-left" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <img className="wp-brand-logo" src={logoImage} alt="CollabTask" />
+        </div>
+        <div className="wp-nav-center">
+          {headerLinks.map((link) => (
+            <span
+              key={link.label}
+              className={`wp-nav-link ${link.active ? 'active' : ''}`}
+              onClick={() => handleNavClick(link.path)}
+            >
+              {link.label}
+            </span>
+          ))}
+        </div>
+        <div className="wp-nav-right">
+          <div className="wp-account-trigger" onClick={() => setShowUserMenu(!showUserMenu)} ref={userMenuRef}>
+            <div className="wp-avatar">
+              {user?.avatar_url ? (
+                <img src={user.avatar_url} alt="User" />
+              ) : (
+                <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
               )}
             </div>
+            <span className="wp-account-name">{user?.full_name || user?.username || 'Admin Account'}</span>
+            <i className={`fas fa-chevron-down wp-account-arrow ${showUserMenu ? 'open' : ''}`}></i>
+            {showUserMenu && (
+              <div className="wp-user-dropdown" onClick={(e) => e.stopPropagation()}>
+                <div className="wp-user-info">
+                  <div className="wp-user-name">{user?.username || user?.full_name || 'Admin Account'}</div>
+                  <div className="wp-user-email">{user?.email}</div>
+                </div>
+                <div className="wp-dropdown-divider"></div>
+                {user?.role === 'admin' && (
+                  <button className="wp-admin-btn" onClick={() => { setShowUserMenu(false); navigate('/admin'); }} type="button">
+                    <i className="fas fa-shield-alt"></i> Admin Dashboard
+                  </button>
+                )}
+                <button className="wp-logout-btn" onClick={() => { setShowUserMenu(false); handleLogout(); }} type="button">
+                  <i className="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+              </div>
+            )}
           </div>
         </div>
+      </div>
 
+      <div className="workspace-hero-wrapper">
         <div className="workspace-hero-content">
           <div className="workspace-hero-copy">
-            <p className="workspace-eyebrow">Không gian làm việc</p>
             <h1>Workspace của bạn, gọn hơn và dễ quét hơn.</h1>
             <p>
               Tạo, lọc và mở workspace nhanh. Mỗi không gian đều có trạng thái riêng, quyền riêng và luồng làm việc rõ ràng.

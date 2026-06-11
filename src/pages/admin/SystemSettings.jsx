@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import adminService from '../../services/adminService';
 import useToast from '../../hooks/useToast';
+import { ToastContainer } from '../../components/toast/Toast';
 
 const SystemSettings = () => {
     const [systemInfo, setSystemInfo] = useState(null);
     const [loading, setLoading] = useState(true);
-    const { showToast } = useToast();
+    const { toasts, showToast, removeToast } = useToast();
 
     useEffect(() => {
         loadSystemInfo();
@@ -136,23 +137,28 @@ const SystemSettings = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {systemInfo?.tableSizes?.map((table) => (
-                                    <tr key={table.table_name}>
-                                        <td>
-                                            <code style={{ 
-                                                background: '#f1f5f9', 
-                                                padding: '4px 8px', 
-                                                borderRadius: '4px',
-                                                fontSize: '13px',
-                                                fontFamily: 'monospace'
-                                            }}>
-                                                {table.table_name}
-                                            </code>
-                                        </td>
-                                        <td>{table.table_rows?.toLocaleString() || 0}</td>
-                                        <td>{table.size_mb} MB</td>
-                                    </tr>
-                                ))}
+                                {systemInfo?.tableSizes?.map((table, index) => {
+                                    const tableName = table.table_name || table.TABLE_NAME;
+                                    const tableRows = table.table_rows !== undefined ? table.table_rows : table.TABLE_ROWS;
+                                    const sizeMb = table.size_mb || table.SIZE_MB;
+                                    return (
+                                        <tr key={tableName || index}>
+                                            <td>
+                                                <code style={{ 
+                                                    background: '#f1f5f9', 
+                                                    padding: '4px 8px', 
+                                                    borderRadius: '4px',
+                                                    fontSize: '13px',
+                                                    fontFamily: 'monospace'
+                                                }}>
+                                                    {tableName || 'N/A'}
+                                                </code>
+                                            </td>
+                                            <td>{(tableRows !== undefined && tableRows !== null) ? Number(tableRows).toLocaleString() : 0}</td>
+                                            <td>{sizeMb || 0} MB</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -220,6 +226,7 @@ const SystemSettings = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer toasts={toasts} onRemove={removeToast} />
         </div>
     );
 };

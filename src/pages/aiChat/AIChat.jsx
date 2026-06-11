@@ -4,10 +4,12 @@ import projectService from '../../services/projectService';
 import taskService from '../../services/taskService';
 import useToast from '../../hooks/useToast';
 import { ToastContainer } from '../../components/toast/Toast';
+import { useAuth } from '../../contexts/AuthContext';
 import './AIChat.css';
 
 const AIChat = () => {
   const { toasts, addToast, removeToast } = useToast();
+  const { user } = useAuth();
   const [aiMessages, setAiMessages] = useState([]);
   const [aiInput, setAiInput] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
@@ -16,6 +18,42 @@ const AIChat = () => {
   const [selectedProjectName, setSelectedProjectName] = useState('');
   const [addingTasks, setAddingTasks] = useState(new Set());
   const messagesEndRef = useRef(null);
+
+  const getAvatarUrl = () => {
+    if (user?.avatar) {
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3036';
+      return user.avatar.startsWith('http') 
+        ? user.avatar 
+        : `${API_BASE_URL}/uploads/avatars/${user.avatar}`;
+    }
+    return null;
+  };
+  const avatarUrl = getAvatarUrl();
+
+  // Load chat history from localStorage
+  useEffect(() => {
+    if (user?.id) {
+      const savedHistory = localStorage.getItem(`ai_chat_history_${user.id}`);
+      if (savedHistory) {
+        try {
+          setAiMessages(JSON.parse(savedHistory));
+        } catch (e) {
+          console.error('Failed to parse saved chat history:', e);
+        }
+      }
+    }
+  }, [user?.id]);
+
+  // Save chat history to localStorage whenever it changes
+  useEffect(() => {
+    if (user?.id) {
+      if (aiMessages.length > 0) {
+        localStorage.setItem(`ai_chat_history_${user.id}`, JSON.stringify(aiMessages));
+      } else {
+        localStorage.removeItem(`ai_chat_history_${user.id}`);
+      }
+    }
+  }, [aiMessages, user?.id]);
 
   // Load projects on mount
   useEffect(() => {
@@ -420,8 +458,12 @@ const AIChat = () => {
                   </div>
                 </div>
                 {msg.role === 'user' && (
-                  <div className="user-avatar">
-                    <i className="fas fa-user"></i>
+                  <div className="user-avatar" style={avatarUrl ? { background: 'transparent' } : {}}>
+                    {avatarUrl ? (
+                      <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                    ) : (
+                      <i className="fas fa-user"></i>
+                    )}
                   </div>
                 )}
               </div>

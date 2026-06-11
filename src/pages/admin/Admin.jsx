@@ -5,6 +5,7 @@ import UserManagement from './UserManagement';
 import WorkspaceMonitoring from './WorkspaceMonitoring';
 import ActivityLogs from './ActivityLogs';
 import SystemSettings from './SystemSettings';
+import WebsiteSettings from './WebsiteSettings';
 
 const Admin = () => {
     const [currentView, setCurrentView] = useState('dashboard');
@@ -21,6 +22,8 @@ const Admin = () => {
                 return <ActivityLogs />;
             case 'settings':
                 return <SystemSettings />;
+            case 'website':
+                return <WebsiteSettings />;
             default:
                 return <AdminDashboard />;
         }

@@ -12,15 +12,15 @@ const ProtectedRoute = ({
   requireLeaderOrAbove = false,
   requireWorkspace = false
 }) => {
-  const { isAuthenticated, loading, user } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { isAuthenticated, loading: authLoading, user } = useAuth();
+  const { currentWorkspace, loading: workspaceLoading } = useWorkspace();
   const workspaceRole = currentWorkspace?.role || null;
   // Chuẩn hóa global role về lowercase để tránh lệ thuộc vào chữ hoa/thường
   const globalRole = user?.role ? String(user.role).toLowerCase() : null;
   const location = useLocation();
 
-  // Hiển thị loading khi đang kiểm tra authentication
-  if (loading) {
+  // Hiển thị loading khi đang kiểm tra authentication hoặc workspace
+  if (authLoading || (requireWorkspace && workspaceLoading)) {
     return (
       <div style={{ 
         display: 'flex', 
@@ -47,6 +47,20 @@ const ProtectedRoute = ({
 
   // Với các route yêu cầu phải chọn workspace
   if (requireWorkspace && isAuthenticated && !currentWorkspace) {
+    // Nếu có ID trong localStorage nhưng chưa load được lên Context, có thể do đang sync. Chờ thêm một chút.
+    if (localStorage.getItem('currentWorkspaceId')) {
+      return (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          fontSize: '18px'
+        }}>
+          Đang kết nối không gian làm việc...
+        </div>
+      );
+    }
     return <Navigate to="/workspaces" state={{ from: location }} replace />;
   }
 

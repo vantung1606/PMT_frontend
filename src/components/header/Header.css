@@ -46,10 +46,12 @@
   align-items: center;
   gap: 15px;
   margin: 0;
-  .logo-img{
-    width: 50px; 
+
+  .logo-img {
+    width: 50px;
   }
-  .logo-text{
+
+  .logo-text {
     font-size: 24px;
     font-weight: 900;
     letter-spacing: 4px;
@@ -211,12 +213,12 @@
   .header-nav {
     display: none;
   }
-  
+
   .header-logo .logo-text {
     font-size: 20px;
     letter-spacing: 2px;
   }
-  
+
   .header-logo .logo-img {
     width: 40px;
   }
@@ -226,17 +228,17 @@
   .header {
     top: 10px;
   }
-  
+
   .header-container {
     height: 54px;
     padding: 0 12px;
     width: min(980px, calc(100% - 16px));
   }
-  
+
   .header-right {
     gap: 10px;
   }
-  
+
   .user-greeting {
     font-size: 0.9rem;
   }
@@ -252,4 +254,3 @@
     white-space: nowrap;
   }
 }
-
