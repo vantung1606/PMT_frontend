@@ -40,17 +40,26 @@ const getSocket = () => {
   // Tạo kết nối WebSocket mới với xác thực và workspace context
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3036';
   
+  // Trích xuất origin để tránh bị hiểu nhầm là namespace (ví dụ: tránh /api bị chuyển thành namespace /api)
+  let socketUrl = API_BASE_URL;
+  try {
+    const parsedUrl = new URL(API_BASE_URL);
+    socketUrl = parsedUrl.origin;
+  } catch (error) {
+    console.error('Invalid API_BASE_URL for socket connection:', error);
+  }
+  
   // Gửi workspace_id để server biết role của user trong workspace
   const workspaceId = localStorage.getItem('currentWorkspaceId');
   
   if (process.env.NODE_ENV === 'development') {
-    console.log('Socket connecting with workspace_id:', workspaceId);
+    console.log('Socket connecting to URL:', socketUrl, 'with workspace_id:', workspaceId);
   }
   
   const workspaceIdForSocket = workspaceId ? parseInt(workspaceId) : null;
   currentSocketWorkspaceId = workspaceIdForSocket;
   
-  socket = io(API_BASE_URL, {
+  socket = io(socketUrl, {
     auth: {
       token: token,
       workspace_id: workspaceIdForSocket
