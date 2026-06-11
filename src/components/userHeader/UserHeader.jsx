@@ -115,12 +115,24 @@ const UserHeader = () => {
       <div className="user-header-container">
         {/* Logo */}
         <div className="user-header-logo" onClick={handleLogoClick}>
-          <img src={logo} alt="logo" className="user-logo-img" />
-          <span className="user-logo-text">COLLABTASK</span>
+          <img src={logo} alt="logo" className="user-logo-img" style={{filter: 'brightness(0) invert(1)'}} />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <span className="user-logo-text">COLLABTASK</span>
+            <span style={{ fontSize: '12px', fontWeight: '500', color: 'rgba(255,255,255,0.8)', marginTop: '-4px' }}>Project Hub</span>
+          </div>
         </div>
 
         {/* Navigation Menu */}
         <nav className="user-header-nav">
+          {/* Nút quay lại Workspace */}
+          <button 
+            className="user-nav-item back-to-workspace" 
+            onClick={() => navigate('/workspaces')}
+            style={{ marginBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px' }}
+          >
+            <i className="fas fa-arrow-left"></i>
+            <span>Trở về Workspaces</span>
+          </button>
           {visibleMenuItems.map((item) => (
             <button
               key={item.path}

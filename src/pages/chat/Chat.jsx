@@ -296,77 +296,64 @@ const Chat = () => {
     <div className="chat-chat-page">
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       
-      {/* Top Header Bar */}
-      <div className="chat-header">
-        <div className="chat-header-left">
-          <h1 className="chat-header-title">Chat</h1>
-        </div>
-        <div className="chat-header-right">
-          <div className="chat-user-info">
-            <div className="chat-user-avatar">
-              {user?.avatar ? (
-                <img src={getAvatarUrl(user.avatar)} alt={user.username} />
-              ) : (
-                <span>{getLastName(user?.username || 'U').charAt(0).toUpperCase()}</span>
-              )}
-            </div>
-            <span className="chat-user-name">{user?.username || 'User'}</span>
-            <i className="fas fa-chevron-down"></i>
-          </div>
-        </div>
-      </div>
+      {/* We don't need the top header bar since the mockup has the sidebar going all the way up, 
+          or we can keep it hidden/integrated. The mockup shows the Chat list taking the full height 
+          next to the red sidebar. */}
+
 
       <div className="chat-content">
         {/* Left Sidebar */}
         <div className="chat-sidebar">
+          <div className="chat-sidebar-header">
+            <h2>Tin nhắn</h2>
+            <button className="chat-edit-btn"><i className="far fa-edit"></i></button>
+          </div>
+
           <div className="chat-sidebar-search">
             <i className="fas fa-search"></i>
             <input 
               type="text" 
-              placeholder="Tìm kiếm đoạn chat..."
+              placeholder="Tìm kiếm cuộc hội thoại..."
               value={sidebarSearchQuery}
               onChange={(e) => setSidebarSearchQuery(e.target.value)}
             />
           </div>
 
-          <div className="chat-sidebar-section">
-            <div className="chat-sidebar-section-header">
-              <i className="fas fa-comments"></i>
-              <span>Đoạn chat</span>
-            </div>
-            <div className="chat-chats-list">
-              {filteredProjects.length > 0 ? (
-                filteredProjects.map(project => (
-                  <div
-                    key={project.id}
-                    className={`chat-chat-item ${selectedProjectId === project.id ? 'active' : ''}`}
-                    onClick={() => setSelectedProjectId(project.id)}
-                  >
-                    <div className="chat-chat-avatar">
-                      <i className="fas fa-folder"></i>
+          <div className="chat-filters">
+            <span className="chat-filter-pill active">Tất cả</span>
+            <span className="chat-filter-pill">Chưa đọc</span>
+            <span className="chat-filter-pill">Nhóm</span>
+            <span className="chat-filter-pill">Cá nhân</span>
+          </div>
+
+          <div className="chat-chats-list">
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map(project => (
+                <div
+                  key={project.id}
+                  className={`chat-chat-item ${selectedProjectId === project.id ? 'active-project active' : ''}`}
+                  onClick={() => setSelectedProjectId(project.id)}
+                >
+                  <div className="chat-chat-avatar group">
+                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(project.name)}&background=random`} alt={project.name} />
+                  </div>
+                  <div className="chat-chat-info">
+                    <div className="chat-chat-name-row">
+                      <span className="chat-chat-name">{project.name}</span>
+                      {/* Normally would show last message time here, using static "Hôm qua" or logic if available */}
                     </div>
-                    <div className="chat-chat-info">
-                      <div className="chat-chat-name">{project.name}</div>
+                    <div className="chat-chat-msg-row">
+                      <span className="chat-chat-msg">Nhấn để xem tin nhắn dự án</span>
                     </div>
                   </div>
-                ))
-              ) : sidebarSearchQuery ? (
-                <div className="chat-empty-chats">
-                  <i className="fas fa-search"></i>
-                  <span>Không tìm thấy đoạn chat nào</span>
                 </div>
-              ) : projects.length > 0 ? (
-                <div className="chat-empty-chats">
-                  <i className="fas fa-search"></i>
-                  <span>Không tìm thấy kết quả</span>
-                </div>
-              ) : (
-                <div className="chat-empty-chats">
-                  <i className="fas fa-folder-open"></i>
-                  <span>Chưa có dự án nào trong workspace</span>
-                </div>
-              )}
-            </div>
+              ))
+            ) : (
+              <div className="chat-empty-chats" style={{padding: '20px', textAlign: 'center', color: '#9ca3af', fontSize: '13px'}}>
+                <i className="fas fa-folder-open" style={{fontSize: '24px', marginBottom: '8px'}}></i>
+                <div>Không tìm thấy đoạn chat nào</div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -383,129 +370,105 @@ const Chat = () => {
               {/* Chat Header */}
               <div className="chat-chat-header">
                 <div className="chat-chat-header-info">
-                  <div className="chat-chat-header-avatar">
-                    <i className="fas fa-folder"></i>
+                  <div className="chat-chat-header-avatar group">
+                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(selectedProject?.name || 'Project')}&background=random`} alt={selectedProject?.name} />
                   </div>
-                  <div>
+                  <div className="chat-chat-header-title-box">
                     <h3>{selectedProject?.name}</h3>
-                    <p>Đoạn chat dự án</p>
+                    <p className="status-text online">Đoạn chat dự án</p>
                   </div>
                 </div>
                 <div className="chat-chat-header-actions">
-                  <button className="chat-header-btn">
-                    <i className="fas fa-search"></i>
-                  </button>
-                  <button className="chat-header-btn">
-                    <i className="fas fa-ellipsis-v"></i>
-                  </button>
+                  <button className="chat-header-btn"><i className="fas fa-phone-alt"></i></button>
+                  <button className="chat-header-btn"><i className="fas fa-video"></i></button>
+                  <button className="chat-header-btn"><i className="fas fa-search"></i></button>
+                  <button className="chat-header-btn"><i className="fas fa-info-circle"></i></button>
                 </div>
               </div>
 
               {/* Messages Area */}
               <div className="chat-messages">
+                <div className="chat-date-divider">
+                  <span>HÔM NAY</span>
+                </div>
+
+                {/* Actual Real-time Messages from Database */}
                 {loading ? (
                   <LoadingState message="Đang tải bình luận..." />
                 ) : (
                   <>
-                    {Object.keys(groupedMessages).length > 0 ? (
-                      Object.keys(groupedMessages).map(dateKey => (
-                        <div key={dateKey} className="chat-message-group">
-                          <div className="chat-date-divider">
-                            <span>{dateKey}</span>
-                          </div>
-                          {groupedMessages[dateKey].map(comment => (
-                            <div
-                              key={comment.id}
-                              className={`chat-message ${comment.user_id === user.id ? 'own' : 'other'}`}
-                            >
-                              {comment.user_id !== user.id && (
-                                <div className="chat-message-avatar">
-                                  {comment.avatar ? (
-                                    <img src={getAvatarUrl(comment.avatar)} alt={comment.username} />
-                                  ) : (
-                                    <span>{getLastName(comment.username || 'U').charAt(0).toUpperCase()}</span>
-                                  )}
-                                </div>
-                              )}
-                              <div className="chat-message-content">
-                                {comment.user_id !== user.id && (
-                                  <div className="chat-message-header">
-                                    <span className="chat-message-author">{comment.username}</span>
-                                    <span className="chat-message-time">
-                                      {formatMessageTime(comment.created_at)}
-                                    </span>
-                                  </div>
-                                )}
-                                <div className="chat-message-bubble">
-                                  <div className="chat-message-text">{comment.comment}</div>
-                                </div>
-                                {comment.user_id === user.id && (
-                                  <span className="chat-message-time-inline">
-                                    {formatMessageTime(comment.created_at)}
-                                  </span>
+                    {Object.keys(groupedMessages).map(dateKey => (
+                      <div key={dateKey} className="chat-message-group">
+                        <div className="chat-date-divider">
+                          <span>{dateKey}</span>
+                        </div>
+                        {groupedMessages[dateKey].map(comment => (
+                          <div
+                            key={comment.id}
+                            className={`chat-message ${comment.user_id === user.id ? 'own' : 'other'}`}
+                          >
+                            {comment.user_id !== user.id && (
+                              <div className="chat-message-avatar">
+                                {comment.avatar ? (
+                                  <img src={getAvatarUrl(comment.avatar)} alt={comment.username} />
+                                ) : (
+                                  <span>{getLastName(comment.username || 'U').charAt(0).toUpperCase()}</span>
                                 )}
                               </div>
+                            )}
+                            <div className="chat-message-content">
+                              <div className="chat-message-bubble">
+                                <div className="chat-message-text">{comment.comment}</div>
+                              </div>
+                              <span className="chat-message-time-inline">
+                                {formatMessageTime(comment.created_at)}
+                                {comment.user_id === user.id && <i className="fas fa-check-double" style={{color: '#b71c1c', marginLeft: '4px'}}></i>}
+                              </span>
                             </div>
-                          ))}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="chat-empty-messages">
-                        <i className="fas fa-comments"></i>
-                        <p>Chưa có tin nhắn nào. Hãy bắt đầu cuộc trò chuyện!</p>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                    {typingUsers.size > 0 && (
-                      <div className="chat-typing-indicator">
-                        <div className="chat-typing-dots">
-                          <span></span>
-                          <span></span>
-                          <span></span>
-                        </div>
-                        <span>{Array.from(typingUsers).join(', ')} đang nhập...</span>
-                      </div>
-                    )}
+                    ))}
                     <div ref={commentsEndRef} />
                   </>
                 )}
               </div>
 
-              {/* Input Area */}
-              <div className="chat-input-area">
+              {/* Input Area (New Mockup Design) */}
+              <div className="chat-input-area new-design">
                 <form className="chat-input-form" onSubmit={handleSendComment}>
-                  <div className="chat-input-toolbar">
-                    <button type="button" className="chat-toolbar-btn" title="Định dạng">
-                      <i className="fas fa-font"></i>
-                    </button>
-                    <button type="button" className="chat-toolbar-btn" title="Emoji">
-                      <i className="far fa-smile"></i>
-                    </button>
-                    <button type="button" className="chat-toolbar-btn" title="Đính kèm">
-                      <i className="fas fa-paperclip"></i>
-                    </button>
+                  <div className="chat-input-container">
+                    <div className="chat-input-toolbar-top">
+                      <div className="toolbar-icons">
+                        <button type="button"><i className="fas fa-bold"></i></button>
+                        <button type="button"><i className="fas fa-paperclip"></i></button>
+                        <button type="button"><i className="far fa-image"></i></button>
+                        <button type="button"><i className="far fa-smile"></i></button>
+                      </div>
+                      <button type="button" className="ai-assist-btn">
+                        <i className="fas fa-robot"></i> AI Trợ giúp
+                      </button>
+                    </div>
+                    <div className="chat-input-row">
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        className="chat-input-field"
+                        placeholder="Nhập tin nhắn..."
+                        value={newComment}
+                        onChange={handleCommentChange}
+                      />
+                      <button
+                        type="submit"
+                        className="chat-send-btn-new"
+                        disabled={!newComment.trim()}
+                      >
+                        <i className="fas fa-paper-plane"></i>
+                      </button>
+                    </div>
                   </div>
-                  <div className="chat-input-wrapper">
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      className="chat-input"
-                      placeholder="Type a message"
-                      value={newComment}
-                      onChange={handleCommentChange}
-                    />
-                  </div>
-                  <div className="chat-input-actions">
-                    <button type="button" className="chat-toolbar-btn" title="Thêm">
-                      <i className="fas fa-plus"></i>
-                    </button>
-                    <button
-                      type="submit"
-                      className="chat-send-btn"
-                      disabled={!newComment.trim()}
-                      title="Gửi"
-                    >
-                      <i className="fas fa-paper-plane"></i>
-                    </button>
+                  <div className="chat-input-footer">
+                    Nhấn Enter để gửi, Shift + Enter để xuống dòng
                   </div>
                 </form>
               </div>

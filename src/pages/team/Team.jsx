@@ -238,63 +238,75 @@ const Team = () => {
         </div>
       )}
 
-      <div className="page-header">
-        <div className="header-content">
-          <div className="header-icon-wrapper">
-            <i className="fas fa-users"></i>
+      {/* TOP NAV BAR - Global Nav for Team Page */}
+      <div className="team-top-nav">
+        <div className="nav-left">
+          <div className="nav-brand">
+            <div className="nav-icon"><i className="fas fa-layer-group"></i></div>
+            <span className="nav-title">DỰ ÁN</span>
           </div>
-          <div>
-            <h1>QUẢN LÝ THÀNH VIÊN</h1>
-            <p className="subtitle">Quản lý thông tin và vai trò của các thành viên trong hệ thống.</p>
-          </div>
+          <span className="nav-link">Dashboard</span>
+          <span className="nav-link active">Overview</span>
         </div>
-        <div className="header-right-section">
-          <div className="header-search">
-            <i className="fas fa-search search-icon"></i>
-            <input
-              type="text"
-              placeholder="Tìm kiếm thành viên..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-            {searchQuery && (
-              <button
-                className="search-clear"
-                onClick={() => setSearchQuery('')}
-                type="button"
-                title="Xóa tìm kiếm"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            )}
+        <div className="nav-right">
+          <div className="nav-search">
+            <i className="fas fa-search"></i>
+            <input type="text" placeholder="Tìm kiếm thành viên..." />
           </div>
-          {(canManage || permissions.canViewTeam) && (
-            <div className="header-actions">
-              <span className="badge-prj">
-                <i className="fas fa-users"></i>
-                {members.length} thành viên
-              </span>
-              {canManage && (
-                <button className="primary" type="button" onClick={openCreate}>
-                  <i className="fas fa-plus"></i>
-                  Thêm thành viên
-                </button>
-              )}
-            </div>
+          <i className="far fa-bell icon-btn"></i>
+          <i className="fas fa-cog icon-btn"></i>
+          {user?.avatar ? (
+             <img src={user.avatar} alt="User" className="nav-avatar" />
+          ) : (
+             <div className="nav-avatar-placeholder">
+               {getLastName(user?.username || 'U').charAt(0).toUpperCase()}
+             </div>
           )}
         </div>
       </div>
 
+      {/* MAIN HEADER */}
+      <div className="team-welcome">
+        <div className="welcome-icon">
+          <i className="fas fa-user-friends"></i>
+        </div>
+        <div className="welcome-text">
+          <h1>QUẢN LÝ THÀNH VIÊN</h1>
+          <p>Quản lý thông tin và vai trò của các thành viên trong hệ thống.</p>
+        </div>
+      </div>
+
+      {/* CONTROLS */}
+      <div className="team-controls">
+        <div className="controls-search">
+          <i className="fas fa-search"></i>
+          <input 
+            type="text" 
+            placeholder="Tìm kiếm thành viên..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="controls-count">
+          <i className="fas fa-user-friends"></i>
+          <span>{members.length} thành viên</span>
+        </div>
+        {canManage && (
+          <button className="add-member-btn" onClick={openCreate}>
+            <i className="fas fa-plus"></i> Thêm thành viên
+          </button>
+        )}
+      </div>
+
+      {/* TABLE */}
       {loading ? (
         <div className="loading-state">
           <i className="fas fa-spinner fa-spin"></i>
           <p>Đang tải danh sách thành viên...</p>
         </div>
       ) : (
-        <div className="team-table-container">
+        <div className="team-table-card">
           {(() => {
-            // Filter members based on search query
             const filteredMembers = members.filter(m => {
               if (!searchQuery.trim()) return true;
               const query = searchQuery.toLowerCase();
@@ -307,71 +319,75 @@ const Team = () => {
             });
 
             return filteredMembers.length > 0 || members.length === 0 ? (
-              <table className="team-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Tên</th>
-                    <th>Email</th>
-                    <th>Ngày sinh</th>
-                    <th>Nghề nghiệp</th>
-                    {canManage && <th className="actions-column">Thao tác</th>}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredMembers.length > 0 ? (
-                    filteredMembers.map(m => (
-                  <tr key={m.id}>
-                    <td className="id-cell">{m.id}</td>
-                    <td className="name-cell">
-                      <div className="name-wrapper">
-                        <i className="fas fa-user"></i>
-                        <span>{m.name}</span>
-                      </div>
-                    </td>
-                    <td className="email-cell">
-                      <i className="fas fa-envelope"></i>
-                      {m.email}
-                    </td>
-                    <td className="date-cell">
-                      {m.date_of_birth ? formatDateForDisplay(m.date_of_birth) : '-'}
-                    </td>
-                    <td className="occupation-cell">
-                      {m.occupation || '-'}
-                    </td>
-                    {canManage && (
-                      <td className="actions-cell">
-                        <div className="table-actions">
-                          <button className="table-btn edit-btn" onClick={() => openEdit(m)} title="Sửa">
-                            <i className="fas fa-edit"></i>
-                          </button>
-                          {canDelete && (
-                            <button className="table-btn delete-btn" onClick={() => openDelete(m.id)} title="Xóa">
-                              <i className="fas fa-trash"></i>
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                    ))
-                  ) : (
+              <>
+                <table className="team-table">
+                  <thead>
                     <tr>
-                      <td colSpan={canManage ? 6 : 5} style={{ textAlign: 'center', padding: '40px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                          <i className="fas fa-search" style={{ fontSize: '48px', color: '#9ca3af' }}></i>
-                          <div style={{ fontSize: '16px', fontWeight: '600', color: '#374151' }}>
-                            Không tìm thấy thành viên
-                          </div>
-                          <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                            Không có thành viên nào khớp với từ khóa "{searchQuery}"
-                          </div>
-                        </div>
-                      </td>
+                      <th>ID</th>
+                      <th>TÊN</th>
+                      <th>EMAIL</th>
+                      <th>NGÀY SINH</th>
+                      <th>NGHỀ NGHIỆP</th>
+                      {canManage && <th>THAO TÁC</th>}
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredMembers.length > 0 ? (
+                      filteredMembers.map((m, idx) => {
+                        // Determine badge class
+                        const occ = (m.occupation || '').toLowerCase();
+                        let badgeClass = 'default';
+                        if (occ.includes('design') || occ.includes('thiết kế')) badgeClass = 'design';
+                        else if (occ.includes('engineer') || occ.includes('dev') || occ.includes('kỹ sư')) badgeClass = 'engineering';
+                        else if (occ.includes('market') || occ.includes('sale') || occ.includes('kinh doanh')) badgeClass = 'marketing';
+
+                        return (
+                          <tr key={m.id}>
+                            <td className="col-id">#{String(m.id).padStart(3, '0')}</td>
+                            <td className="col-name">
+                              <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=random`} alt={m.name} className="member-avatar" />
+                              <span>{m.name}</span>
+                            </td>
+                            <td className="col-email">{m.email}</td>
+                            <td className="col-date">
+                              {m.date_of_birth ? formatDateForDisplay(m.date_of_birth) : '-'}
+                            </td>
+                            <td>
+                              <span className={`badge ${badgeClass}`}>{m.occupation || '-'}</span>
+                            </td>
+                            {canManage && (
+                              <td>
+                                <button className="table-btn edit-btn" onClick={() => openEdit(m)} title="Sửa">
+                                  <i className="fas fa-edit"></i>
+                                </button>
+                                {canDelete && (
+                                  <button className="table-btn delete-btn" onClick={() => openDelete(m.id)} title="Xóa">
+                                    <i className="fas fa-trash"></i>
+                                  </button>
+                                )}
+                              </td>
+                            )}
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan={canManage ? 6 : 5} style={{ textAlign: 'center', padding: '40px' }}>
+                          <div style={{ color: '#9ca3af' }}>Không có thành viên nào khớp với từ khóa "{searchQuery}"</div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+                <div className="table-footer">
+                  <span>Hiển thị {Math.min(1, filteredMembers.length)} - {filteredMembers.length} trong số {filteredMembers.length} thành viên</span>
+                  <div className="pagination">
+                    <button>&lt;</button>
+                    <button className="active">1</button>
+                    <button>&gt;</button>
+                  </div>
+                </div>
+              </>
             ) : (
               <EmptyState
                 icon="fa-users"
@@ -384,6 +400,24 @@ const Team = () => {
           })()}
         </div>
       )}
+
+      {/* BOTTOM PANELS */}
+      <div className="team-bottom-panels">
+        <div className="panel-admin">
+          <h3>Lời khuyên quản trị</h3>
+          <p>Sử dụng vai trò 'Guest' cho các đối tác bên ngoài để giới hạn quyền truy cập vào dữ liệu nhạy cảm của công ty.</p>
+          <a href="#">Xem hướng dẫn bảo mật</a>
+          <i className="fas fa-shield-alt bg-icon"></i>
+        </div>
+        <div className="panel-support">
+          <div className="support-icon"><i className="far fa-question-circle"></i></div>
+          <div className="support-content">
+            <h3>Cần hỗ trợ?</h3>
+            <p>Nếu bạn gặp khó khăn trong việc quản lý thành viên, vui lòng liên hệ đội ngũ IT Hub.</p>
+            <button>Gửi yêu cầu hỗ trợ</button>
+          </div>
+        </div>
+      </div>
 
       {/* Create/Edit Modal */}
       <ModalAdd

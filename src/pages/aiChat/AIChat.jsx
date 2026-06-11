@@ -55,34 +55,6 @@ const AIChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Initialize conversation with AI suggestion
-  useEffect(() => {
-    const initializeChat = async () => {
-      try {
-        setAiLoading(true);
-        const userProjects = projects.map(p => ({
-          id: p.id,
-          name: p.name,
-          description: p.description || ''
-        }));
-        
-        const res = await aiService.chat([], selectedProjectName || null, userProjects);
-        if (res.success && res.data) {
-          setAiMessages([{
-            role: res.data.role || 'assistant',
-            content: res.data.content || res.data.message || res.data
-          }]);
-        }
-      } catch (err) {
-        addToast('Không thể khởi tạo cuộc trò chuyện với AI', 'danger');
-      } finally {
-        setAiLoading(false);
-      }
-    };
-    if (projects.length >= 0) {
-      initializeChat();
-    }
-  }, [projects]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -145,29 +117,6 @@ const AIChat = () => {
     if (window.confirm('Bạn có chắc muốn xóa toàn bộ cuộc trò chuyện?')) {
       setAiMessages([]);
       setAiInput('');
-      const initializeChat = async () => {
-        try {
-          setAiLoading(true);
-          const userProjects = projects.map(p => ({
-            id: p.id,
-            name: p.name,
-            description: p.description || ''
-          }));
-          
-          const res = await aiService.chat([], selectedProjectName || null, userProjects);
-          if (res.success && res.data) {
-            setAiMessages([{
-              role: res.data.role || 'assistant',
-              content: res.data.content || res.data.message || res.data
-            }]);
-          }
-        } catch (err) {
-          addToast('Không thể khởi tạo cuộc trò chuyện với AI', 'danger');
-        } finally {
-          setAiLoading(false);
-        }
-      };
-      initializeChat();
     }
   };
 

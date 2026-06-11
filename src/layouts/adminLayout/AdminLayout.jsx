@@ -53,6 +53,11 @@ const AdminLayout = ({ children, currentView, setCurrentView }) => {
 
     return (
         <div className="admin-layout">
+            <div className="admin-ambient-bg">
+                <div className="admin-orb admin-orb-red"></div>
+                <div className="admin-orb admin-orb-blue"></div>
+                <div className="admin-orb admin-orb-orange"></div>
+            </div>
             <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
                 <div className="admin-brand">
                     <img src={LogoDash} alt="logo" className="admin-brand-logo" />

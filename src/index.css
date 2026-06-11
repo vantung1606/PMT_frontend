@@ -37,6 +37,7 @@ body {
   overflow: auto;
   scrollbar-width: none; 
   letter-spacing: 0.1px;
+  zoom: 0.85; /* Scale down the entire UI */
 }
 
 body::-webkit-scrollbar {

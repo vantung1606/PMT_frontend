@@ -4,14 +4,8 @@ import Footer from '../../components/footer/Footer';
 import InforLayout from '../../layouts/inforLayout/InforLayout';
 const Home = () => {
   return (
-    <div className="container">
-      {/* Header */}
-      <Header />
-
+    <div className="landing-wrapper">
       <InforLayout/>
-
-      {/* Footer */}
-      <Footer/>
     </div>
   );
 };

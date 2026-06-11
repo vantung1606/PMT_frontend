@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
 import { useAuth } from '../../contexts/AuthContext';
+import logoImage from '../../assets/img/logo.png';
 import './Workspaces.css';
 
 const Workspaces = () => {
@@ -17,13 +18,15 @@ const Workspaces = () => {
   const [sortBy, setSortBy] = useState('recent');
   const userMenuRef = useRef(null);
 
-  const ownedWorkspaces = Array.isArray(workspaces)
-    ? workspaces.filter((ws) => user && ws.owner_id === user.id)
-    : [];
+  const ownedWorkspaces = useMemo(
+    () => (Array.isArray(workspaces) ? workspaces.filter((ws) => user && ws.owner_id === user.id) : []),
+    [workspaces, user]
+  );
 
-  const memberWorkspaces = Array.isArray(workspaces)
-    ? workspaces.filter((ws) => !user || ws.owner_id !== user.id)
-    : [];
+  const memberWorkspaces = useMemo(
+    () => (Array.isArray(workspaces) ? workspaces.filter((ws) => !user || ws.owner_id !== user.id) : []),
+    [workspaces, user]
+  );
 
   const getWorkspaceTime = (ws) => {
     const rawValue = ws?.updated_at || ws?.created_at;
@@ -56,6 +59,7 @@ const Workspaces = () => {
   const displayedOwnedWorkspaces = filterAndSortWorkspaces(ownedWorkspaces);
   const displayedMemberWorkspaces = filterAndSortWorkspaces(memberWorkspaces);
   const recentWorkspaces = filterAndSortWorkspaces(Array.isArray(workspaces) ? workspaces : []).slice(0, 4);
+  const totalCount = Array.isArray(workspaces) ? workspaces.length : 0;
 
   const handleSelect = (ws) => {
     selectWorkspace(ws);
@@ -75,11 +79,13 @@ const Workspaces = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name.trim()) {
-      setError('T�n kh�ng gian l�m vi?c l� b?t bu?c');
+      setError('Tên không gian làm việc là bắt buộc');
       return;
     }
+
     setError('');
     setSubmitting(true);
+
     try {
       await createWorkspace({
         name: form.name.trim(),
@@ -88,7 +94,7 @@ const Workspaces = () => {
       setForm({ name: '', description: '' });
       setShowModal(false);
     } catch (err) {
-      setError(err.message || 'Kh�ng th? t?o kh�ng gian l�m vi?c');
+      setError(err.message || 'Không thể tạo không gian làm việc');
     } finally {
       setSubmitting(false);
     }
@@ -110,231 +116,309 @@ const Workspaces = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showUserMenu]);
 
+  const headerLinks = [
+    { label: 'TRANG CHỦ', active: false, path: '/' },
+    { label: 'DỰ ÁN', active: true, path: '/workspaces' },
+    { label: 'SỰ KIỆN', active: false, path: '/events' },
+    { label: 'TIN TỨC', active: false, path: '/news' }
+  ];
+
   return (
     <div className="workspaces-page">
-      <div className="workspace-top-nav">
-        <div className="workspace-nav-actions">
-          <button className="back-to-home-btn" onClick={() => navigate('/')} title="Tr? v? trang ch?">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            <span>Trang ch?</span>
-          </button>
-          {user?.role === 'admin' && (
-            <button className="back-to-admin-btn" onClick={() => navigate('/admin')} title="Back to Admin Dashboard">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="9"></rect>
-                <rect x="14" y="3" width="7" height="5"></rect>
-                <rect x="14" y="12" width="7" height="9"></rect>
-                <rect x="3" y="16" width="7" height="5"></rect>
-              </svg>
-              <span>Admin Dashboard</span>
-            </button>
-          )}
-        </div>
-
-        <div className="user-menu-container" ref={userMenuRef}>
-          <button className="user-name-btn" onClick={() => setShowUserMenu(!showUserMenu)} title="Menu ngu?i d�ng">
-            <div className="user-avatar">
-              {user?.avatar_url ? <img src={user.avatar_url} alt={user.full_name} /> : <span>{user?.full_name?.charAt(0).toUpperCase() || 'U'}</span>}
-            </div>
-            <span className="user-name">{user?.full_name || 'Ngu?i d�ng'}</span>
-            <svg className={`dropdown-arrow ${showUserMenu ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </button>
-
-          {showUserMenu && (
-            <div className="user-dropdown-menu">
-              <div className="user-info-section">
-                <div className="user-info-name">{user?.full_name}</div>
-                <div className="user-info-email">{user?.email}</div>
-              </div>
-              <div className="dropdown-divider"></div>
-              <button className="logout-btn" onClick={handleLogout}>
-                <span>�ang xu?t</span>
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="workspaces-hero">
-        <div>
-          <p className="hero-eyebrow">Workspace cho d? �n</p>
-          <h1>Ch?n workspace d? di th?ng v�o qu?n l� d? �n</h1>
-          <p className="hero-subtitle">M?i workspace gi�p b?n t�ch d? �n theo team ho?c kh�ch h�ng, theo d�i ti?n d? v� ph?i h?p c�ng vi?c r� r�ng.</p>
-        </div>
-        <div className="logo-wp-container">
-          <img src={require('../../assets/img/BrandCollabTask.png')} alt="CollabTask Logo" className="logo-wp" style={{ width: 48, height: 48, objectFit: 'contain' }} />
-          <span className="logo-wp-text">COLLABTASK</span>
-        </div>
-      </div>
-
-      <section className="workspace-section workspace-tools-section">
-        <div className="workspace-tools">
-          <div className="workspace-search">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="T�m workspace theo t�n d? �n, team ho?c m� t?..."
-              aria-label="T�m workspace"
-            />
+      <div className="workspace-hero-wrapper">
+        <div className="workspace-pill-nav">
+          <div className="wp-nav-left">
+            <img className="wp-brand-logo" src={logoImage} alt="CollabTask" />
           </div>
-          <div className="workspace-sort">
-            <label htmlFor="workspace-sort">S?p x?p</label>
-            <select id="workspace-sort" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              <option value="recent">M?i c?p nh?t</option>
-              <option value="name-asc">T�n A-Z</option>
-              <option value="name-desc">T�n Z-A</option>
-            </select>
+          <div className="wp-nav-center">
+            {headerLinks.map((link) => (
+              <span
+                key={link.label}
+                className={`wp-nav-link ${link.active ? 'active' : ''}`}
+                onClick={() => navigate(link.path)}
+              >
+                {link.label}
+              </span>
+            ))}
           </div>
-        </div>
-      </section>
-
-      <div className="workspace-main-layout">
-        <div className="workspace-primary-column">
-          <section className="workspace-section workspace-primary-section">
-            <div className="workspace-section-header">
-              <div>
-                <h2>Kh�ng gian c?a b?n</h2>
-                <p>Ch?n workspace d? m? danh s�ch d? �n tuong ?ng</p>
-              </div>
-              <button className="workspace-section-action" onClick={handleOpenModal}>T?o kh�ng gian</button>
-            </div>
-
-            {loading && <div className="workspaces-loading">�ang t?i danh s�ch kh�ng gian...</div>}
-
-            {!loading && displayedOwnedWorkspaces.length === 0 && (
-              <div className="workspaces-empty">
-                <p>{searchTerm.trim() ? 'Kh�ng t�m th?y workspace ph� h?p v?i t? kh�a c?a b?n.' : 'B?n chua c� kh�ng gian l�m vi?c n�o. H�y t?o m?i d? b?t d?u.'}</p>
-              </div>
-            )}
-
-            <div className="workspaces-grid">
-              <button className="workspace-card workspace-card-create" onClick={handleOpenModal}>
-                <div className="create-icon">+</div>
-                <div>
-                  <h3>T?o kh�ng gian m?i</h3>
-                  <p>B?t d?u qu?n l� d? �n m?i theo team ho?c kh�ch h�ng</p>
+          <div className="wp-nav-right">
+            <div className="wp-account-menu" ref={userMenuRef}>
+              <button type="button" className="wp-account-trigger" onClick={() => setShowUserMenu(!showUserMenu)}>
+                <div className="wp-avatar">
+                  {user?.avatar_url ? (
+                    <img src={user.avatar_url} alt="User" />
+                  ) : (
+                    <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
+                  )}
                 </div>
+                <span className="wp-account-name">{user?.full_name || user?.username || 'Admin Account'}</span>
               </button>
+              {showUserMenu && (
+                <div className="wp-user-dropdown">
+                  <div className="wp-user-info">
+                    <div className="wp-user-name">{user?.username || user?.full_name || 'Admin Account'}</div>
+                    <div className="wp-user-email">{user?.email}</div>
+                  </div>
+                  <div className="wp-dropdown-divider"></div>
+                  {user?.role === 'admin' && (
+                    <button className="wp-admin-btn" onClick={() => { setShowUserMenu(false); navigate('/admin'); }} type="button">
+                      <i className="fas fa-shield-alt"></i> Admin Dashboard
+                    </button>
+                  )}
+                  <button className="wp-logout-btn" onClick={() => { setShowUserMenu(false); handleLogout(); }} type="button">
+                    <i className="fas fa-sign-out-alt"></i> Đăng xuất
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
-              {displayedOwnedWorkspaces.map((ws) => (
-                <button key={ws.id} className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`} onClick={() => handleSelect(ws)}>
-                  <div className="workspace-card-header">
-                    <div>
-                      <h3>{ws.name}</h3>
-                      {ws.description && <p className="workspace-desc">{ws.description}</p>}
-                    </div>
+        <div className="workspace-hero-content">
+          <div className="workspace-hero-copy">
+            <p className="workspace-eyebrow">Không gian làm việc</p>
+            <h1>Workspace của bạn, gọn hơn và dễ quét hơn.</h1>
+            <p>
+              Tạo, lọc và mở workspace nhanh. Mỗi không gian đều có trạng thái riêng, quyền riêng và luồng làm việc rõ ràng.
+            </p>
+          </div>
+          <div className="workspace-hero-stats">
+            <div>
+              <strong>{totalCount}</strong>
+              <span>workspace</span>
+            </div>
+            <div>
+              <strong>{displayedOwnedWorkspaces.length}</strong>
+              <span>sở hữu</span>
+            </div>
+            <div>
+              <strong>{displayedMemberWorkspaces.length}</strong>
+              <span>tham gia</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="workspace-main-container">
+        <div className="workspace-left-col">
+          <div className="wp-toolbar">
+            <div className="wp-toolbar-search">
+              <i className="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Tìm workspace..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="wp-toolbar-actions">
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                <option value="recent">Mới nhất</option>
+                <option value="name-asc">Tên A-Z</option>
+                <option value="name-desc">Tên Z-A</option>
+              </select>
+              <button className="wp-btn-primary" onClick={handleOpenModal} type="button">
+                <i className="fas fa-plus"></i> Không gian mới
+              </button>
+            </div>
+          </div>
+
+          {loading && <div className="workspaces-loading">Đang tải danh sách không gian...</div>}
+
+          {!loading && displayedOwnedWorkspaces.length === 0 && displayedMemberWorkspaces.length === 0 && (
+            <div className="workspaces-empty">Bạn chưa có workspace nào khớp với bộ lọc hiện tại.</div>
+          )}
+
+          {!!displayedOwnedWorkspaces.length && (
+            <section className="workspace-group">
+              <div className="workspace-group-header">
+                <h2>Workspace của bạn</h2>
+                <span>{displayedOwnedWorkspaces.length} mục</span>
+              </div>
+              <div className="wp-cards-grid">
+                {displayedOwnedWorkspaces.map((ws, index) => {
+                  const badgeLabels = ['Đang hoạt động', 'Ưu tiên', 'Riêng tư'];
+                  const badgeClass = ['active', 'priority', 'private'];
+                  const bIdx = index % 3;
+                  const icons = ['fa-network-wired', 'fa-bullhorn', 'fa-shield-halved'];
+
+                  return (
+                    <button key={ws.id} className="wp-card" onClick={() => handleSelect(ws)} type="button">
+                      <div className="wp-card-header">
+                        <div className={`wp-card-icon badge-${badgeClass[bIdx]}`}>
+                          <i className={`fas ${icons[bIdx]}`}></i>
+                        </div>
+                        <span className={`wp-card-badge type-${badgeClass[bIdx]}`}>
+                          {badgeLabels[bIdx]}
+                        </span>
+                      </div>
+                      <h3 className="wp-card-title">{ws.name}</h3>
+                      <p className="wp-card-desc">
+                        {ws.description || 'Không gian làm việc tập trung cho dự án, nhiệm vụ và cộng tác nhóm.'}
+                      </p>
+
+                      <div className="wp-card-stats">
+                        <div className="wp-stat-box">
+                          <span className="stat-label">Dự án</span>
+                          <span className="stat-value">{Math.floor(Math.random() * 20) + 5}</span>
+                        </div>
+                        <div className="wp-stat-box">
+                          <span className="stat-label">Thành viên</span>
+                          <span className="stat-value">{Math.floor(Math.random() * 40) + 4}</span>
+                        </div>
+                      </div>
+
+                      <div className="wp-card-footer">
+                        <div className="wp-card-avatars">
+                          <img src="https://i.pravatar.cc/150?u=1" alt="Member" />
+                          <img src="https://i.pravatar.cc/150?u=2" alt="Member" />
+                          <span className="more-members">+{Math.floor(Math.random() * 10) + 2}</span>
+                        </div>
+                        <div className="wp-card-action">
+                          Mở bảng điều khiển <i className="fas fa-chevron-right"></i>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {!!displayedMemberWorkspaces.length && (
+            <section className="workspace-group">
+              <div className="workspace-group-header">
+                <h2>Workspace bạn tham gia</h2>
+                <span>{displayedMemberWorkspaces.length} mục</span>
+              </div>
+              <div className="wp-cards-grid member-grid">
+                {displayedMemberWorkspaces.map((ws, index) => {
+                  const badgeLabels = ['Đang hoạt động', 'Ưu tiên', 'Cộng tác'];
+                  const badgeClass = ['active', 'priority', 'private'];
+                  const bIdx = index % 3;
+                  const icons = ['fa-people-group', 'fa-folder-open', 'fa-layer-group'];
+
+                  return (
+                    <button key={ws.id} className="wp-card member-card" onClick={() => handleSelect(ws)} type="button">
+                      <div className="wp-card-header">
+                        <div className={`wp-card-icon badge-${badgeClass[bIdx]}`}>
+                          <i className={`fas ${icons[bIdx]}`}></i>
+                        </div>
+                        <span className={`wp-card-badge type-${badgeClass[bIdx]}`}>
+                          {badgeLabels[bIdx]}
+                        </span>
+                      </div>
+                      <h3 className="wp-card-title">{ws.name}</h3>
+                      <p className="wp-card-desc">
+                        {ws.description || 'Workspace được chia sẻ với team để phối hợp công việc hiệu quả hơn.'}
+                      </p>
+                      <div className="wp-card-footer member-footer">
+                        <div className="wp-card-avatars">
+                          <span className="more-members">{(ws.role || 'M').toString().charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div className="wp-card-action">
+                          Vào workspace <i className="fas fa-chevron-right"></i>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          <div className="wp-card wp-card-create" onClick={handleOpenModal} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && handleOpenModal()}>
+            <div className="wp-create-circle">
+              <i className="fas fa-plus"></i>
+            </div>
+            <span>Tạo workspace mới</span>
+          </div>
+        </div>
+
+        <div className="workspace-right-col">
+          <div className="wp-overview-card">
+            <div className="wp-overview-top">
+              <p className="wp-overview-label">Tổng quan</p>
+              <h3 className="wp-overview-title">
+                <i className="fas fa-chart-pie"></i> Nguồn lực & hoạt động
+              </h3>
+            </div>
+
+            <div className="wp-current-workspace">
+              <span className="current-label">Workspace hiện tại</span>
+              <strong>{currentWorkspace?.name || 'Chưa chọn workspace'}</strong>
+              <p>{currentWorkspace?.description || 'Chọn một workspace để vào bảng dự án, task và báo cáo.'}</p>
+            </div>
+
+            <div className="wp-storage-section">
+              <div className="storage-header">
+                <span>HẠN MỨC LƯU TRỮ</span>
+                <strong>78%</strong>
+              </div>
+              <div className="storage-bar">
+                <div className="storage-fill" style={{ width: '78%' }}></div>
+              </div>
+              <p className="storage-desc">Đã sử dụng 156GB trên tổng số 200GB tại tất cả các trung tâm.</p>
+            </div>
+
+            <div className="wp-system-structure">
+              <h4>CẤU TRÚC HỆ THỐNG</h4>
+              <div className="system-item">
+                <div className="sys-icon"><i className="fas fa-sitemap"></i></div>
+                <div className="sys-info">
+                  <strong>Cấu trúc phân cấp</strong>
+                  <span>Xem sơ đồ phân cấp trực quan</span>
+                </div>
+              </div>
+              <div className="system-item">
+                <div className="sys-icon"><i className="fas fa-shield-alt"></i></div>
+                <div className="sys-info">
+                  <strong>Kiểm soát truy cập</strong>
+                  <span>Mã hóa & phân quyền</span>
+                </div>
+              </div>
+              <div className="system-item">
+                <div className="sys-icon"><i className="fas fa-history"></i></div>
+                <div className="sys-info">
+                  <strong>Nhật ký hệ thống</strong>
+                  <span>Các hành động theo thời gian thực</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="wp-recent-list">
+              <h4>WORKSPACE GẦN ĐÂY</h4>
+              {recentWorkspaces.map((ws) => (
+                <button key={ws.id} className="recent-item" onClick={() => handleSelect(ws)} type="button">
+                  <div>
+                    <strong>{ws.name}</strong>
+                    <span>{ws.description || 'Không có mô tả'}</span>
                   </div>
-                  <div className="workspace-footer">
-                    <span className="workspace-status">{currentWorkspace?.id === ws.id ? '�ang ho?t d?ng' : 'M? d? �n'}</span>
-                    <span className="workspace-arrow">?</span>
-                  </div>
+                  <i className="fas fa-chevron-right"></i>
                 </button>
               ))}
             </div>
-          </section>
 
-          {!loading && recentWorkspaces.length > 0 && (
-            <section className="workspace-section">
-              <div className="workspace-section-header">
-                <div>
-                  <h2>G?n d�y truy c?p</h2>
-                  <p>C�c workspace b?n v?a l�m vi?c g?n nh?t</p>
-                </div>
-              </div>
-              <div className="workspaces-grid">
-                {recentWorkspaces.map((ws) => (
-                  <button key={`recent-${ws.id}`} className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`} onClick={() => handleSelect(ws)}>
-                    <div className="workspace-card-header">
-                      <div>
-                        <h3>{ws.name}</h3>
-                        {ws.description && <p className="workspace-desc">{ws.description}</p>}
-                      </div>
-                    </div>
-                    <div className="workspace-footer">
-                      <span className="workspace-status">{currentWorkspace?.id === ws.id ? '�ang ho?t d?ng' : 'M? d? �n'}</span>
-                      <span className="workspace-arrow">?</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {displayedMemberWorkspaces.length > 0 && (
-            <section className="workspace-section">
-              <div className="workspace-section-header">
-                <div>
-                  <h2>Kh�ng gian b?n tham gia</h2>
-                  <p>C�c workspace c� d? �n b?n dang c?ng t�c</p>
-                </div>
-              </div>
-
-              <div className="workspaces-grid">
-                {displayedMemberWorkspaces.map((ws) => (
-                  <button key={ws.id} className={`workspace-card ${currentWorkspace?.id === ws.id ? 'active' : ''}`} onClick={() => handleSelect(ws)}>
-                    <div className="workspace-card-header">
-                      <div>
-                        <h3>{ws.name}</h3>
-                        {ws.description && <p className="workspace-desc">{ws.description}</p>}
-                      </div>
-                    </div>
-                    <div className="workspace-footer">
-                      <span className="workspace-status">{currentWorkspace?.id === ws.id ? '�ang ho?t d?ng' : 'M? d? �n'}</span>
-                      <span className="workspace-arrow">?</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
+            <div className="wp-support-box">
+              <h4>Hỗ Trợ Chuyên Nghiệp</h4>
+              <p>Dịch vụ hỗ trợ riêng biệt cho các vấn đề quản trị cấp cao.</p>
+              <button type="button">Liên Hệ Hỗ Trợ 24/7</button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <aside className="workspace-sidebar-column">
-          <section className="workspace-section workspace-sidebar-block">
-            <div className="workspace-section-header">
-              <div>
-                <h2>B?t d?u trong 3 bu?c</h2>
-                <p>T?i uu d? v�o qu?n l� d? �n ngay</p>
-              </div>
-            </div>
-            <div className="workspace-content-grid sidebar-grid">
-              <article className="workspace-content-card">
-                <span className="content-step">01</span>
-                <h3>T?o workspace</h3>
-                <p>T?o kh�ng gian theo team/kh�ch h�ng d? gom d�ng d? �n.</p>
-              </article>
-              <article className="workspace-content-card">
-                <span className="content-step">02</span>
-                <h3>T?o d? �n d?u ti�n</h3>
-                <p>Thi?t l?p m?c ti�u, timeline v� ph?m vi c�ng vi?c r� r�ng.</p>
-              </article>
-              <article className="workspace-content-card">
-                <span className="content-step">03</span>
-                <h3>Ph�n c�ng & theo d�i</h3>
-                <p>Giao task cho th�nh vi�n v� c?p nh?t ti?n d? theo d? �n.</p>
-              </article>
-            </div>
-          </section>
-
-          <section className="workspace-section workspace-sidebar-block">
-            <div className="workspace-section-header">
-              <div>
-                <h2>M?u workspace d? �n</h2>
-                <p>Ch?n m?u d? tri?n khai nhanh</p>
-              </div>
-            </div>
-            <div className="workspace-content-grid sidebar-grid">
-              <article className="workspace-content-card"><h3>Ph?n m?m</h3><p>Backlog, sprint, bug, release.</p></article>
-              <article className="workspace-content-card"><h3>Marketing</h3><p>Timeline n?i dung v� KPI.</p></article>
-              <article className="workspace-content-card"><h3>V?n h�nh</h3><p>Quy tr�nh d?nh k? v� b�o c�o.</p></article>
-            </div>
-          </section>
-        </aside>
+      <div className="wp-footer">
+        <div className="wp-footer-brand">
+          <img className="wp-brand-logo footer-logo" src={logoImage} alt="CollabTask" />
+          <span>© 2026 COLLABTASK. Bảo lưu mọi quyền.</span>
+        </div>
+        <div className="wp-footer-links">
+          <span>Chính sách bảo mật</span>
+          <span>Điều khoản dịch vụ</span>
+          <span>Liên hệ hỗ trợ</span>
+          <span>Bảo mật</span>
+        </div>
       </div>
 
       {showModal && (
@@ -342,25 +426,37 @@ const Workspaces = () => {
           <div className="workspace-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
             <div className="workspace-modal-header">
               <div>
-                <p className="modal-eyebrow">T?o kh�ng gian</p>
-                <h3>Thi?t l?p kh�ng gian m?i</h3>
+                <p className="modal-eyebrow">Tạo không gian</p>
+                <h3>Thiết lập workspace mới</h3>
               </div>
-              <button className="modal-close" onClick={handleCloseModal} disabled={submitting}>�</button>
+              <button className="modal-close" onClick={handleCloseModal} disabled={submitting} type="button">×</button>
             </div>
 
             <form onSubmit={handleSubmit} className="workspace-form">
               <div className="form-row">
-                <label htmlFor="ws-name">T�n kh�ng gian</label>
-                <input id="ws-name" type="text" placeholder="V� d?: Product Team 2026" value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} />
+                <label htmlFor="ws-name">Tên workspace</label>
+                <input
+                  id="ws-name"
+                  type="text"
+                  placeholder="Ví dụ: Product Team 2026"
+                  value={form.name}
+                  onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                />
               </div>
               <div className="form-row">
-                <label htmlFor="ws-desc">M� t?</label>
-                <textarea id="ws-desc" rows={4} placeholder="M� t? ng?n v? d? �n/team/kh�ch h�ng trong workspace n�y..." value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} />
+                <label htmlFor="ws-desc">Mô tả</label>
+                <textarea
+                  id="ws-desc"
+                  rows={4}
+                  placeholder="Mô tả ngắn về dự án/team/khách hàng trong workspace này..."
+                  value={form.description}
+                  onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+                />
               </div>
               {error && <div className="workspace-error">{error}</div>}
               <div className="modal-actions">
-                <button type="button" className="modal-secondary" onClick={handleCloseModal} disabled={submitting}>H?y</button>
-                <button type="submit" className="workspace-submit" disabled={submitting}>{submitting ? '�ang t?o...' : 'T?o kh�ng gian'}</button>
+                <button type="button" className="modal-secondary" onClick={handleCloseModal} disabled={submitting}>Hủy</button>
+                <button type="submit" className="workspace-submit" disabled={submitting}>{submitting ? 'Đang tạo...' : 'Tạo workspace'}</button>
               </div>
             </form>
           </div>

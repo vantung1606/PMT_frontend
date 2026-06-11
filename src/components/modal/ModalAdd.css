@@ -25,7 +25,7 @@
 /* Modal Content */
 .modal-content {
   width: 100%;
-  max-width: 28rem; /* max-w-md */
+  max-width: 26rem; /* slightly smaller default */
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
@@ -37,20 +37,20 @@
 }
 
 .modal-content.small {
-  max-width: 24rem;
+  max-width: 22rem;
 }
 
 .modal-content.large {
-  max-width: 32rem; /* sm:max-w-lg */
+  max-width: 30rem; /* sm:max-w-lg */
 }
 
 @media (min-width: 640px) {
   .modal-content {
-    max-width: 32rem; /* sm:max-w-lg */
+    max-width: 28rem;
   }
   
   .modal-content.large {
-    max-width: 40rem;
+    max-width: 34rem;
   }
 }
 
@@ -70,8 +70,8 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 16px 24px 16px 24px;
-  border-bottom: 2px solid #d32f2f;
+  padding: 20px 20px 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .modal-header-text {
@@ -80,15 +80,16 @@
 }
 
 .modal-title {
-  font-size: 18px;
-  font-weight: 800;
-  color: #d32f2f;
+  font-size: 20px;
+  font-weight: 700;
+  color: #c62828;
   margin: 0 0 4px 0;
   line-height: 1.5;
+  text-transform: uppercase;
 }
 
 .modal-description {
-  font-size: 14px;
+  font-size: 13px;
   color: #6b7280;
   margin: 0;
   line-height: 1.5;
@@ -121,7 +122,7 @@
 
 /* Modal Body */
 .modal-body {
-  padding: 24px;
+  padding: 20px;
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1;
@@ -149,9 +150,9 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding: 16px 24px;
+  padding: 16px 20px;
   border-top: 1px solid #e5e7eb;
-  background: #ffffff;
+  background: #f8fafc;
 }
 
 /* Action Buttons */
@@ -160,10 +161,10 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
@@ -178,13 +179,12 @@
 /* Outline Button (Secondary) */
 .modal-action-btn.outline {
   background: #ffffff;
-  color: #374151;
-  border-color: #d1d5db;
+  color: #111827;
+  border-color: #e5e7eb;
 }
 
 .modal-action-btn.outline:hover:not(:disabled) {
   background: #f9fafb;
-  border-color: #9ca3af;
 }
 
 .modal-action-btn.outline:active:not(:disabled) {
@@ -193,17 +193,16 @@
 
 /* Primary Button */
 .modal-action-btn.primary {
-  background: #b71c1c;
+  background: #c62828;
   color: #ffffff;
 }
 
 .modal-action-btn.primary:hover:not(:disabled) {
   background: #b71c1c;
-  color: #ffffff;
 }
 
 .modal-action-btn.primary:active:not(:disabled) {
-  background: #b71c1c;
+  background: #991b1b;
 }
 
 /* Secondary Button */
@@ -250,23 +249,25 @@
 .modal-content .project-form .form-row {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .modal-body .form-row label,
 .modal-content .project-form .form-row label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 8px;
+  letter-spacing: 0.5px;
 }
 
 .modal-body .form-row label i,
 .modal-content .project-form .form-row label i {
-  color: #6b7280;
-  font-size: 16px;
+  color: #c62828;
+  font-size: 14px;
   width: 16px;
   text-align: center;
 }
@@ -276,15 +277,15 @@
 .modal-body .form-row input[type="email"],
 .modal-body .form-row textarea,
 .modal-content .project-form .form-row input[type="text"],
-modal-content .project-form .form-row input[type="number"],
+.modal-content .project-form .form-row input[type="number"],
 .modal-content .project-form .form-row input[type="date"],
 .modal-content .project-form .form-row input[type="email"],
 .modal-content .project-form .form-row textarea {
   width: 100%;
   padding: 10px 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
   background: #ffffff;
   color: #111827;
   transition: all 0.2s ease;
@@ -306,7 +307,7 @@ modal-content .project-form .form-row input[type="number"],
 .modal-content .project-form .form-row input[type="date"]:hover,
 .modal-content .project-form .form-row input[type="email"]:hover,
 .modal-content .project-form .form-row textarea:hover {
-  border-color: #9ca3af;
+  border-color: #d1d5db;
 }
 
 .modal-body .form-row input[type="text"]:focus,
@@ -318,8 +319,8 @@ modal-content .project-form .form-row input[type="number"],
 .modal-content .project-form .form-row input[type="email"]:focus,
 .modal-content .project-form .form-row textarea:focus {
   outline: none;
-  border-color: #070F2B;
-  box-shadow: 0 0 0 3px rgba(7, 15, 43, 0.1);
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
 }
 
 /* Select Styles */
@@ -327,9 +328,9 @@ modal-content .project-form .form-row input[type="number"],
   width: 100%;
   padding: 10px 14px;
   padding-right: 40px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
   background: #ffffff;
   color: #111827;
   cursor: pointer;
@@ -342,13 +343,13 @@ modal-content .project-form .form-row input[type="number"],
 }
 
 .modal-content .project-form select:hover {
-  border-color: #9ca3af;
+  border-color: #d1d5db;
 }
 
 .modal-content .project-form select:focus {
   outline: none;
-  border-color: #070F2B;
-  box-shadow: 0 0 0 3px rgba(7, 15, 43, 0.1);
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
 }
 
 .modal-content .project-form select option {
@@ -437,10 +438,11 @@ modal-content .project-form .form-row input[type="number"],
 .modal-body .hint,
 .modal-content .project-form .hint {
   color: #6b7280;
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-style: italic;
   font-weight: 400;
   line-height: 1.5;
   margin-top: 4px;
@@ -448,7 +450,7 @@ modal-content .project-form .form-row input[type="number"],
 
 .modal-body .hint i,
 .modal-content .project-form .hint i {
-  font-size: 12px;
+  font-size: 11px;
   color: #9ca3af;
 }
 

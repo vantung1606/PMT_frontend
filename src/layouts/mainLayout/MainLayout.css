@@ -1,14 +1,14 @@
 .main-layout {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f9fafb;
+  background-color: #f8fafc;
 }
 
 .main-layout-content {
   flex: 1;
   margin-left: 250px;
-  padding: 24px;
+  padding: 32px;
   min-height: 100vh;
 }
 
@@ -17,4 +17,3 @@
     padding: 16px;
   }
 }
-

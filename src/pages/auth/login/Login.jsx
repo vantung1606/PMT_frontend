@@ -7,21 +7,14 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (!error) return undefined;
-
-    const timer = setTimeout(() => {
-      setError('');
-    }, 5000);
-
+    const timer = setTimeout(() => setError(''), 5000);
     return () => clearTimeout(timer);
   }, [error]);
 
@@ -29,10 +22,7 @@ const Login = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -43,173 +33,116 @@ const Login = () => {
     try {
       const res = await login(formData);
       const role = res?.data?.user?.role;
-
-      if (role === 'admin') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate(from, { replace: true });
-      }
+      if (role === 'admin') navigate('/admin', { replace: true });
+      else navigate(from, { replace: true });
     } catch (error) {
-      setError(error.message || 'Có lỗi xảy ra khi đăng nhập');
+      setError(error.message || 'Email hoặc mật khẩu không chính xác.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log('Google login');
-  };
-
-  const handleFacebookLogin = () => {
-    console.log('Facebook login');
-  };
-
-  const handleForgotPassword = () => {
-    console.log('Forgot password');
-  };
-
   return (
-    <div className="login-page">
+    <div className="auth-super-page">
+      {/* Animated Background Orbs */}
+      <div className="auth-orb orb-red"></div>
+      <div className="auth-orb orb-blue"></div>
+      <div className="auth-orb orb-orange"></div>
+
       {error && (
-        <div className="error-notification">
-          <div className="error-content">
-            <span className="error-icon">!</span>
-            <span className="error-message">{error}</span>
-            <button className="error-close" onClick={() => setError('')} aria-label="Đóng thông báo">
-              ×
-            </button>
-          </div>
+        <div className="auth-super-error">
+          <i className="fas fa-exclamation-triangle"></i>
+          <span>{error}</span>
         </div>
       )}
 
-      <div className="login-shell">
-        <section className="login-brand-panel">
-          <Link to="/" className="login-brand">COLLABTASK</Link>
-          <div className="login-brand-copy">
-            <p className="login-kicker">Workspace Management</p>
-            <h1>Quay lại nhịp làm việc của đội nhóm</h1>
-            <p>
-              Đăng nhập để tiếp tục quản lý workspace, dự án, task, báo cáo và các trao đổi realtime
-              trong CollabTask.
-            </p>
+      <div className="auth-super-card">
+        <div className="auth-super-left">
+          <div className="auth-super-brand">
+            <h1>COLLABTASK</h1>
+            <p>Nền tảng quản trị dự án & đội nhóm thế hệ mới.</p>
+          </div>
+          <div className="auth-super-quote">
+            "Sự lựa chọn hoàn hảo để kết nối mọi thành viên, thúc đẩy tiến độ và làm chủ mọi dự án."
+          </div>
+        </div>
+
+        <div className="auth-super-right">
+          <div className="auth-super-header">
+            <h2>Đăng nhập</h2>
+            <p>Chào mừng bạn quay trở lại hệ thống</p>
           </div>
 
-          <div className="login-benefits">
-            <div>
-              <span>01</span>
-              <strong>Workspace rõ ràng</strong>
-              <p>Chọn đúng không gian làm việc và vai trò của bạn.</p>
-            </div>
-            <div>
-              <span>02</span>
-              <strong>Theo dõi tiến độ</strong>
-              <p>Cập nhật project, task và báo cáo trong cùng hệ thống.</p>
-            </div>
-            <div>
-              <span>03</span>
-              <strong>Realtime</strong>
-              <p>Không bỏ lỡ bình luận, thông báo và thay đổi quan trọng.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="login-form-panel">
-          <div className="login-card">
-            <div className="login-header">
-              <p>Chào mừng trở lại</p>
-              <h2>Đăng nhập</h2>
+          <form onSubmit={handleSubmit} className="auth-super-form">
+            <div className="super-input-group">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder=" "
+                required
+              />
+              <label htmlFor="email">Địa chỉ Email</label>
+              <i className="far fa-envelope input-icon"></i>
             </div>
 
-            <form onSubmit={handleSubmit} className="login-form">
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">Mật khẩu</label>
-                <div className="password-input-container">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="Nhập mật khẩu"
-                    autoComplete="current-password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                  >
-                    {showPassword ? 'Ẩn' : 'Hiện'}
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-options">
-                <button
-                  type="button"
-                  className="forgot-password-link"
-                  onClick={handleForgotPassword}
-                >
-                  Quên mật khẩu?
-                </button>
-              </div>
-
-              <button type="submit" className="login-button" disabled={loading}>
-                {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-              </button>
-            </form>
-
-            <div className="divider">
-              <span>Hoặc tiếp tục bằng</span>
-            </div>
-
-            <div className="social-login">
-              <button
-                type="button"
-                className="social-button google-button"
-                onClick={handleGoogleLogin}
+            <div className="super-input-group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                id="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder=" "
+                required
+              />
+              <label htmlFor="password">Mật khẩu</label>
+              <i className="fas fa-lock input-icon"></i>
+              <button 
+                type="button" 
+                className="super-pwd-btn"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                <svg className="social-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Google
-              </button>
-
-              <button
-                type="button"
-                className="social-button facebook-button"
-                onClick={handleFacebookLogin}
-              >
-                <svg className="social-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-                Facebook
+                <i className={showPassword ? 'far fa-eye-slash' : 'far fa-eye'}></i>
               </button>
             </div>
 
-            <div className="login-footer">
-              <p>Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link></p>
+            <div className="super-form-actions">
+              <label className="super-checkbox">
+                <input type="checkbox" />
+                <span>Ghi nhớ tôi</span>
+              </label>
+              <span className="super-forgot">Quên mật khẩu?</span>
             </div>
+
+            <button type="submit" className="super-submit-btn" disabled={loading}>
+              <span>{loading ? 'ĐANG KẾT NỐI...' : 'ĐĂNG NHẬP NGAY'}</span>
+              <i className="fas fa-arrow-right"></i>
+            </button>
+          </form>
+
+          <div className="super-social-divider">
+            <span>Hoặc tiếp tục với</span>
           </div>
-        </section>
+
+          <div className="super-social-row">
+            <button type="button" className="super-social-btn">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" />
+            </button>
+            <button type="button" className="super-social-btn">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" />
+            </button>
+            <button type="button" className="super-social-btn facebook">
+              <i className="fab fa-facebook-f"></i>
+            </button>
+          </div>
+
+          <p className="super-footer-text">
+            Chưa có tài khoản? <Link to="/register">Tạo tài khoản mới</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

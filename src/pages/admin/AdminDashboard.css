@@ -10,10 +10,18 @@
 }
 
 .admin-chart-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.admin-chart-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 
 .admin-chart-header {
@@ -24,10 +32,22 @@
 }
 
 .admin-chart-title {
+  font-family: 'Montserrat', sans-serif;
   font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
+  font-weight: 700;
+  color: #0f172a;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-chart-title i {
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
 }
 
 .admin-chart-content {
@@ -35,22 +55,33 @@
 }
 
 .admin-activities {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.admin-activities:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 
 .admin-activity-item {
   display: flex;
-  align-items: start;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
-.admin-activity-item:last-child {
-  border-bottom: none;
+.admin-activity-item:hover {
+  background: #f8fafc;
+  border-color: #f1f5f9;
 }
 
 .admin-activity-icon {
@@ -95,22 +126,33 @@
 }
 
 .admin-list-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.admin-list-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 
 .admin-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
-.admin-list-item:last-child {
-  border-bottom: none;
+.admin-list-item:hover {
+  background: #f8fafc;
+  border-color: #f1f5f9;
 }
 
 .admin-list-label {

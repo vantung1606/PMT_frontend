@@ -275,47 +275,78 @@ const Projects = () => {
           ))}
         </div>
       )}
-      <div className="page-header">
-        <div className="header-content">
-          <div className="header-icon-wrapper">
-            <i className="fas fa-folder-open"></i>
+      {/* HEADER SECTION */}
+      <div className="top-nav-bar">
+        <div className="nav-left">
+          <div className="nav-icon-box">
+            <i className="fas fa-folder"></i>
           </div>
-          <div>
-            <h1>DỰ ÁN</h1>
-            <p className="subtitle">Tạo và quản lý dự án của bạn một cách trực quan.</p>
+          <span className="nav-title">DỰ ÁN</span>
+          <div className="nav-tabs">
+            <span className="nav-tab active">Dashboard</span>
+            <span className="nav-tab">Overview</span>
           </div>
         </div>
         {permissions.canCreateProject && (
-          <div className="header-actions">
+          <div className="nav-right">
+            <button className="btn-ai" onClick={() => navigate('/ai-chat')}>
+              <i className="fas fa-robot"></i> Gợi ý AI
+            </button>
+            <button className="btn-create" onClick={openCreateModal}>
+              <i className="fas fa-plus"></i> Tạo dự án
+            </button>
             {user?.role === 'admin' && (
-              <button
-                className="admin-back-btn"
-                onClick={() => navigate('/admin')}
-                type="button"
-              >
-                <i className="fas fa-table-cells-large"></i>
-                Admin Dashboard
+              <button className="btn-ai" onClick={() => navigate('/admin')}>
+                <i className="fas fa-cog"></i> Admin
               </button>
             )}
-            <span className="badge-prj">
-              <i className="fas fa-project-diagram"></i>
-              {projects.length} dự án
-            </span>
-            <button 
-              className="secondary" 
-              onClick={() => navigate('/ai-chat')} 
-              type="button"
-              style={{ marginRight: '8px' }}
-            >
-              <i className="fas fa-robot"></i>
-              Gợi ý AI
-            </button>
-            <button className="primary" onClick={openCreateModal} type="button">
-              <i className="fas fa-plus"></i>
-              Tạo dự án
-            </button>
+            <div className="nav-user-actions">
+              <i className="far fa-bell"></i>
+              <i className="fas fa-cog"></i>
+              <div className="nav-avatar">AD</div>
+            </div>
           </div>
         )}
+      </div>
+
+      {/* WELCOME BANNER SECTION */}
+      <div className="welcome-section">
+        <div className="welcome-text">
+          <h1>Chào mừng trở lại, {user?.username || 'Admin'}</h1>
+          <p>Tạo và quản lý dự án của bạn một cách trực quan.</p>
+        </div>
+        <div className="welcome-stats">
+          <div className="stat-card">
+            <div className="stat-icon red-bg">
+              <i className="fas fa-project-diagram"></i>
+            </div>
+            <div className="stat-info">
+              <h3>{projects.length < 10 ? `0${projects.length}` : projects.length}</h3>
+              <p>Tổng dự án</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon yellow-bg">
+              <i className="fas fa-clipboard-list"></i>
+            </div>
+            <div className="stat-info">
+              <h3>04</h3>
+              <p>Đang chờ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CONTROLS SECTION */}
+      <div className="controls-section">
+        <div className="search-box">
+          <i className="fas fa-search"></i>
+          <input type="text" placeholder="Tìm kiếm dự án..." />
+        </div>
+        <div className="view-toggles">
+          <button className="view-btn active"><i className="fas fa-th-large"></i></button>
+          <button className="view-btn"><i className="fas fa-list"></i></button>
+        </div>
       </div>
       {permissions.canCreateProject ? (
         <div className="project-manage">
@@ -329,12 +360,12 @@ const Projects = () => {
               {
                 label: 'Hủy',
                 icon: 'fa-times',
-                className: 'secondary',
+                className: 'outline',
                 onClick: closeFormOnly
               },
               {
                 label: editingId ? 'Lưu' : 'Tạo',
-                icon: editingId ? 'fa-save' : 'fa-plus',
+                icon: editingId ? 'fa-save' : 'fa-plus-circle',
                 className: 'primary',
                 onClick: () => {
                   const form = document.getElementById('project-form');
@@ -366,7 +397,7 @@ const Projects = () => {
 
             <div className="form-row">
               <label htmlFor="projectStatus">
-                <i className="fas fa-tasks"></i>
+                <i className="fas fa-list-ul"></i>
                 Trạng thái dự án
               </label>
               <select
@@ -394,7 +425,7 @@ const Projects = () => {
             <div className="form-row dates-row">
               <div className="date-field">
                 <label htmlFor="projectStartDate">
-                  <i className="fas fa-calendar-plus"></i>
+                  <i className="far fa-calendar-alt"></i>
                   Ngày bắt đầu
                 </label>
                 <input
@@ -410,7 +441,7 @@ const Projects = () => {
               </div>
               <div className="date-field">
                 <label htmlFor="projectEndDate">
-                  <i className="fas fa-calendar-check"></i>
+                  <i className="far fa-calendar-check"></i>
                   Ngày kết thúc
                 </label>
                 <input
@@ -428,7 +459,7 @@ const Projects = () => {
 
             <div className="form-row">
               <label>
-                <i className="fas fa-users"></i>
+                <i className="fas fa-user-plus"></i>
                 Thêm thành viên
               </label>
               <div className="member-select">
@@ -518,7 +549,7 @@ const Projects = () => {
 
             <div className="form-row">
               <label htmlFor="projectDesc">
-                <i className="fas fa-align-left"></i>
+                <i className="far fa-file-alt"></i>
                 Mô tả
               </label>
               <div className="rich-text-editor">
@@ -537,70 +568,123 @@ const Projects = () => {
             </form>
           </ModalAdd>
 
-          <div className="projects-list modern">
+          <div className="projects-grid-layout">
             {projects.map(p => (
               <div 
-                className="projects-item card" 
+                className="project-card" 
                 key={p.id}
                 onClick={() => openDetailModal(p)}
-                style={{ cursor: 'pointer' }}
               >
-                <div className="item-head">
-                  <div className="item-title-wrapper">
-                    <i className="fas fa-folder item-icon"></i>
-                    <div className="item-title">{p.name}</div>
+                <div className="card-top">
+                  <div className="card-icon"><i className="fas fa-folder"></i></div>
+                  <div className="card-title-group">
+                    <h4>{p.name}</h4>
+                    <p>{p.description || 'Infrastructure Redesign'}</p>
                   </div>
-                  {permissions.canEditProject && (
-                    <div className="item-actions" onClick={(e) => e.stopPropagation()}>
-                      <button className="text-btn" onClick={() => handleEdit(p)} title="Sửa">
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button className="text-btn danger" onClick={() => openDeleteConfirm(p.id)} title="Xóa">
-                        <i className="fas fa-trash"></i>
-                      </button>
+                  <div className="card-menu"><i className="fas fa-ellipsis-v"></i></div>
+                </div>
+
+                {/* Using a mockup badge style since real status codes might differ */}
+                <div className="card-badge yellow-badge">
+                  CHƯA BẮT ĐẦU
+                </div>
+
+                {/* Mockup Progress or Date Box */}
+                {p.id % 2 === 0 ? (
+                  <div className="card-progress">
+                    <div className="progress-info">
+                      <span>ĐANG THỰC HIỆN</span>
+                      <span>65%</span>
                     </div>
-                  )}
-                </div>
-                <div className="item-meta">
-                  <div className="status-row">
-                    <StatusBadge status={p.status} statuses={statuses} />
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{width: '65%'}}></div>
+                    </div>
                   </div>
-                  <div className="date-row">
-                    <span className="date-item start-date">
-                      <i className="fas fa-calendar-plus"></i>
-                      <span className="date-text">Bắt đầu: {new Date(p.created_at).toLocaleDateString('vi-VN')}</span>
-                    </span>
-                    {p.end_date && (
-                      <span className="date-item end-date">
-                        <i className="fas fa-calendar-check"></i>
-                        <span className="date-text">Kết thúc: {new Date(p.end_date).toLocaleDateString('vi-VN')}</span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-                {p.description && (
-                  <div className="item-desc">
-                    <i className="fas fa-file-alt desc-icon"></i>
-                    {p.description}
+                ) : (
+                  <div className="card-date-box">
+                    <i className="far fa-calendar-alt"></i>
+                    <div className="date-text">
+                      <span>Bắt đầu</span>
+                      <strong>{new Date(p.created_at).toLocaleDateString('vi-VN')}</strong>
+                    </div>
                   </div>
                 )}
+
+                <div className="card-bottom">
+                  <div className="avatar-group">
+                    <div className="avatar-img">A</div>
+                    <div className="avatar-img">B</div>
+                    <div className="avatar-more">+3</div>
+                  </div>
+                  <div className="card-stats">
+                    <span><i className="far fa-comment-dots"></i> 12</span>
+                    <span><i className="fas fa-paperclip"></i> 8/16</span>
+                  </div>
+                </div>
               </div>
             ))}
-            {projects.length === 0 && (
-              <div className="empty-state">
-                <div className="empty-icon-wrapper">
-                  <i className="fas fa-folder-open empty-icon"></i>
+
+            {permissions.canCreateProject && (
+              <div className="project-card add-new-card" onClick={openCreateModal}>
+                <div className="add-icon-circle">
+                  <i className="fas fa-plus"></i>
                 </div>
-                <div className="empty-title">Chưa có dự án nào</div>
-                <div className="empty-desc">Tạo dự án mới để bắt đầu quản lý công việc.</div>
-                {permissions.canCreateProject && (
-                  <button className="empty-action-btn" onClick={openCreateModal}>
-                    <i className="fas fa-plus"></i>
-                    Tạo dự án đầu tiên
-                  </button>
-                )}
+                <h4>Thêm dự án mới</h4>
+                <p>Bắt đầu lập kế hoạch cho mục tiêu tiếp theo của bạn.</p>
               </div>
             )}
+          </div>
+          
+          {/* BOTTOM DASHBOARD PANELS */}
+          <div className="bottom-dashboard">
+            <div className="panel chart-panel">
+              <div className="panel-header">
+                <h3>Hiệu suất dự án</h3>
+                <div className="chart-legend">
+                  <span><i className="fas fa-circle text-red"></i> Hoàn thành</span>
+                  <span><i className="fas fa-circle text-grey"></i> Mục tiêu</span>
+                </div>
+              </div>
+              <div className="chart-mockup">
+                {/* Empty space for chart */}
+                <div className="chart-x-axis">
+                  <span>Thứ 2</span>
+                  <span>Thứ 3</span>
+                  <span>Thứ 4</span>
+                  <span>Thứ 5</span>
+                  <span>Thứ 6</span>
+                  <span>Thứ 7</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="panel activity-panel">
+              <h3>Hoạt động gần đây</h3>
+              <div className="activity-list">
+                <div className="activity-item">
+                  <div className="activity-avatar">F</div>
+                  <div className="activity-content">
+                    <p><strong>Felix</strong> đã chỉnh sửa dự án <strong>B1</strong></p>
+                    <span>10 phút trước</span>
+                  </div>
+                </div>
+                <div className="activity-item">
+                  <div className="activity-avatar bg-green">A</div>
+                  <div className="activity-content">
+                    <p><strong>Anna</strong> đã hoàn thành task <em>"Nghiên cứu thị trường"</em></p>
+                    <span>2 giờ trước</span>
+                  </div>
+                </div>
+                <div className="activity-item">
+                  <div className="activity-avatar bg-blue"><i className="fas fa-robot"></i></div>
+                  <div className="activity-content">
+                    <p><strong>Trợ lý AI</strong> đã gửi báo cáo tiến độ tuần</p>
+                    <span>Hôm qua</span>
+                  </div>
+                </div>
+              </div>
+              <button className="view-all-btn">Xem tất cả hoạt động</button>
+            </div>
           </div>
           <ModalAdd
             isOpen={isDeleteOpen}
