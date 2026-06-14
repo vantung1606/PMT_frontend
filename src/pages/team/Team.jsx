@@ -61,14 +61,31 @@ const Team = () => {
   const loadMembers = async () => {
     try {
       setLoading(true);
-      const res = await memberService.list();
-      if (res.success) {
-        setMembers(res.data);
+      if (filterProjectId) {
+        // Fetch project detail to get PROJECT members
+        const res = await projectService.get(filterProjectId);
+        if (res.success && res.data) {
+          const projectMembers = res.data.members.map(m => ({
+            id: m.user_id || m.id, // Ensure unique ID for table keys
+            user_id: m.user_id,
+            name: m.username,
+            email: m.email,
+            workspace_role: m.role, // Temporarily map project role to workspace_role property for the select component
+            projects: res.data.name // Show the project name
+          }));
+          setMembers(projectMembers);
+        }
       } else {
-        addToast('Không thể tải danh sách thành viên', 'danger');
+        // Fetch workspace members
+        const res = await memberService.list();
+        if (res.success) {
+          setMembers(res.data);
+        } else {
+          addToast('Không thể tải danh sách thành viên', 'danger');
+        }
       }
     } catch (err) {
-      addToast(err?.response?.data?.message || err.message || 'Lỗi khi tải danh sách thành viên', 'danger');
+      addToast(err?.response?.data?.message || err.message || 'Lỗi khi tải danh sách', 'danger');
     } finally {
       setLoading(false);
     }
@@ -85,18 +102,40 @@ const Team = () => {
     };
 
     if (canManage || permissions.canViewTeam) {
-      loadMembers();
       loadProjects();
     }
   }, [canManage, permissions.canViewTeam]);
 
+  // Refetch members when filterProjectId changes
+  useEffect(() => {
+    if (canManage || permissions.canViewTeam) {
+      loadMembers();
+    }
+  }, [filterProjectId, canManage, permissions.canViewTeam]);
+
   const handleUpdateRole = async (userId, newRole) => {
     if (!currentWorkspace?.id || !userId) return;
     try {
-      const res = await workspaceService.updateMemberRole(currentWorkspace.id, userId, { role: newRole });
-      if (res.success) {
-        addToast('Đã cập nhật vai trò thành công', 'success');
-        loadMembers(); // Reload to reflect changes
+      if (filterProjectId) {
+        // Fetch current project to get full payload
+        const projRes = await projectService.get(filterProjectId);
+        if (projRes.success && projRes.data) {
+          const project = projRes.data;
+          project.members = project.members.map(m => 
+            (m.user_id === userId) ? { ...m, role: newRole } : m
+          );
+          const updateRes = await projectService.update(filterProjectId, project);
+          if (updateRes.success) {
+            addToast('Đã cập nhật chức vụ trong dự án', 'success');
+            loadMembers();
+          }
+        }
+      } else {
+        const res = await workspaceService.updateMemberRole(currentWorkspace.id, userId, { role: newRole });
+        if (res.success) {
+          addToast('Đã cập nhật vai trò công ty thành công', 'success');
+          loadMembers(); // Reload to reflect changes
+        }
       }
     } catch (err) {
       addToast(err?.response?.data?.message || 'Lỗi khi cập nhật vai trò', 'danger');
@@ -347,12 +386,6 @@ const Team = () => {
         <div className="team-table-card">
           {(() => {
             const filteredMembers = members.filter(m => {
-              if (filterProjectId) {
-                const selectedProject = projects.find(p => p.id.toString() === filterProjectId);
-                if (selectedProject && (!m.projects || !m.projects.includes(selectedProject.name))) {
-                  return false;
-                }
-              }
               if (!searchQuery.trim()) return true;
               const query = searchQuery.toLowerCase();
               return (
@@ -373,7 +406,7 @@ const Team = () => {
                       <th>EMAIL</th>
                       <th>VAI TRÒ</th>
                       <th>DỰ ÁN</th>
-                      {canManage && <th>THAO TÁC</th>}
+                      {canManage && !filterProjectId && <th>THAO TÁC</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -414,7 +447,7 @@ const Team = () => {
                             <td>
                               <span style={{ fontSize: '13px', color: '#4b5563' }}>{m.projects || '-'}</span>
                             </td>
-                            {canManage && (
+                            {canManage && !filterProjectId && (
                               <td>
                                 <button className="table-btn edit-btn" onClick={() => openEdit(m)} title="Sửa">
                                   <i className="fas fa-edit"></i>
