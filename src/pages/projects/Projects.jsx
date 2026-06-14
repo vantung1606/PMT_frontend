@@ -41,6 +41,7 @@ const Projects = () => {
   const [memberQuery, setMemberQuery] = useState('');
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [activeMenuId, setActiveMenuId] = useState(null);
 
 
   const addToast = (message, type = 'success') => {
@@ -109,6 +110,13 @@ const Projects = () => {
 
   const handleRemoveMember = (userId) => {
     setForm(prev => ({ ...prev, members: prev.members.filter(m => (m.user_id || m.id) !== userId) }));
+  };
+
+  const handleUpdateMemberRole = (userId, newRole) => {
+    setForm(prev => ({
+      ...prev,
+      members: prev.members.map(m => (m.user_id || m.id) === userId ? { ...m, role: newRole } : m)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -537,6 +545,17 @@ const Projects = () => {
                             <i className="fas fa-user"></i>
                           </div>
                           <span className="chip-text">{lastName}</span>
+                          <select 
+                            className="chip-role-select" 
+                            value={m.role || 'mb'} 
+                            onChange={(e) => handleUpdateMemberRole(m.user_id || m.id, e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ marginLeft: '4px', border: 'none', background: 'transparent', fontSize: '12px', outline: 'none', cursor: 'pointer', fontWeight: 'bold' }}
+                          >
+                            <option value="pm">PM</option>
+                            <option value="tl">TL</option>
+                            <option value="mb">MB</option>
+                          </select>
                           <button type="button" className="chip-remove" onClick={() => handleRemoveMember(m.user_id || m.id)}>×</button>
                         </div>
                       );
@@ -581,7 +600,22 @@ const Projects = () => {
                     <h4>{p.name}</h4>
                     <p>{p.description || 'Infrastructure Redesign'}</p>
                   </div>
-                  <div className="card-menu"><i className="fas fa-ellipsis-v"></i></div>
+                  <div className="card-menu" style={{ position: 'relative' }} onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveMenuId(activeMenuId === p.id ? null : p.id);
+                  }}>
+                    <i className="fas fa-ellipsis-v"></i>
+                    {activeMenuId === p.id && permissions.canCreateProject && (
+                      <div className="card-dropdown-menu" style={{ position: 'absolute', right: 0, top: '24px', background: 'white', border: '1px solid #ddd', borderRadius: '4px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)', zIndex: 10 }}>
+                        <div style={{ padding: '8px 16px', cursor: 'pointer', fontSize: '14px' }} onClick={(e) => { e.stopPropagation(); setActiveMenuId(null); handleEdit(p); }}>
+                          <i className="fas fa-edit" style={{ marginRight: '8px', color: '#007bff' }}></i> Chỉnh sửa
+                        </div>
+                        <div style={{ padding: '8px 16px', cursor: 'pointer', fontSize: '14px', color: 'red' }} onClick={(e) => { e.stopPropagation(); setActiveMenuId(null); openDeleteConfirm(p.id); }}>
+                          <i className="fas fa-trash" style={{ marginRight: '8px' }}></i> Xóa
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Using a mockup badge style since real status codes might differ */}
