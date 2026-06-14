@@ -27,12 +27,12 @@ jobs:
 
       - name: Sync develop branch
         run: |
-          git checkout develop
+          git checkout -B develop origin/develop
           git merge upstream/develop -m "Merge upstream develop" --allow-unrelated-histories || echo "No changes or merge conflict in develop"
           git push origin develop
 
       - name: Sync main branch
         run: |
-          git checkout main
+          git checkout -B main origin/main
           git merge upstream/main -m "Merge upstream main" --allow-unrelated-histories || echo "No changes or merge conflict in main"
           git push origin main
