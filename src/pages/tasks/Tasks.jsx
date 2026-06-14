@@ -20,6 +20,25 @@ import './Tasks.css';
 
 const DEFAULT_STATUS = 'In Progress';
 
+// Helper function to render text with clickable links
+const renderTextWithLinks = (text) => {
+  if (!text) return null;
+  // Regex to match URLs
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="inline-link" onClick={(e) => e.stopPropagation()} style={{ color: '#0056b3', textDecoration: 'underline', wordBreak: 'break-all' }}>
+          <i className="fas fa-external-link-alt" style={{ marginRight: '4px', fontSize: '0.85em' }}></i>
+          {part}
+        </a>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+};
+
 const emptyForm = {
   name: '',
   description: '',
@@ -643,7 +662,7 @@ const Tasks = () => {
                 {task.description && (
                   <div className="item-desc">
                     <i className="fas fa-file-alt desc-icon"></i>
-                    {task.description}
+                    {renderTextWithLinks(task.description)}
                   </div>
                 )}
               </div>
@@ -691,7 +710,7 @@ const Tasks = () => {
                 <div className="detail-item">
                   <span className="detail-label">Mô tả:</span>
                   <span className="detail-value">
-                    {selectedTask.description || 'Không có mô tả'}
+                    {selectedTask.description ? renderTextWithLinks(selectedTask.description) : 'Không có mô tả'}
                   </span>
                 </div>
                 <div className="detail-item">
@@ -855,7 +874,7 @@ const Tasks = () => {
                               {formatDateForDisplay(comment.created_at)}
                             </span>
                           </div>
-                          <div className="comment-text-detail">{comment.comment}</div>
+                          <div className="comment-text-detail">{renderTextWithLinks(comment.comment)}</div>
                         </div>
                       </div>
                     ))
