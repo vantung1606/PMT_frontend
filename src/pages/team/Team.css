@@ -447,7 +447,19 @@
 .table-btn.edit-btn { color: #2563eb; }
 .table-btn.delete-btn { color: #dc2626; }
 
-/* RESPONSIVE MOBILE */
+/* RESPONSIVE MOBILE & TABLET */
+@media (max-width: 1024px) {
+  .team-page {
+    height: auto;
+    min-height: calc(100vh - 64px);
+    overflow: visible;
+  }
+  .team-table-card {
+    flex: none;
+    min-height: 400px;
+  }
+}
+
 @media (max-width: 768px) {
   .team-top-nav {
     padding: 12px 16px;
