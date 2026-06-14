@@ -3,6 +3,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import usePermissions from '../../hooks/usePermissions';
 import memberService from '../../services/memberService';
 import userService from '../../services/userService';
+import projectService from '../../services/projectService';
+import workspaceService from '../../services/workspaceService';
+import { useWorkspace } from '../../contexts/WorkspaceContext';
 import ModalAdd from '../../components/modal/ModalAdd';
 import EmptyState from '../../components/emptyState/EmptyState';
 import { formatDateForDisplay, formatDateForInput } from '../../utils/dateHelper';
@@ -19,6 +22,7 @@ const emptyMember = {
 const Team = () => {
   const { user } = useAuth();
   const permissions = usePermissions();
+  const { currentWorkspace } = useWorkspace();
   // Sử dụng canManageMembers trong workspace, canManageUsers ở global scope
   const canManage = permissions.canManageMembers || permissions.canManageUsers;
   const canDelete = permissions.canDelete || permissions.canDeleteUsers;
@@ -34,6 +38,8 @@ const Team = () => {
   const [emailSuggestions, setEmailSuggestions] = useState([]);
   const [showEmailSuggestions, setShowEmailSuggestions] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [projects, setProjects] = useState([]);
+  const [filterProjectId, setFilterProjectId] = useState('');
 
   const addToast = (message, type = 'success') => {
     const id = `t_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
@@ -69,12 +75,33 @@ const Team = () => {
   };
 
   useEffect(() => {
-    // Chỉ load nếu có quyền (ad, pm, tl)
-    // Phân quyền dựa trên workspace role hoặc global role
+    const loadProjects = async () => {
+      try {
+        const res = await projectService.getMyProjects();
+        if (res.success) {
+          setProjects(res.data);
+        }
+      } catch (err) {}
+    };
+
     if (canManage || permissions.canViewTeam) {
       loadMembers();
+      loadProjects();
     }
   }, [canManage, permissions.canViewTeam]);
+
+  const handleUpdateRole = async (userId, newRole) => {
+    if (!currentWorkspace?.id || !userId) return;
+    try {
+      const res = await workspaceService.updateMemberRole(currentWorkspace.id, userId, { role: newRole });
+      if (res.success) {
+        addToast('Đã cập nhật vai trò thành công', 'success');
+        loadMembers(); // Reload to reflect changes
+      }
+    } catch (err) {
+      addToast(err?.response?.data?.message || 'Lỗi khi cập nhật vai trò', 'danger');
+    }
+  };
 
   const openCreate = () => {
     setEditingId(null);
@@ -287,6 +314,18 @@ const Team = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <div className="controls-filter" style={{ marginLeft: '12px' }}>
+          <select 
+            value={filterProjectId} 
+            onChange={(e) => setFilterProjectId(e.target.value)}
+            style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e5e7eb', outline: 'none' }}
+          >
+            <option value="">Tất cả dự án</option>
+            {projects.map(p => (
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
+          </select>
+        </div>
         <div className="controls-count">
           <i className="fas fa-user-friends"></i>
           <span>{members.length} thành viên</span>
@@ -308,6 +347,12 @@ const Team = () => {
         <div className="team-table-card">
           {(() => {
             const filteredMembers = members.filter(m => {
+              if (filterProjectId) {
+                const selectedProject = projects.find(p => p.id.toString() === filterProjectId);
+                if (selectedProject && (!m.projects || !m.projects.includes(selectedProject.name))) {
+                  return false;
+                }
+              }
               if (!searchQuery.trim()) return true;
               const query = searchQuery.toLowerCase();
               return (
@@ -326,8 +371,8 @@ const Team = () => {
                       <th>ID</th>
                       <th>TÊN</th>
                       <th>EMAIL</th>
-                      <th>NGÀY SINH</th>
-                      <th>NGHỀ NGHIỆP</th>
+                      <th>VAI TRÒ</th>
+                      <th>DỰ ÁN</th>
                       {canManage && <th>THAO TÁC</th>}
                     </tr>
                   </thead>
@@ -349,11 +394,26 @@ const Team = () => {
                               <span>{m.name}</span>
                             </td>
                             <td className="col-email">{m.email}</td>
-                            <td className="col-date">
-                              {m.date_of_birth ? formatDateForDisplay(m.date_of_birth) : '-'}
+                            <td>
+                              {canManage && m.user_id ? (
+                                <select 
+                                  value={m.workspace_role || 'mb'}
+                                  onChange={(e) => handleUpdateRole(m.user_id, e.target.value)}
+                                  style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #e5e7eb', outline: 'none' }}
+                                >
+                                  <option value="pm">Project Manager</option>
+                                  <option value="tl">Team Leader</option>
+                                  <option value="mb">Member</option>
+                                  <option value="clt">Khách hàng</option>
+                                </select>
+                              ) : (
+                                <span className={`member-role-badge role-${m.workspace_role || 'mb'}`} style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', background: '#f3f4f6', color: '#4b5563' }}>
+                                  {m.workspace_role === 'pm' ? 'PM' : m.workspace_role === 'tl' ? 'TL' : m.workspace_role === 'clt' ? 'KH' : 'MB'}
+                                </span>
+                              )}
                             </td>
                             <td>
-                              <span className={`badge ${badgeClass}`}>{m.occupation || '-'}</span>
+                              <span style={{ fontSize: '13px', color: '#4b5563' }}>{m.projects || '-'}</span>
                             </td>
                             {canManage && (
                               <td>
