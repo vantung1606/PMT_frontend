@@ -365,79 +365,81 @@ const Team = () => {
 
             return filteredMembers.length > 0 || members.length === 0 ? (
               <>
-                <table className="team-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>TÊN</th>
-                      <th>EMAIL</th>
-                      <th>VAI TRÒ</th>
-                      <th>DỰ ÁN</th>
-                      {canManage && <th>THAO TÁC</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredMembers.length > 0 ? (
-                      filteredMembers.map((m, idx) => {
-                        // Determine badge class
-                        const occ = (m.occupation || '').toLowerCase();
-                        let badgeClass = 'default';
-                        if (occ.includes('design') || occ.includes('thiết kế')) badgeClass = 'design';
-                        else if (occ.includes('engineer') || occ.includes('dev') || occ.includes('kỹ sư')) badgeClass = 'engineering';
-                        else if (occ.includes('market') || occ.includes('sale') || occ.includes('kinh doanh')) badgeClass = 'marketing';
+                <div className="table-responsive-wrapper">
+                  <table className="team-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>TÊN</th>
+                        <th>EMAIL</th>
+                        <th>VAI TRÒ</th>
+                        <th>DỰ ÁN</th>
+                        {canManage && <th>THAO TÁC</th>}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredMembers.length > 0 ? (
+                        filteredMembers.map((m, idx) => {
+                          // Determine badge class
+                          const occ = (m.occupation || '').toLowerCase();
+                          let badgeClass = 'default';
+                          if (occ.includes('design') || occ.includes('thiết kế')) badgeClass = 'design';
+                          else if (occ.includes('engineer') || occ.includes('dev') || occ.includes('kỹ sư')) badgeClass = 'engineering';
+                          else if (occ.includes('market') || occ.includes('sale') || occ.includes('kinh doanh')) badgeClass = 'marketing';
 
-                        return (
-                          <tr key={m.id}>
-                            <td className="col-id">#{String(m.id).padStart(3, '0')}</td>
-                            <td className="col-name">
-                              <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=random`} alt={m.name} className="member-avatar" />
-                              <span>{m.name}</span>
-                            </td>
-                            <td className="col-email">{m.email}</td>
-                            <td>
-                              {canManage && m.user_id && m.workspace_role !== 'pm' ? (
-                                <select 
-                                  value={m.workspace_role || 'mb'}
-                                  onChange={(e) => handleUpdateRole(m.user_id, e.target.value)}
-                                  className="role-select"
-                                >
-                                  <option value="tl">Team Leader</option>
-                                  <option value="mb">Member</option>
-                                  <option value="clt">Khách hàng</option>
-                                </select>
-                              ) : (
-                                <span className={`member-role-badge role-${m.workspace_role || 'mb'}`} style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', background: '#f3f4f6', color: '#4b5563' }}>
-                                  {m.workspace_role === 'pm' ? 'PM' : m.workspace_role === 'tl' ? 'TL' : m.workspace_role === 'clt' ? 'KH' : 'MB'}
-                                </span>
-                              )}
-                            </td>
-                            <td>
-                              <span style={{ fontSize: '13px', color: '#4b5563' }}>{m.projects || '-'}</span>
-                            </td>
-                            {canManage && (
+                          return (
+                            <tr key={m.id}>
+                              <td className="col-id">#{String(m.id).padStart(3, '0')}</td>
+                              <td className="col-name">
+                                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=random`} alt={m.name} className="member-avatar" />
+                                <span>{m.name}</span>
+                              </td>
+                              <td className="col-email">{m.email}</td>
                               <td>
-                                <button className="table-btn edit-btn" onClick={() => openEdit(m)} title="Sửa">
-                                  <i className="fas fa-edit"></i>
-                                </button>
-                                {canDelete && (
-                                  <button className="table-btn delete-btn" onClick={() => openDelete(m.id)} title="Xóa">
-                                    <i className="fas fa-trash"></i>
-                                  </button>
+                                {canManage && m.user_id && m.workspace_role !== 'pm' ? (
+                                  <select 
+                                    value={m.workspace_role || 'mb'}
+                                    onChange={(e) => handleUpdateRole(m.user_id, e.target.value)}
+                                    className="role-select"
+                                  >
+                                    <option value="tl">Team Leader</option>
+                                    <option value="mb">Member</option>
+                                    <option value="clt">Khách hàng</option>
+                                  </select>
+                                ) : (
+                                  <span className={`member-role-badge role-${m.workspace_role || 'mb'}`} style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', background: '#f3f4f6', color: '#4b5563' }}>
+                                    {m.workspace_role === 'pm' ? 'PM' : m.workspace_role === 'tl' ? 'TL' : m.workspace_role === 'clt' ? 'KH' : 'MB'}
+                                  </span>
                                 )}
                               </td>
-                            )}
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan={canManage ? 6 : 5} style={{ textAlign: 'center', padding: '40px' }}>
-                          <div style={{ color: '#9ca3af' }}>Không có thành viên nào khớp với từ khóa "{searchQuery}"</div>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                              <td>
+                                <span style={{ fontSize: '13px', color: '#4b5563' }}>{m.projects || '-'}</span>
+                              </td>
+                              {canManage && (
+                                <td>
+                                  <button className="table-btn edit-btn" onClick={() => openEdit(m)} title="Sửa">
+                                    <i className="fas fa-edit"></i>
+                                  </button>
+                                  {canDelete && (
+                                    <button className="table-btn delete-btn" onClick={() => openDelete(m.id)} title="Xóa">
+                                      <i className="fas fa-trash"></i>
+                                    </button>
+                                  )}
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan={canManage ? 6 : 5} style={{ textAlign: 'center', padding: '40px' }}>
+                            <div style={{ color: '#9ca3af' }}>Không có thành viên nào khớp với từ khóa "{searchQuery}"</div>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
                 <div className="table-footer">
                   <span>Hiển thị {Math.min(1, filteredMembers.length)} - {filteredMembers.length} trong số {filteredMembers.length} thành viên</span>
                   <div className="pagination">
