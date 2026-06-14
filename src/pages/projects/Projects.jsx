@@ -108,7 +108,7 @@ const Projects = () => {
   };
 
   const handleRemoveMember = (userId) => {
-    setForm(prev => ({ ...prev, members: prev.members.filter(m => m.user_id !== userId) }));
+    setForm(prev => ({ ...prev, members: prev.members.filter(m => (m.user_id || m.id) !== userId) }));
   };
 
   const handleSubmit = async (e) => {
@@ -121,7 +121,7 @@ const Projects = () => {
           status: form.status,
           start_date: form.start_date,
           end_date: form.end_date,
-          members: form.members.map(m => ({ user_id: m.user_id, role: m.role || 'mb' }))
+          members: form.members.map(m => ({ user_id: m.user_id || m.id, role: m.role || 'mb' }))
         });
         if (res.success) {
           const updated = res.data;
@@ -135,7 +135,7 @@ const Projects = () => {
           status: form.status,
           start_date: form.start_date,
           end_date: form.end_date,
-          members: form.members.map(m => ({ user_id: m.user_id, role: m.role || 'mb' }))
+          members: form.members.map(m => ({ user_id: m.user_id || m.id, role: m.role || 'mb' }))
         });
         if (res.success) {
           const newProject = res.data;
@@ -532,12 +532,12 @@ const Projects = () => {
                     {form.members.map(m => {
                       const lastName = getLastName(m.username);
                       return (
-                        <div className="chip" key={m.user_id}>
+                        <div className="chip" key={m.user_id || m.id}>
                           <div className="chip-icon">
                             <i className="fas fa-user"></i>
                           </div>
                           <span className="chip-text">{lastName}</span>
-                          <button type="button" className="chip-remove" onClick={() => handleRemoveMember(m.user_id)}>×</button>
+                          <button type="button" className="chip-remove" onClick={() => handleRemoveMember(m.user_id || m.id)}>×</button>
                         </div>
                       );
                     })}
@@ -781,7 +781,27 @@ const Projects = () => {
             icon: 'fa-times',
             className: 'secondary',
             onClick: closeDetailModal
-          }
+          },
+          ...(permissions.canCreateProject ? [
+            {
+              label: 'Xóa',
+              icon: 'fa-trash',
+              className: 'outline',
+              onClick: () => {
+                closeDetailModal();
+                openDeleteConfirm(selectedProject.id);
+              }
+            },
+            {
+              label: 'Chỉnh sửa',
+              icon: 'fa-edit',
+              className: 'primary',
+              onClick: () => {
+                closeDetailModal();
+                handleEdit(selectedProject);
+              }
+            }
+          ] : [])
         ]}
       >
         {selectedProject && (
