@@ -635,13 +635,28 @@ const Projects = () => {
 
                 <div className="card-bottom">
                   <div className="avatar-group">
-                    <div className="avatar-img">A</div>
-                    <div className="avatar-img">B</div>
-                    <div className="avatar-more">+3</div>
+                    {p.members && p.members.length > 0 ? (
+                      <>
+                        {p.members.slice(0, 3).map((m, idx) => (
+                          <div className="avatar-img" key={idx} title={m.username}>
+                            {m.avatar ? (
+                              <img src={`${process.env.REACT_APP_API_BASE_URL || 'http://localhost:3036'}/uploads/avatars/${m.avatar}`} alt={m.username} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                            ) : (
+                              m.username ? m.username.charAt(0).toUpperCase() : 'U'
+                            )}
+                          </div>
+                        ))}
+                        {p.members.length > 3 && (
+                          <div className="avatar-more">+{p.members.length - 3}</div>
+                        )}
+                      </>
+                    ) : (
+                      <span style={{ fontSize: '12px', color: '#9ca3af' }}>Chưa có thành viên</span>
+                    )}
                   </div>
                   <div className="card-stats">
-                    <span><i className="far fa-comment-dots"></i> 12</span>
-                    <span><i className="fas fa-paperclip"></i> 8/16</span>
+                    {/* Placeholder for task counts instead of comments/attachments */}
+                    <span><i className="fas fa-tasks"></i> Tasks</span>
                   </div>
                 </div>
               </div>
