@@ -611,26 +611,23 @@ const Projects = () => {
                   <StatusBadge status={p.status} />
                 </div>
 
-                <div className="card-date-box" style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className="card-date-box" style={{ marginBottom: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px' }}>
                   {p.start_date && (
-                    <div className="date-text" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#6b7280' }}>
-                      <i className="far fa-calendar-alt"></i>
-                      <span>Bắt đầu:</span>
-                      <strong>{new Date(p.start_date).toLocaleDateString('vi-VN')}</strong>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase' }}><i className="far fa-calendar-alt"></i> Bắt đầu</span>
+                      <strong style={{ fontSize: '13px', color: '#111827' }}>{new Date(p.start_date).toLocaleDateString('vi-VN')}</strong>
                     </div>
                   )}
                   {p.end_date && (
-                    <div className="date-text" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#6b7280' }}>
-                      <i className="far fa-calendar-check"></i>
-                      <span>Kết thúc:</span>
-                      <strong>{new Date(p.end_date).toLocaleDateString('vi-VN')}</strong>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'right' }}>
+                      <span style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase' }}><i className="far fa-calendar-check"></i> Kết thúc</span>
+                      <strong style={{ fontSize: '13px', color: '#111827' }}>{new Date(p.end_date).toLocaleDateString('vi-VN')}</strong>
                     </div>
                   )}
                   {!p.start_date && !p.end_date && (
-                    <div className="date-text" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#6b7280' }}>
-                      <i className="far fa-clock"></i>
-                      <span>Tạo ngày:</span>
-                      <strong>{new Date(p.created_at).toLocaleDateString('vi-VN')}</strong>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase' }}><i className="far fa-clock"></i> Ngày tạo</span>
+                      <strong style={{ fontSize: '13px', color: '#111827' }}>{new Date(p.created_at).toLocaleDateString('vi-VN')}</strong>
                     </div>
                   )}
                 </div>
