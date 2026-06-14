@@ -607,33 +607,35 @@ const Projects = () => {
                   </div>
                 </div>
 
-                {/* Using a mockup badge style since real status codes might differ */}
-                <div className="card-badge yellow-badge">
-                  CHƯA BẮT ĐẦU
+                <div className="card-badge" style={{ marginBottom: '16px' }}>
+                  <StatusBadge status={p.status} />
                 </div>
 
-                {/* Mockup Progress or Date Box */}
-                {p.id % 2 === 0 ? (
-                  <div className="card-progress">
-                    <div className="progress-info">
-                      <span>ĐANG THỰC HIỆN</span>
-                      <span>65%</span>
+                <div className="card-date-box" style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {p.start_date && (
+                    <div className="date-text" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#6b7280' }}>
+                      <i className="far fa-calendar-alt"></i>
+                      <span>Bắt đầu:</span>
+                      <strong>{new Date(p.start_date).toLocaleDateString('vi-VN')}</strong>
                     </div>
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{width: '65%'}}></div>
+                  )}
+                  {p.end_date && (
+                    <div className="date-text" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#6b7280' }}>
+                      <i className="far fa-calendar-check"></i>
+                      <span>Kết thúc:</span>
+                      <strong>{new Date(p.end_date).toLocaleDateString('vi-VN')}</strong>
                     </div>
-                  </div>
-                ) : (
-                  <div className="card-date-box">
-                    <i className="far fa-calendar-alt"></i>
-                    <div className="date-text">
-                      <span>Bắt đầu</span>
+                  )}
+                  {!p.start_date && !p.end_date && (
+                    <div className="date-text" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#6b7280' }}>
+                      <i className="far fa-clock"></i>
+                      <span>Tạo ngày:</span>
                       <strong>{new Date(p.created_at).toLocaleDateString('vi-VN')}</strong>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
 
-                <div className="card-bottom">
+                <div className="card-bottom" style={{ marginTop: 'auto' }}>
                   <div className="avatar-group">
                     {p.members && p.members.length > 0 ? (
                       <>
