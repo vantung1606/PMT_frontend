@@ -652,3 +652,27 @@
   background: #e5e7eb;
   color: #dc2626;
 }
+
+.chip-role-select {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #111827;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  outline: none;
+  margin-left: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.chip-role-select:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+.chip-role-select option {
+  color: #111827;
+  background: white;
+  font-weight: 500;
+}
+

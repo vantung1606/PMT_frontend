@@ -550,11 +550,11 @@ const Projects = () => {
                             value={m.role || 'mb'} 
                             onChange={(e) => handleUpdateMemberRole(m.user_id || m.id, e.target.value)}
                             onClick={(e) => e.stopPropagation()}
-                            style={{ marginLeft: '4px', border: 'none', background: 'transparent', fontSize: '12px', outline: 'none', cursor: 'pointer', fontWeight: 'bold' }}
                           >
                             <option value="pm">PM</option>
                             <option value="tl">TL</option>
-                            <option value="mb">MB</option>
+                            <option value="mb">Member</option>
+                            <option value="clt">Khách hàng</option>
                           </select>
                           <button type="button" className="chip-remove" onClick={() => handleRemoveMember(m.user_id || m.id)}>×</button>
                         </div>
