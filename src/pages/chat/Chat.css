@@ -675,3 +675,65 @@
   color: #94a3b8;
   margin-top: 12px;
 }
+
+/* RESPONSIVE MOBILE */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+    margin-right: 12px;
+  }
+  
+  .chat-chat-page {
+    border-radius: 0;
+    box-shadow: none;
+    height: calc(100vh - 64px); /* Account for mobile top nav */
+  }
+  
+  .chat-sidebar {
+    width: 100%;
+    border-right: none;
+  }
+  
+  .chat-main {
+    display: none; /* Hide main area by default on mobile */
+  }
+  
+  /* When chat is active, hide sidebar and show main chat */
+  .chat-content.chat-active .chat-sidebar {
+    display: none;
+  }
+  
+  .chat-content.chat-active .chat-main {
+    display: flex;
+    width: 100%;
+  }
+
+  .chat-chat-header {
+    padding: 12px 16px;
+  }
+
+  .chat-chat-header-actions {
+    gap: 12px;
+  }
+
+  .chat-messages {
+    padding: 16px;
+  }
+
+  .chat-message {
+    max-width: 90%;
+  }
+
+  .chat-input-area.new-design {
+    padding: 0 16px 16px;
+  }
+
+  .chat-input-toolbar-top {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

@@ -331,41 +331,115 @@
   background: #fee2e2;
 }
 
+/* Mobile Topbar */
+.user-mobile-topbar {
+  display: none;
+}
+
+.user-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
-  .user-header-nav {
-    gap: 4px;
+  .user-mobile-topbar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    z-index: 900;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   }
 
-  .user-nav-item {
-    padding: 8px 12px;
-    font-size: 13px;
+  .user-mobile-menu-toggle {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: #475569;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
   }
 
-  .user-nav-item span {
-    display: none;
+  .user-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
   }
 
-  .user-nav-item i {
+  .user-mobile-brand img {
+    height: 24px;
+    width: 24px;
+  }
+
+  .user-mobile-brand span {
     font-size: 18px;
+    font-weight: 800;
+    color: #c62828;
+    letter-spacing: 0.5px;
+  }
+
+  .user-mobile-icon-btn {
+    position: relative;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .user-mobile-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #c62828;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Transform Sidebar to Drawer */
+  .user-header {
+    transform: translateX(-100%);
+    width: 260px; /* Full width again inside drawer */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .user-header.open {
+    transform: translateX(0);
+  }
+
+  .user-sidebar-backdrop.show {
+    display: block;
+    opacity: 1;
   }
 }
 
 @media (max-width: 768px) {
-  .user-header-container {
-    padding: 0 16px;
-    gap: 12px;
-  }
-
-  .user-logo-text {
-    font-size: 20px;
-  }
-
-  .user-name {
-    display: none;
-  }
-
-  .user-menu-trigger {
-    padding: 6px;
-  }
+  /* further tweaks if needed */
 }

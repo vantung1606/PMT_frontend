@@ -156,16 +156,72 @@
 }
 
 @media (max-width: 768px) {
-  .notification-item {
-    flex-direction: column;
-    gap: 12px;
+  .notifications-page {
+    padding: 0;
   }
-
-  .notification-actions {
-    align-self: flex-end;
+  
+  .notifications-content {
+    padding: 0;
   }
 
   .notifications-filters {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 12px 16px;
+    margin: 0 16px 16px;
+    gap: 8px;
+    scrollbar-width: none;
+  }
+
+  .notifications-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    flex: 0 0 auto;
+    padding: 8px 14px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .notifications-list {
+    padding: 0 16px 16px;
+    gap: 10px;
+  }
+
+  .notification-item {
+    flex-direction: row; /* Keep it compact */
+    padding: 12px;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .notification-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .notification-message {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .notification-time {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  .notification-actions {
+    flex-direction: column; /* Stack action buttons vertically on the right */
+    gap: 4px;
+  }
+
+  .action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
   }
 }

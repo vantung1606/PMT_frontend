@@ -129,6 +129,7 @@ const InforLayout = () => {
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const userMenuRef = React.useRef(null);
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [activeHash, setActiveHash] = React.useState('/');
@@ -273,10 +274,12 @@ const InforLayout = () => {
   }, []);
 
   const handleStartClick = () => {
+    setIsMobileMenuOpen(false);
     navigate(isAuthenticated ? '/workspaces' : '/login');
   };
 
   const handleLogout = () => {
+    setIsMobileMenuOpen(false);
     logout();
     navigate('/');
   };
@@ -290,6 +293,7 @@ const InforLayout = () => {
 
   const handleNavClick = (path) => {
     setActiveHash(path);
+    setIsMobileMenuOpen(false);
     if (path === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (path.startsWith('#')) {
@@ -302,11 +306,85 @@ const InforLayout = () => {
 
   return (
     <main className="landing-page">
+      {/* Backdrop */}
+      <div className={`mobile-backdrop ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+
+      {/* Red Drawer */}
+      <div className={`mobile-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="drawer-close" onClick={() => setIsMobileMenuOpen(false)}>
+          <i className="fas fa-times"></i>
+        </div>
+
+        {/* Avatar section at top of drawer */}
+        <div className="drawer-user-section">
+          {isAuthenticated ? (
+            <>
+              <div className="drawer-avatar">
+                {user?.avatar_url ? (
+                  <img src={user.avatar_url} alt="User" />
+                ) : (
+                  <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
+                )}
+              </div>
+              <div className="drawer-user-info">
+                <strong>{user?.full_name || user?.username || 'Người dùng'}</strong>
+                <span>{user?.email}</span>
+              </div>
+            </>
+          ) : (
+            <div className="drawer-guest">
+              <i className="fas fa-user-circle"></i>
+              <span>Chưa đăng nhập</span>
+            </div>
+          )}
+        </div>
+
+        <div className="drawer-divider"></div>
+
+        {/* Nav links */}
+        <nav className="drawer-nav">
+          {headerLinks.map((link) => (
+            <span
+              key={link.label}
+              className={`drawer-nav-link ${link.active ? 'active' : ''}`}
+              onClick={() => handleNavClick(link.path)}
+            >
+              {link.label}
+            </span>
+          ))}
+        </nav>
+
+        <div className="drawer-divider"></div>
+
+        {/* Auth actions */}
+        <div className="drawer-actions">
+          {isAuthenticated ? (
+            <>
+              {user?.role === 'admin' && (
+                <button className="drawer-action-btn" onClick={() => { setIsMobileMenuOpen(false); navigate('/admin'); }} type="button">
+                  <i className="fas fa-shield-alt"></i> Admin Dashboard
+                </button>
+              )}
+              <button className="drawer-action-btn danger" onClick={handleLogout} type="button">
+                <i className="fas fa-sign-out-alt"></i> Đăng xuất
+              </button>
+            </>
+          ) : (
+            <button className="drawer-action-btn primary" onClick={handleStartClick} type="button">
+              <i className="fas fa-sign-in-alt"></i> Đăng nhập
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Pill Navbar */}
       <div className="workspace-pill-nav">
         <div className="wp-nav-left" onClick={() => handleNavClick('/')} style={{ cursor: 'pointer' }}>
           <img className="wp-brand-logo" src={logoImage} alt="CollabTask" />
         </div>
-        <div className="wp-nav-center">
+
+        {/* Desktop nav center */}
+        <div className="wp-nav-center desktop-only">
           {headerLinks.map((link) => (
             <span
               key={link.label}
@@ -317,7 +395,9 @@ const InforLayout = () => {
             </span>
           ))}
         </div>
-        <div className="wp-nav-right">
+
+        {/* Desktop right */}
+        <div className="wp-nav-right desktop-only">
           {isAuthenticated ? (
             <div className="wp-account-trigger" onClick={() => setShowUserMenu(!showUserMenu)} ref={userMenuRef}>
               <div className="wp-avatar">
@@ -327,21 +407,21 @@ const InforLayout = () => {
                   <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
                 )}
               </div>
-              <span className="wp-account-name">{user?.full_name || user?.username || 'Admin Account'}</span>
+              <span className="wp-account-name">{user?.full_name || user?.username || 'Account'}</span>
               <i className={`fas fa-chevron-down wp-account-arrow ${showUserMenu ? 'open' : ''}`}></i>
               {showUserMenu && (
                 <div className="wp-user-dropdown" onClick={(e) => e.stopPropagation()}>
                   <div className="wp-user-info">
-                    <div className="wp-user-name">{user?.username || user?.full_name || 'Admin Account'}</div>
+                    <div className="wp-user-name">{user?.username || user?.full_name}</div>
                     <div className="wp-user-email">{user?.email}</div>
                   </div>
                   <div className="wp-dropdown-divider"></div>
                   {user?.role === 'admin' && (
-                    <button className="wp-admin-btn" onClick={(e) => { e.stopPropagation(); setShowUserMenu(false); navigate('/admin'); }} type="button">
+                    <button className="wp-admin-btn" onClick={() => { setShowUserMenu(false); navigate('/admin'); }} type="button">
                       <i className="fas fa-shield-alt"></i> Admin Dashboard
                     </button>
                   )}
-                  <button className="wp-logout-btn" onClick={(e) => { e.stopPropagation(); setShowUserMenu(false); handleLogout(); }} type="button">
+                  <button className="wp-logout-btn" onClick={() => { setShowUserMenu(false); handleLogout(); }} type="button">
                     <i className="fas fa-sign-out-alt"></i> Đăng xuất
                   </button>
                 </div>
@@ -351,6 +431,11 @@ const InforLayout = () => {
             <button className="ld-btn-start glow-btn" onClick={handleStartClick}>Đăng nhập</button>
           )}
         </div>
+
+        {/* Mobile: hamburger only */}
+        <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)} type="button">
+          <i className="fas fa-bars"></i>
+        </button>
       </div>
 
       <div style={{ height: '90px' }}></div>

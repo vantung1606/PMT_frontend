@@ -37,7 +37,19 @@ body {
   overflow: auto;
   scrollbar-width: none; 
   letter-spacing: 0.1px;
-  zoom: 0.85; /* Scale down the entire UI */
+}
+
+/* KHẮC PHỤC LỖI KHOẢNG TRẮNG DO ZOOM TRÊN MOBILE */
+@media (max-width: 768px) {
+  body {
+    zoom: 1 !important; 
+    width: 100%;
+    overflow-x: hidden;
+  }
+  html {
+    overflow-x: hidden;
+    width: 100%;
+  }
 }
 
 body::-webkit-scrollbar {

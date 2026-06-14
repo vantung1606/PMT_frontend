@@ -301,7 +301,7 @@ const Chat = () => {
           next to the red sidebar. */}
 
 
-      <div className="chat-content">
+      <div className={`chat-content ${selectedProjectId ? 'chat-active' : ''}`}>
         {/* Left Sidebar */}
         <div className="chat-sidebar">
           <div className="chat-sidebar-header">
@@ -370,6 +370,12 @@ const Chat = () => {
               {/* Chat Header */}
               <div className="chat-chat-header">
                 <div className="chat-chat-header-info">
+                  <button 
+                    className="chat-header-btn back-btn mobile-only" 
+                    onClick={() => setSelectedProjectId(null)}
+                  >
+                    <i className="fas fa-arrow-left"></i>
+                  </button>
                   <div className="chat-chat-header-avatar group">
                     <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(selectedProject?.name || 'Project')}&background=random`} alt={selectedProject?.name} />
                   </div>

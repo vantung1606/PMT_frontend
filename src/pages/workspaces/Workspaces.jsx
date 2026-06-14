@@ -32,6 +32,7 @@ const Workspaces = () => {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('recent');
   const userMenuRef = useRef(null);
@@ -212,11 +213,65 @@ const Workspaces = () => {
 
   return (
     <div className="workspaces-page">
+      {/* Backdrop */}
+      <div className={`mobile-backdrop ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+
+      {/* Red Drawer */}
+      <div className={`mobile-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="drawer-close" onClick={() => setIsMobileMenuOpen(false)}>
+          <i className="fas fa-times"></i>
+        </div>
+
+        <div className="drawer-user-section">
+          <div className="drawer-avatar">
+            {user?.avatar_url ? (
+              <img src={user.avatar_url} alt="User" />
+            ) : (
+              <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
+            )}
+          </div>
+          <div className="drawer-user-info">
+            <strong>{user?.full_name || user?.username || 'Người dùng'}</strong>
+            <span>{user?.email}</span>
+          </div>
+        </div>
+
+        <div className="drawer-divider"></div>
+
+        <nav className="drawer-nav">
+          {headerLinks.map((link) => (
+            <span
+              key={link.label}
+              className={`drawer-nav-link ${link.active ? 'active' : ''}`}
+              onClick={() => { handleNavClick(link.path); setIsMobileMenuOpen(false); }}
+            >
+              {link.label}
+            </span>
+          ))}
+        </nav>
+
+        <div className="drawer-divider"></div>
+
+        <div className="drawer-actions">
+          {user?.role === 'admin' && (
+            <button className="drawer-action-btn" onClick={() => { setIsMobileMenuOpen(false); navigate('/admin'); }} type="button">
+              <i className="fas fa-shield-alt"></i> Admin Dashboard
+            </button>
+          )}
+          <button className="drawer-action-btn danger" onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }} type="button">
+            <i className="fas fa-sign-out-alt"></i> Đăng xuất
+          </button>
+        </div>
+      </div>
+
+      {/* Pill Navbar */}
       <div className="workspace-pill-nav">
         <div className="wp-nav-left" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <img className="wp-brand-logo" src={logoImage} alt="CollabTask" />
         </div>
-        <div className="wp-nav-center">
+
+        {/* Desktop center */}
+        <div className="wp-nav-center desktop-only">
           {headerLinks.map((link) => (
             <span
               key={link.label}
@@ -227,7 +282,9 @@ const Workspaces = () => {
             </span>
           ))}
         </div>
-        <div className="wp-nav-right">
+
+        {/* Desktop right */}
+        <div className="wp-nav-right desktop-only">
           <div className="wp-account-trigger" onClick={() => setShowUserMenu(!showUserMenu)} ref={userMenuRef}>
             <div className="wp-avatar">
               {user?.avatar_url ? (
@@ -236,12 +293,12 @@ const Workspaces = () => {
                 <span>{(user?.username || user?.full_name || 'A').charAt(0).toUpperCase()}</span>
               )}
             </div>
-            <span className="wp-account-name">{user?.full_name || user?.username || 'Admin Account'}</span>
+            <span className="wp-account-name">{user?.full_name || user?.username || 'Account'}</span>
             <i className={`fas fa-chevron-down wp-account-arrow ${showUserMenu ? 'open' : ''}`}></i>
             {showUserMenu && (
               <div className="wp-user-dropdown" onClick={(e) => e.stopPropagation()}>
                 <div className="wp-user-info">
-                  <div className="wp-user-name">{user?.username || user?.full_name || 'Admin Account'}</div>
+                  <div className="wp-user-name">{user?.username || user?.full_name}</div>
                   <div className="wp-user-email">{user?.email}</div>
                 </div>
                 <div className="wp-dropdown-divider"></div>
@@ -257,7 +314,13 @@ const Workspaces = () => {
             )}
           </div>
         </div>
+
+        {/* Mobile: hamburger only */}
+        <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)} type="button">
+          <i className="fas fa-bars"></i>
+        </button>
       </div>
+
 
       <div className="workspace-hero-wrapper">
         <div className="workspace-hero-content">
@@ -345,19 +408,24 @@ const Workspaces = () => {
                       <div className="wp-card-stats">
                         <div className="wp-stat-box">
                           <span className="stat-label">Dự án</span>
-                          <span className="stat-value">{Math.floor(Math.random() * 20) + 5}</span>
+                          <span className="stat-value">{ws.project_count ?? 0}</span>
                         </div>
                         <div className="wp-stat-box">
                           <span className="stat-label">Thành viên</span>
-                          <span className="stat-value">{Math.floor(Math.random() * 40) + 4}</span>
+                          <span className="stat-value">{ws.member_count ?? 0}</span>
                         </div>
                       </div>
 
                       <div className="wp-card-footer">
                         <div className="wp-card-avatars">
-                          <img src="https://i.pravatar.cc/150?u=1" alt="Member" />
-                          <img src="https://i.pravatar.cc/150?u=2" alt="Member" />
-                          <span className="more-members">+{Math.floor(Math.random() * 10) + 2}</span>
+                          {(ws.member_avatars || []).map((m, i) => (
+                            m?.avatar
+                              ? <img key={i} src={m.avatar} alt={m.username || 'Member'} title={m.username} />
+                              : <span key={i} className="avatar-initial">{(m?.username || '?').charAt(0).toUpperCase()}</span>
+                          ))}
+                          {(ws.member_count ?? 0) > (ws.member_avatars?.length ?? 0) && (
+                            <span className="more-members">+{(ws.member_count ?? 0) - (ws.member_avatars?.length ?? 0)}</span>
+                          )}
                         </div>
                         <div className="wp-card-action">
                           Mở bảng điều khiển <i className="fas fa-chevron-right"></i>

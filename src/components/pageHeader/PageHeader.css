@@ -211,21 +211,109 @@
 }
 
 @media (max-width: 768px) {
+  .ph-nav-user-actions {
+    display: none;
+  }
+
   .ph-top-nav-bar {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: none;
+    gap: 8px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
   }
+  
+  .ph-nav-left {
+    width: 100%;
+  }
+  
+  .ph-nav-title {
+    font-size: 16px;
+    margin-right: auto;
+  }
+  
+  .ph-nav-icon-box {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .ph-nav-right {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    width: 100%;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  
+  .ph-nav-right::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ph-btn {
+    flex: 0 0 auto;
+    padding: 6px 12px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
   .ph-welcome-section {
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    margin-bottom: 12px;
+    gap: 8px;
   }
+
+  .ph-welcome-text h1 {
+    font-size: 16px;
+    margin-bottom: 2px;
+    text-transform: none !important;
+  }
+
+  .ph-welcome-text p {
+    font-size: 12px;
+  }
+
+  .ph-welcome-stats {
+    width: 100%;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .ph-stat-card {
+    flex: 1;
+    width: auto;
+    padding: 8px 12px;
+    min-width: unset;
+    gap: 10px;
+  }
+
+  .ph-stat-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
+  .ph-stat-info h3 {
+    font-size: 16px;
+  }
+  
+  .ph-stat-info p {
+    font-size: 11px;
+  }
+
   .ph-controls-section {
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     align-items: stretch;
+    margin-bottom: 16px;
   }
+  
   .ph-search-box {
     width: 100%;
   }

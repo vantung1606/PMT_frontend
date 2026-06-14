@@ -14,6 +14,11 @@ const AdminLayout = ({ children, currentView, setCurrentView }) => {
         navigate('/profile');
     };
 
+    const handleMenuClick = (view) => {
+        setCurrentView(view);
+        setSidebarOpen(false);
+    };
+
     const handleBackToMain = () => {
         navigate('/workspaces');
     };
@@ -73,10 +78,14 @@ const AdminLayout = ({ children, currentView, setCurrentView }) => {
                 </div>
 
                 <div className="admin-user-box">
-                    <div className="admin-avatar" onClick={handleProfileClick}>
-                        {(user?.username || 'A').slice(0, 1).toUpperCase()}
+                    <div className="admin-avatar" style={{ cursor: 'default' }}>
+                        {(user?.avatar_url || user?.avatar) ? (
+                            <img src={user.avatar_url || user.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        ) : (
+                            (user?.username || 'A').slice(0, 1).toUpperCase()
+                        )}
                     </div>
-                    <div className="admin-user-info" onClick={handleProfileClick}>
+                    <div className="admin-user-info" style={{ cursor: 'default' }}>
                         <div className="admin-user-name">
                             {getLastName(user?.username) || 'Admin'}
                         </div>
@@ -103,7 +112,7 @@ const AdminLayout = ({ children, currentView, setCurrentView }) => {
                                 className={`admin-menu-item ${
                                     currentView === item.view ? 'active' : ''
                                 }`}
-                                onClick={() => setCurrentView(item.view)}
+                                onClick={() => handleMenuClick(item.view)}
                             >
                                 <i className={`fa-solid ${item.icon}`}></i>
                                 {item.label}
@@ -122,7 +131,34 @@ const AdminLayout = ({ children, currentView, setCurrentView }) => {
                 </nav>
             </aside>
 
+            <div 
+                className={`admin-sidebar-backdrop ${sidebarOpen ? 'show' : ''}`}
+                onClick={() => setSidebarOpen(false)}
+            ></div>
+
             <main className="admin-main">
+                <div className="admin-mobile-header">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button className="admin-menu-toggle" onClick={() => setSidebarOpen(true)}>
+                            <i className="fa-solid fa-bars"></i>
+                        </button>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <img src={LogoDash} alt="logo" className="admin-brand-logo" style={{ width: '32px', height: '32px', padding: '4px' }} />
+                            <h2 style={{ fontSize: '18px', color: '#1e293b', margin: 0, fontWeight: 800 }}>CollabTask</h2>
+                        </div>
+                    </div>
+                    
+                    <div 
+                        className="admin-avatar" 
+                        style={{ width: '38px', height: '38px', fontSize: '15px', cursor: 'default' }}
+                    >
+                        {(user?.avatar_url || user?.avatar) ? (
+                            <img src={user.avatar_url || user.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        ) : (
+                            (user?.username || 'A').slice(0, 1).toUpperCase()
+                        )}
+                    </div>
+                </div>
                 {children}
             </main>
         </div>

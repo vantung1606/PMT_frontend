@@ -138,6 +138,201 @@
   display: none;
 }
 
+/* Mobile Nav System */
+.mobile-menu-toggle {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+/* Backdrop */
+.mobile-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-backdrop.open {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Red Drawer */
+.mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(160deg, #c62828 0%, #991b1b 100%);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.3);
+  z-index: 10001;
+  transition: right 0.32s cubic-bezier(0.4,0,0.2,1);
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.mobile-drawer.open {
+  display: flex;
+  right: 0;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 20px;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  background: none;
+  border: none;
+}
+
+.drawer-close:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.drawer-user-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 64px 24px 24px;
+}
+
+.drawer-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 900;
+  color: #c62828;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.drawer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.drawer-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.drawer-user-info strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-user-info span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.18);
+  margin: 0 24px;
+}
+
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 4px;
+}
+
+.drawer-nav-link {
+  display: block;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.82);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.drawer-nav-link:hover {
+  background: rgba(255,255,255,0.12);
+  color: #ffffff;
+}
+
+.drawer-nav-link.active {
+  background: rgba(255,255,255,0.22);
+  color: #ffffff;
+}
+
+.drawer-actions {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawer-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: rgba(255,255,255,0.12);
+  color: #ffffff;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.drawer-action-btn:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.drawer-action-btn.danger {
+  background: rgba(0,0,0,0.15);
+}
+
+.drawer-action-btn.danger:hover {
+  background: rgba(0,0,0,0.25);
+}
+
 .wp-nav-right {
   display: flex;
   align-items: center;
@@ -641,6 +836,25 @@
   border: 2px solid #ffffff;
 }
 
+.wp-card-avatars .avatar-initial {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c62828, #ef4444);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  margin-left: -8px;
+  border: 2px solid #ffffff;
+  flex-shrink: 0;
+}
+
+.wp-card-avatars .avatar-initial:first-child {
+  margin-left: 0;
+}
+
 .wp-card-action {
   color: #c62828;
   font-size: 12px;
@@ -1139,137 +1353,10 @@
   }
 }
 
-@media (max-width: 820px) {
-  .workspace-pill-nav {
-    flex-wrap: wrap;
-    height: auto;
-    border-radius: 22px;
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .wp-nav-center {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .workspace-hero-content h1 {
-    font-size: 40px;
-  }
-
-  .workspace-main-container {
-    margin-top: -70px;
-  }
-
-  .wp-toolbar,
-  .wp-toolbar-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .wp-cards-grid,
-  .wp-cards-grid.member-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .wp-footer {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-@media (max-width: 560px) {
-  .workspace-hero-wrapper {
-    padding-bottom: 92px;
-  }
-
-  .workspace-hero-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .workspace-hero-stats div {
-    border-right: 0;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .workspace-hero-stats div:last-child {
-    border-bottom: 0;
-  }
-
-  .wp-card-footer,
-  .member-footer {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .modal-actions {
-    flex-direction: column-reverse;
-  }
-
-  .modal-secondary,
-  .workspace-submit {
-    width: 100%;
-  }
-}
-
-.workspace-hero-wrapper.header-only {
-  padding: 6px 0 0;
-  background: transparent;
-}
-
-.workspace-hero-wrapper.header-only::before {
-  height: 92px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.58), transparent 100%);
-}
 
 
 
-@media (max-width: 820px) {
-  .workspace-pill-nav {
-    width: min(100% - 28px, 1276px);
-  }
-
-  .wp-account-trigger {
-    padding-right: 12px;
-  }
-}
-
-@media (max-width: 560px) {
-  .wp-account-name {
-    display: none;
-  }
-
-  .wp-account-trigger {
-    min-height: 46px;
-    padding: 4px;
-  }
-}
-
-
-.workspace-hero-wrapper.header-only {
-  padding: 0;
-}
-
-@media (max-width: 768px) {
-  .workspace-pill-nav {
-    width: min(1200px, 95%);
-    height: auto;
-    min-height: 60px;
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .wp-nav-center {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Workspace logo image brand override */
+/* Logo override */
 .wp-brand-logo {
   display: block;
   width: 138px;
@@ -1281,3 +1368,221 @@
   width: 138px;
   height: auto;
 }
+
+/* =============================================
+   MOBILE RESPONSIVE — WORKSPACES PAGE
+   ============================================= */
+
+@media (max-width: 820px) {
+  /* ---- Pill nav: logo + hamburger only ---- */
+  .workspaces-page {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .workspace-pill-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    padding: 0 12px 0 20px !important;
+    width: calc(100% - 32px) !important;
+    top: 14px !important;
+    border-radius: 999px !important;
+    overflow: visible !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-menu-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    border: none !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ---- Hero ---- */
+  .workspace-hero-wrapper {
+    padding: 110px 0 48px;
+  }
+
+  .workspace-hero-content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 0 20px;
+  }
+
+  .workspace-hero-content h1 {
+    font-size: clamp(26px, 7vw, 36px);
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    line-height: 1.15;
+  }
+
+  .workspace-hero-content p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #6b7280;
+  }
+
+  /* ---- Stats: 3 columns ---- */
+  .workspace-hero-stats {
+    min-width: 0;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  }
+
+  .workspace-hero-stats div {
+    padding: 14px 12px;
+    text-align: center;
+    border-right: 1px solid #e2e8f0;
+    border-bottom: none !important;
+  }
+
+  .workspace-hero-stats div:last-child {
+    border-right: 0;
+  }
+
+  .workspace-hero-stats strong {
+    font-size: 26px;
+  }
+
+  .workspace-hero-stats span {
+    font-size: 10px;
+  }
+
+  /* ---- Main container ---- */
+  .workspace-main-container {
+    width: 100%;
+    padding: 0 16px;
+    margin: -24px auto 40px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    box-sizing: border-box;
+  }
+
+  .workspace-right-col {
+    position: static;
+  }
+
+  /* ---- Toolbar ---- */
+  .wp-toolbar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    min-height: unset;
+  }
+
+  .wp-toolbar-search {
+    min-width: 0;
+    width: 100%;
+    height: 44px;
+  }
+
+  .wp-toolbar-actions {
+    flex-direction: row;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .wp-toolbar-actions select {
+    flex: 1;
+    height: 44px;
+    font-size: 13px;
+  }
+
+  .wp-btn-primary {
+    height: 44px;
+    padding: 0 14px;
+    font-size: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ---- Cards ---- */
+  .wp-cards-grid,
+  .wp-cards-grid.member-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .wp-card {
+    min-height: unset;
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .wp-card-title {
+    font-size: 17px;
+  }
+
+  .wp-card-desc {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .workspace-group-header h2 {
+    font-size: 17px;
+  }
+
+  .wp-overview-card {
+    border-radius: 16px;
+    padding: 18px;
+  }
+
+  /* ---- Footer ---- */
+  .wp-footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    padding: 24px 16px;
+  }
+
+  .wp-footer-links {
+    justify-content: center;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 430px) {
+  .workspace-hero-content h1 {
+    font-size: clamp(22px, 6vw, 28px);
+  }
+
+  .workspace-hero-stats strong {
+    font-size: 22px;
+  }
+
+  .workspace-hero-stats span {
+    font-size: 9px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-secondary,
+  .workspace-submit {
+    width: 100%;
+  }
+}

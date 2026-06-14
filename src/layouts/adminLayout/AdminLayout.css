@@ -479,6 +479,50 @@
   gap: 8px;
 }
 
+/* ========== ACTIVITY LOGS ========== */
+.admin-log-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+.admin-log-card:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.admin-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .admin-log-card {
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+  }
+  
+  .admin-log-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .admin-log-time {
+    margin-left: 0 !important;
+  }
+}
+
 .admin-table-btn {
   padding: 6px 12px;
   border-radius: 6px;
@@ -640,6 +684,52 @@
   font-size: 14px;
 }
 
+/* ========== MOBILE HEADER & BACKDROP ========== */
+.admin-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  margin: -24px -24px 24px -24px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.admin-menu-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #1e293b;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.admin-mobile-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  color: #ef4444;
+}
+
+.admin-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1024px) {
   .admin-sidebar {
@@ -656,9 +746,19 @@
 }
 
 @media (max-width: 768px) {
+  .admin-mobile-header {
+    display: flex;
+  }
+
+  .admin-sidebar-backdrop.show {
+    display: block;
+    opacity: 1;
+  }
+
   .admin-sidebar {
     transform: translateX(-100%);
     transition: transform 0.3s;
+    z-index: 1000;
   }
 
   .admin-sidebar.open {
@@ -670,7 +770,30 @@
   }
 
   .admin-stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .admin-stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .admin-stat-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+    border-radius: 10px;
+  }
+
+  .admin-stat-value {
+    font-size: 24px;
+  }
+
+  .admin-stat-label {
+    font-size: 12px;
   }
 
   .admin-filters {
@@ -678,6 +801,77 @@
   }
 
   .admin-search-input {
+    width: 100%;
+  }
+
+  /* Responsive Table: Convert to Cards */
+  .admin-table, 
+  .admin-table thead, 
+  .admin-table tbody, 
+  .admin-table th, 
+  .admin-table td, 
+  .admin-table tr { 
+    display: block; 
+  }
+
+  .admin-table thead tr { 
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .admin-table tr { 
+    border: 1px solid #e2e8f0; 
+    margin-bottom: 16px; 
+    border-radius: 12px; 
+    padding: 8px 16px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .admin-table td { 
+    border: none;
+    border-bottom: 1px dashed #f1f5f9; 
+    position: relative;
+    padding: 12px 0 12px 40%; 
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .admin-table td:last-child {
+    border-bottom: none;
+  }
+
+  .admin-table td::before { 
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 35%; 
+    padding-right: 10px; 
+    white-space: nowrap;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 13px;
+    text-align: left;
+  }
+
+  /* Labels specifically for UserManagement */
+  .admin-table td:nth-of-type(1)::before { content: "ID"; }
+  .admin-table td:nth-of-type(2)::before { content: "Người dùng"; }
+  .admin-table td:nth-of-type(3)::before { content: "Email"; }
+  .admin-table td:nth-of-type(4)::before { content: "Vai trò"; }
+  .admin-table td:nth-of-type(5)::before { content: "Workspaces"; }
+  .admin-table td:nth-of-type(6)::before { content: "Projects"; }
+  .admin-table td:nth-of-type(7)::before { content: "Tasks"; }
+  .admin-table td:nth-of-type(8)::before { content: "Ngày tạo"; }
+  .admin-table td:nth-of-type(9)::before { content: "Thao tác"; }
+
+  .admin-table-actions {
+    justify-content: flex-end;
     width: 100%;
   }
 }

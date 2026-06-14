@@ -12,8 +12,20 @@
   min-height: 100vh;
 }
 
+@media (max-width: 1024px) {
+  .main-layout-content {
+    margin-left: 0;
+    padding-top: 84px; /* padding top to account for 60px header + 24px natural padding */
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
 @media (max-width: 768px) {
   .main-layout-content {
-    padding: 16px;
+    margin-left: 0;
+    padding-top: 76px; /* 60px header + 16px padding */
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }

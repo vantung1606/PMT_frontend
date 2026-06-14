@@ -281,30 +281,7 @@ const ActivityLogs = () => {
                     )}
                     
                     {logs.map((log) => (
-                        <div
-                            key={log.id}
-                            style={{
-                                display: 'flex',
-                                gap: '16px',
-                                padding: '16px',
-                                background: 'white',
-                                borderRadius: '8px',
-                                marginBottom: '12px',
-                                border: '1px solid #e2e8f0',
-                                transition: 'all 0.2s',
-                                boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = '#f8fafc';
-                                e.currentTarget.style.borderColor = '#cbd5e1';
-                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.07)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'white';
-                                e.currentTarget.style.borderColor = '#e2e8f0';
-                                e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
-                            }}
-                        >
+                        <div key={log.id} className="admin-log-card">
                             {/* Icon */}
                             <div
                                 style={{
@@ -325,7 +302,7 @@ const ActivityLogs = () => {
 
                             {/* Content */}
                             <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '6px' }}>
+                                <div className="admin-log-header">
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                                         <strong style={{ 
                                             color: '#1e293b', 
@@ -356,7 +333,7 @@ const ActivityLogs = () => {
                                             </span>
                                         )}
                                     </div>
-                                    <span style={{ 
+                                    <span className="admin-log-time" style={{ 
                                         fontSize: '12px', 
                                         color: '#64748b', 
                                         whiteSpace: 'nowrap',

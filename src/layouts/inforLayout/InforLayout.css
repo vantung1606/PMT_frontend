@@ -1354,3 +1354,354 @@
   height: auto;
   margin-bottom: 12px;
 }
+
+/* =============================================
+   MOBILE NAV: HAMBURGER + RED DRAWER SYSTEM
+   ============================================= */
+
+.mobile-menu-toggle {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+.mobile-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-backdrop.open {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(160deg, #c62828 0%, #991b1b 100%);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.3);
+  z-index: 10001;
+  transition: right 0.32s cubic-bezier(0.4,0,0.2,1);
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.mobile-drawer.open {
+  display: flex;
+  right: 0;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 20px;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+}
+
+.drawer-close:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.drawer-user-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 64px 24px 24px;
+}
+
+.drawer-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 900;
+  color: #c62828;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.drawer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.drawer-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.drawer-user-info strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-user-info span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-guest {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.drawer-guest i {
+  font-size: 36px;
+  opacity: 0.7;
+}
+
+.drawer-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.18);
+  margin: 0 24px;
+}
+
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 4px;
+}
+
+.drawer-nav-link {
+  display: block;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.82);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.drawer-nav-link:hover {
+  background: rgba(255,255,255,0.12);
+  color: #ffffff;
+}
+
+.drawer-nav-link.active {
+  background: rgba(255,255,255,0.22);
+  color: #ffffff;
+}
+
+.drawer-actions {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawer-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: rgba(255,255,255,0.12);
+  color: #ffffff;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.drawer-action-btn:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.drawer-action-btn.danger {
+  background: rgba(0,0,0,0.15);
+}
+
+.drawer-action-btn.danger:hover {
+  background: rgba(0,0,0,0.25);
+}
+
+.drawer-action-btn.primary {
+  background: #ffffff;
+  color: #c62828;
+  font-weight: 800;
+}
+
+.drawer-action-btn.primary:hover {
+  background: #f8d7da;
+}
+
+@media (max-width: 820px) {
+  .landing-page {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-menu-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .mobile-menu-toggle:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  .workspace-pill-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    padding: 0 12px 0 20px !important;
+    width: calc(100% - 32px) !important;
+    top: 14px !important;
+    border-radius: 999px !important;
+    overflow: visible !important;
+  }
+
+  .ld-hero-section {
+    margin: 40px auto 80px;
+    padding: 0 16px;
+  }
+
+  .ld-hero-title {
+    font-size: clamp(32px, 8vw, 40px) !important;
+  }
+
+  .ld-hero-desc {
+    font-size: 14px;
+    padding: 0 10px;
+  }
+
+  .ld-hero-actions {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+    padding: 0 10px;
+  }
+
+  .ld-btn-primary.glow-btn, .glass-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ld-hero-badge {
+    position: relative;
+    margin: 20px auto 0;
+    left: 0;
+    bottom: 0;
+  }
+
+  .ld-features-header h2,
+  .ld-section-header h2,
+  .ld-cta-section h2 {
+    font-size: 28px !important;
+  }
+
+  .ld-stats-section {
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px 16px;
+  }
+
+  .ld-stat-item h3 {
+    font-size: 36px;
+  }
+
+  .ld-workflow-section {
+    padding: 24px 16px;
+    margin-bottom: 60px;
+  }
+
+  .ld-workflow-copy h2 {
+    font-size: 26px !important;
+  }
+
+  .ld-role-card {
+    padding: 20px;
+  }
+
+  .ld-cta-actions {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .ld-cta-actions .ld-btn-start,
+  .ld-cta-actions .ld-cta-link {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .ld-footer {
+    padding: 30px 16px;
+  }
+
+  .orb-1, .orb-2 {
+    width: 250px;
+    height: 250px;
+  }
+}

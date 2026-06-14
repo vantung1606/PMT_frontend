@@ -338,83 +338,82 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .profile-container {
-    margin: 10px;
-    padding: 15px;
+    margin: 0;
+    padding: 16px;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .profile-back-button {
     position: relative;
-    top: 15px;
-    left: 15px;
+    top: 0;
+    left: 0;
+    margin-bottom: 16px;
   }
 
   .back-btn {
     padding: 8px 12px;
     font-size: 13px;
+    display: inline-flex;
+    width: fit-content;
   }
 
   .back-btn span {
-    display: none; /* Ẩn text trên mobile, chỉ hiện icon */
+    display: inline;
   }
 
   .profile-header {
     flex-direction: column;
     text-align: center;
-    gap: 15px;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
   }
 
   .profile-avatar {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
   }
 
   .profile-info h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
-  .form-row {
+  .profile-role {
+    font-size: 14px;
+  }
+
+  .form-row-prf {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 
   .form-section {
-    padding: 20px;
+    padding: 16px;
   }
 
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .btn-cancel,
-  .btn-save {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-container {
-    margin: 5px;
-    padding: 10px;
-  }
-
-  .profile-back-button {
-    top: 10px;
-    left: 10px;
-  }
-
-  .back-btn {
-    padding: 6px 10px;
-    font-size: 12px;
-  }
-
-  .form-section {
-    padding: 15px;
+  .form-section h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
   }
 
   .form-group input,
   .form-group select {
     padding: 10px 12px !important;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+
+  .btn-cancel,
+  .btn-save {
+    width: 100%;
   }
 }
 

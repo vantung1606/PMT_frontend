@@ -15,6 +15,7 @@ const UserHeader = () => {
   const { currentWorkspace } = useWorkspace();
   const permissions = usePermissions();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const userMenuRef = useRef(null);
 
@@ -111,8 +112,35 @@ const UserHeader = () => {
   const userInitial = (user?.username || 'U').slice(0, 1).toUpperCase();
 
   return (
-    <header className="user-header">
-      <div className="user-header-container">
+    <>
+      <div className="user-mobile-topbar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button className="user-mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)}>
+            <i className="fas fa-bars"></i>
+          </button>
+          <div className="user-mobile-brand" onClick={handleLogoClick}>
+            <img src={logo} alt="logo" />
+            <span>CollabTask</span>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button className="user-mobile-icon-btn" onClick={handleNotificationClick}>
+            <i className="fas fa-bell"></i>
+            {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+          </button>
+          <div className="user-mobile-avatar" onClick={handleProfileClick}>
+            {userInitial}
+          </div>
+        </div>
+      </div>
+
+      <div 
+        className={`user-sidebar-backdrop ${isMobileMenuOpen ? 'show' : ''}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+
+      <header className={`user-header ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="user-header-container">
         {/* Logo */}
         <div className="user-header-logo" onClick={handleLogoClick}>
           <img src={logo} alt="logo" className="user-logo-img" style={{ filter: 'brightness(0) invert(1)' }} />
@@ -137,7 +165,10 @@ const UserHeader = () => {
             <button
               key={item.path}
               className={`user-nav-item ${isActive(item.path) ? 'active' : ''}`}
-              onClick={() => navigate(item.path)}
+              onClick={() => {
+                navigate(item.path);
+                setIsMobileMenuOpen(false);
+              }}
             >
               <i className={`fas ${item.icon}`}></i>
               <span>{item.label}</span>
@@ -205,6 +236,7 @@ const UserHeader = () => {
         </div>
       </div>
     </header>
+    </>
   );
 };
 
