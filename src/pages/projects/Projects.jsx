@@ -545,16 +545,6 @@ const Projects = () => {
                             <i className="fas fa-user"></i>
                           </div>
                           <span className="chip-text">{lastName}</span>
-                          <select 
-                            className="chip-role-select" 
-                            value={m.role || 'mb'} 
-                            onChange={(e) => handleUpdateMemberRole(m.user_id || m.id, e.target.value)}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <option value="tl">TL</option>
-                            <option value="mb">Member</option>
-                            <option value="clt">Khách hàng</option>
-                          </select>
                           <button type="button" className="chip-remove" onClick={() => handleRemoveMember(m.user_id || m.id)}>×</button>
                         </div>
                       );
@@ -894,9 +884,6 @@ const Projects = () => {
                           <span className="member-email">{member.email}</span>
                         </div>
                       </div>
-                      <span className={`member-role-badge role-${member.role}`}>
-                        {member.role === 'pm' ? 'PM' : member.role === 'tl' ? 'TL' : member.role === 'clt' ? 'KH' : 'MB'}
-                      </span>
                     </div>
                   ))}
                 </div>
