@@ -19,27 +19,17 @@ export const WorkspaceProvider = ({ children }) => {
   const [currentWorkspace, setCurrentWorkspace] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Tải danh sách workspace khi user đăng nhập thành công
-  useEffect(() => {
-    const load = async () => {
-      // Đợi AuthContext load xong mới quyết định trạng thái workspace
-      if (authLoading) return;
+  const fetchWorkspaces = async (search = '', sort = 'recent') => {
+    if (authLoading || !isAuthenticated) return;
+    setLoading(true);
+    try {
+      const res = await workspaceService.getMyWorkspaces(search, sort);
+      if (res.success) {
+        const list = res.data || [];
+        setWorkspaces(list);
 
-      if (!isAuthenticated) {
-        setWorkspaces([]);
-        setCurrentWorkspace(null);
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const res = await workspaceService.getMyWorkspaces();
-        if (res.success) {
-          const list = res.data || [];
-          setWorkspaces(list);
-
-          // Tự động chọn workspace đã lưu hoặc workspace đầu tiên
+        // Auto-select logic only if we are not actively searching
+        if (!search) {
           const savedId = localStorage.getItem('currentWorkspaceId');
           const saved = list.find(ws => String(ws.id) === savedId);
 
@@ -53,16 +43,27 @@ export const WorkspaceProvider = ({ children }) => {
             localStorage.removeItem('currentWorkspaceId');
           }
         }
-      } catch (err) {
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Load workspaces error:', err);
-        }
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Load workspaces error:', err);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    load();
+  // Initial load
+  useEffect(() => {
+    if (!authLoading) {
+      if (!isAuthenticated) {
+        setWorkspaces([]);
+        setCurrentWorkspace(null);
+        setLoading(false);
+      } else {
+        fetchWorkspaces();
+      }
+    }
   }, [isAuthenticated, authLoading]);
 
   const selectWorkspace = (workspace) => {
@@ -111,7 +112,8 @@ export const WorkspaceProvider = ({ children }) => {
     currentWorkspace,
     loading,
     selectWorkspace,
-    createWorkspace
+    createWorkspace,
+    fetchWorkspaces
   };
 
   return (

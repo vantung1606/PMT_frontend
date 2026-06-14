@@ -26,7 +26,7 @@ const DEFAULT_SETTINGS = {
 const Workspaces = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { workspaces, currentWorkspace, loading, selectWorkspace, createWorkspace } = useWorkspace();
+  const { workspaces, currentWorkspace, loading, selectWorkspace, createWorkspace, fetchWorkspaces } = useWorkspace();
   const [form, setForm] = useState({ name: '', description: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -36,6 +36,15 @@ const Workspaces = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('recent');
   const userMenuRef = useRef(null);
+
+  // Trigger server-side search when filters change
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchWorkspaces(searchTerm, sortBy);
+    }, 300); // Debounce to avoid too many API calls while typing
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, sortBy]);
 
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('collabtask_website_settings');
@@ -101,37 +110,9 @@ const Workspaces = () => {
     [workspaces, user]
   );
 
-  const getWorkspaceTime = (ws) => {
-    const rawValue = ws?.updated_at || ws?.created_at;
-    const parsed = rawValue ? new Date(rawValue).getTime() : 0;
-    return Number.isNaN(parsed) ? 0 : parsed;
-  };
-
-  const filterAndSortWorkspaces = (list) => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
-    const filtered = normalizedSearch
-      ? list.filter((ws) => {
-        const name = (ws?.name || '').toLowerCase();
-        const description = (ws?.description || '').toLowerCase();
-        return name.includes(normalizedSearch) || description.includes(normalizedSearch);
-      })
-      : list;
-
-    const sorted = [...filtered];
-    if (sortBy === 'name-asc') {
-      sorted.sort((a, b) => (a?.name || '').localeCompare(b?.name || '', 'vi'));
-    } else if (sortBy === 'name-desc') {
-      sorted.sort((a, b) => (b?.name || '').localeCompare(a?.name || '', 'vi'));
-    } else {
-      sorted.sort((a, b) => getWorkspaceTime(b) - getWorkspaceTime(a));
-    }
-
-    return sorted;
-  };
-
-  const displayedOwnedWorkspaces = filterAndSortWorkspaces(ownedWorkspaces);
-  const displayedMemberWorkspaces = filterAndSortWorkspaces(memberWorkspaces);
-  const recentWorkspaces = filterAndSortWorkspaces(Array.isArray(workspaces) ? workspaces : []).slice(0, 4);
+  const displayedOwnedWorkspaces = ownedWorkspaces;
+  const displayedMemberWorkspaces = memberWorkspaces;
+  const recentWorkspaces = Array.isArray(workspaces) ? workspaces.slice(0, 4) : [];
   const totalCount = Array.isArray(workspaces) ? workspaces.length : 0;
 
   const handleSelect = (ws) => {

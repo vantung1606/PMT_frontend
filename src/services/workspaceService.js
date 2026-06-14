@@ -1,8 +1,13 @@
 import api from './api';
 
 const workspaceService = {
-  getMyWorkspaces: async () => {
-    const res = await api.get('/workspaces/my');
+  getMyWorkspaces: async (search = '', sort = 'recent') => {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (sort) params.append('sort', sort);
+    
+    const url = `/workspaces/my${params.toString() ? `?${params.toString()}` : ''}`;
+    const res = await api.get(url);
     return res.data;
   },
 
