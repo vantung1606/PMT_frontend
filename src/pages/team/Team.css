@@ -217,16 +217,20 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 0;
 }
 
 .table-responsive-wrapper {
   flex: 1;
   overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
 }
 
 .team-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 800px;
 }
 
 .team-table th {
@@ -240,6 +244,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
+  white-space: nowrap;
 }
 
 .team-table th:first-child { border-top-left-radius: 12px; }
@@ -260,14 +265,16 @@
 .col-id {
   color: #9ca3af;
   font-weight: 500;
+  white-space: nowrap;
 }
 
-.col-name {
+.col-name-wrapper {
   display: flex;
   align-items: center;
   gap: 12px;
   font-weight: 600;
   color: #111827;
+  white-space: nowrap;
 }
 
 .member-avatar {

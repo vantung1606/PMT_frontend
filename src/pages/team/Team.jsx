@@ -390,9 +390,11 @@ const Team = () => {
                           return (
                             <tr key={m.id}>
                               <td className="col-id">#{String(m.id).padStart(3, '0')}</td>
-                              <td className="col-name">
-                                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=random`} alt={m.name} className="member-avatar" />
-                                <span>{m.name}</span>
+                              <td>
+                                <div className="col-name-wrapper">
+                                  <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=random`} alt={m.name} className="member-avatar" />
+                                  <span>{m.name}</span>
+                                </div>
                               </td>
                               <td className="col-email">{m.email}</td>
                               <td>
