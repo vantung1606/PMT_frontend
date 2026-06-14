@@ -551,7 +551,6 @@ const Projects = () => {
                             onChange={(e) => handleUpdateMemberRole(m.user_id || m.id, e.target.value)}
                             onClick={(e) => e.stopPropagation()}
                           >
-                            {m.role === 'pm' && <option value="pm" hidden>PM</option>}
                             <option value="tl">TL</option>
                             <option value="mb">Member</option>
                             <option value="clt">Khách hàng</option>
