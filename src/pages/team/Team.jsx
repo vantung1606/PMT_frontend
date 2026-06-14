@@ -318,7 +318,7 @@ const Team = () => {
           <select 
             value={filterProjectId} 
             onChange={(e) => setFilterProjectId(e.target.value)}
-            style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e5e7eb', outline: 'none' }}
+            className="project-filter-select"
           >
             <option value="">Tất cả dự án</option>
             {projects.map(p => (
@@ -395,13 +395,12 @@ const Team = () => {
                             </td>
                             <td className="col-email">{m.email}</td>
                             <td>
-                              {canManage && m.user_id ? (
+                              {canManage && m.user_id && m.workspace_role !== 'pm' ? (
                                 <select 
                                   value={m.workspace_role || 'mb'}
                                   onChange={(e) => handleUpdateRole(m.user_id, e.target.value)}
-                                  style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #e5e7eb', outline: 'none' }}
+                                  className="role-select"
                                 >
-                                  <option value="pm">Project Manager</option>
                                   <option value="tl">Team Leader</option>
                                   <option value="mb">Member</option>
                                   <option value="clt">Khách hàng</option>
