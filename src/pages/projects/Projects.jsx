@@ -896,7 +896,7 @@ const Projects = () => {
                         </div>
                       </div>
                       <span className={`member-role-badge role-${member.role}`}>
-                        {member.role === 'pm' ? 'PM' : member.role === 'tl' ? 'TL' : 'MB'}
+                        {member.role === 'pm' ? 'PM' : member.role === 'tl' ? 'TL' : member.role === 'clt' ? 'KH' : 'MB'}
                       </span>
                     </div>
                   ))}
